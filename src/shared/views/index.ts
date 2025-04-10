@@ -63,6 +63,8 @@ import {
   ReceiptConfiguration,
   CometChatReceiptInterface,
   ReceiptConfigurationInterface,
+  ReceiptStyle,
+  ReceiptStyleInterface
 } from "./CometChatReceipt";
 import {
   CometChatDateInterface,
@@ -177,6 +179,7 @@ export {
   BadgeStyle,
   DateConfiguration,
   ReceiptConfiguration,
+  ReceiptStyle,
   StatusIndicatorConfiguration,
   StatusIndicatorStyle,
   DateStyle,
@@ -230,6 +233,7 @@ export type {
   DateStyleInterface,
   CometChatReceiptInterface,
   ReceiptConfigurationInterface,
+  ReceiptStyleInterface,
   CometChatStatusIndicatorInterface,
   StatusIndicatorConfigurationInterface,
   StatusIndicatorStyleInterface,

@@ -12,7 +12,7 @@ import translationZHTW from "./resources/zh-tw/translation.json";
 import translationSV from "./resources/sv/translation.json";
 import translationLT from "./resources/lt/translation.json";
 import translationHU from "./resources/hu/translation.json";
-import { Platform, NativeModules } from 'react-native';
+import { Platform, Settings, I18nManager } from 'react-native';
 
 /**
  * CometChatLocalize component allows you to show text in the locale set by you.
@@ -81,9 +81,8 @@ class CometChatLocalize {
      */
     static getNativeLanguage = () => {
         return Platform.OS === 'ios'
-            ? NativeModules.SettingsManager.settings.AppleLocale ||
-            NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
-            : NativeModules.I18nManager.localeIdentifier.replace("_", "-")
+        ? Settings.get('AppleLocale') || Settings.get('AppleLanguages')[0] //iOS 13
+        : I18nManager.getConstants().localeIdentifier?.replace("_", "-")
     };
 
     /**

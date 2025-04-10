@@ -112,12 +112,9 @@ export const CometChatGroupsWithMessages = (props: CometChatGroupsWithMessagesIn
     }
 
     useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', handleBack);
+        const backHandlerListener = BackHandler.addEventListener('hardwareBackPress', handleBack);
         return () => {
-          BackHandler.removeEventListener(
-            'hardwareBackPress',
-            handleBack
-          );
+            backHandlerListener.remove();
         };
     }, [showComponent]);
 

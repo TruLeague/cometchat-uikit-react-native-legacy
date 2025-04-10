@@ -1,4 +1,4 @@
-import { View, Text, Image, ViewStyle, Platform, ScrollView, TextStyle } from 'react-native';
+import { View, Text, Image, ViewStyle, Platform, ScrollView, TextStyle, DimensionValue, Dimensions } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Header from './Header';
 import { ICONS } from './resources';
@@ -23,6 +23,7 @@ import { CometChatContextType } from '../shared/base/Types';
 import { useKeyboard } from '../shared/helper/useKeyboard';
 import { CometChatUIEventHandler } from '../shared/events/CometChatUIEventHandler/CometChatUIEventHandler';
 import { commonVars } from '../shared/base/vars';
+const screenHeight = Dimensions.get('window').height;
 
 const uiEventId = 'ccUiEvent' + new Date().getTime();
 export interface CometChatThreadedMessagesInterface {
@@ -148,6 +149,9 @@ export const CometChatThreadedMessages = (
   );
 
   const keyboardHeight = useKeyboard();
+  const bubbleViewMaxHeight = (Math.floor(
+    ((screenHeight - keyboardHeight - 280) / screenHeight) * 100
+  ) + '%') as DimensionValue;
 
   let limit: number = 30;
 
@@ -264,7 +268,7 @@ export const CometChatThreadedMessages = (
           threadedMessagesStyle?.closeIconTint ?? theme.palette.getPrimary()
         }
       />
-      <View style={styles.msgBubbleContainer}>
+      <View style={[styles.msgBubbleContainer, { maxHeight: bubbleViewMaxHeight }]}>
         <ScrollView>
           {BubbleView && BubbleView(message)}
         </ScrollView>

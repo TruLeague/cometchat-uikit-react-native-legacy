@@ -26,7 +26,12 @@ export interface CometChatReceiptInterface {
     height?: string | number;
     width?: string | number;
     tintColor?: string;
-  };
+    waitIconTint?: string;
+    sentIconTint?: string;
+    deliveredIconTint?: string;
+    readIconTint?: string;
+    errorIconTint?: string;
+  }
 }
 
 export const CometChatReceipt = (props: CometChatReceiptInterface) => {
@@ -46,29 +51,34 @@ export const CometChatReceipt = (props: CometChatReceiptInterface) => {
     ...style,
     height: style?.height || 10,
     width: style?.width || 14,
-    tintColor: style?.tintColor,
   };
 
-  const { height, width, tintColor } = _style;
+  const { height, width } = _style;
 
   let icon: any = null;
   let imageSource: any = null;
+  let tintColor = style?.tintColor;
 
   switch (receipt) {
     case 'SENT':
       icon = sentIcon;
+      tintColor = style?.sentIconTint;
       break;
     case 'DELIVERED':
       icon = deliveredIcon;
+      tintColor = style?.deliveredIconTint;
       break;
     case 'READ':
       icon = readIcon;
+      tintColor = style?.readIconTint;
       break;
     case 'ERROR':
       icon = errorIcon;
+      tintColor = style?.errorIconTint;
       break;
     case 'WAIT':
       icon = waitIcon;
+      tintColor = style?.waitIconTint;
       break;
 
     default:
@@ -81,17 +91,7 @@ export const CometChatReceipt = (props: CometChatReceiptInterface) => {
     } else if (typeof icon === 'number') {
       imageSource = icon;
     }
-    return (
-      <Image
-        source={imageSource}
-        style={
-          [
-            styles.tickImageStyle,
-            { tintColor: tintColor, width, height },
-          ] as ImageStyle
-        }
-      />
-    );
+    return <Image source={imageSource} style={[styles.tickImageStyle, { tintColor: tintColor || style?.tintColor, width, height }] as ImageStyle} />;
   }
   return null;
 };

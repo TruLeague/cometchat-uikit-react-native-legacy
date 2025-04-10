@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Dimensions, FlatList, Image, Text, TouchableOpacity, View, ScrollView, TextStyle, ViewProps, ActivityIndicator } from 'react-native'
 //@ts-ignore
 import { CometChat } from '@cometchat/chat-sdk-react-native'
-import { AvatarStyleInterface, ChatConfigurator, CometChatContext, CometChatDate, CometChatListItem, CometChatMessageTemplate, CometChatUIEventHandler, ImageType, ListItemStyleInterface, StatusIndicatorStyleInterface, localize } from '../shared'
+import { AvatarStyleInterface, ChatConfigurator, CometChatContext, CometChatDate, CometChatListItem, CometChatMessageTemplate, CometChatUIEventHandler, CometChatUiKitConstants, ImageType, ListItemStyleInterface, StatusIndicatorStyleInterface, localize } from '../shared'
 import { MessageInformationStyleInterface } from './MessageInformationStyle'
 import { MessageUtils } from '../shared/utils/MessageUtils'
 import { CommonUtils } from '../shared/utils/CommonUtils'
@@ -95,10 +95,6 @@ export const CometChatMessageInformation = (props: CometChatMessageInformationIn
     } = messageInformationStyle || {};
 
     const receipt = (receipt: any, status: any, time: any) => {
-
-        if (ListItemView) {
-            return ListItemView(message, receipt);
-        }
         return <View style={{ flexDirection: 'row',  alignItems: 'center' }}>
             <Image
                 source={receipt == 'SENT' ? sentIcon :
@@ -119,7 +115,7 @@ export const CometChatMessageInformation = (props: CometChatMessageInformationIn
                 <Text style={[
                     { color: subtitleTextColor || theme.palette.getAccent600() },
                     subtitleTextFont
-                ] as TextStyle}>{status}</Text>
+                ] as TextStyle[]}>{status}</Text>
             </View>
             {
                 receiptDatePattern ?
@@ -145,6 +141,9 @@ export const CometChatMessageInformation = (props: CometChatMessageInformationIn
     }
 
     const renderReceipients = ({ item, index }: any) => {
+        if (ListItemView) {
+          return ListItemView(message, item);
+        }
         const { sender } = item;
         if(!(item['deliveredAt'] || item['readAt'] )) {
            return null;
@@ -188,19 +187,56 @@ export const CometChatMessageInformation = (props: CometChatMessageInformationIn
         }
     }
 
-    const updateMessageReceipt = (newReceipt: any) => {
-        if (message.getId() == newReceipt['id']) {
-            setRecipients([{
-                sender: isGroup() ? newReceipt['sender'] : newReceipt['receiver'],
-                sentAt: newReceipt['sentAt'],
-                readAt: newReceipt['readAt'],
-                deliveredAt: newReceipt['deliveredAt']
-            }]);
+  const updateMessageReceipt = useCallback(
+    (newReceipt: any) => {
+      let checkId;
+      if(newReceipt.messageId) {
+        checkId = newReceipt.messageId ? newReceipt.messageId : newReceipt.id;
+      } else {
+         checkId = newReceipt.getId();
+      }
+      if (message.getId() === checkId) {
+        if (message.getReceiverType() === CometChatUiKitConstants.ReceiverTypeConstants.user) {
+          const readAt = message.getReadAt() || recipients[0]?.readAt || newReceipt.getReadAt();
+          const deliveredAt = message.getDeliveredAt() || recipients[0]?.deliveredAt || newReceipt.getDeliveredAt() || readAt;
+          const udpatedReceipt = {
+            sender: message.getReceiver(),
+            sentAt: message.getSentAt(),
+            readAt: readAt,
+            deliveredAt: deliveredAt
+          };
+          setRecipients([udpatedReceipt]);
+          return;
         }
-    }
+
+        const receiptIndex = recipients.findIndex((rec) => {
+          return (
+            (rec as any).sender.getUid() ===
+            newReceipt.sender.getUid()
+          );
+        });
+
+        if (receiptIndex > -1) {
+          let oldReceipt = recipients[receiptIndex] as any;
+          oldReceipt.setDeliveredAt(oldReceipt.getDeliveredAt() || newReceipt.getDeliveredAt() || newReceipt.getReadAt());
+          oldReceipt.setReadAt(oldReceipt.getReadAt() || newReceipt.getReadAt());
+          let receiptsList = [...recipients];
+          receiptsList.splice(receiptIndex, 1, oldReceipt);
+          setRecipients(receiptsList);
+        } else {
+          newReceipt.setDeliveredAt(newReceipt.getDeliveredAt() || newReceipt.getReadAt());
+          setRecipients([newReceipt, ...recipients]);
+        }
+      }
+    },
+    [recipients, message]
+  );
+
+  useEffect(() => {
+    loadTemplates();
+  }, []);
 
     useEffect(() => {
-        loadTemplates()
         //add listener for message delivery
         CometChatUIEventHandler.addMessageListener(
             listenerId,
@@ -213,6 +249,10 @@ export const CometChatMessageInformation = (props: CometChatMessageInformationIn
                 },
             }
         )
+        return () => {
+            // clean up code like removing listeners
+            CometChatUIEventHandler.removeMessageListener(listenerId);
+        }
     }, []);
 
     useEffect(() => {

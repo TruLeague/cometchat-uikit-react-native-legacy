@@ -53,6 +53,18 @@ export interface CometChatListActionsInterface {
   clearSelection: () => void;
 }
 
+const waitForList = {
+  resolve: (_: any[]) => null,
+  promise: () => {
+    return new Promise((resolve: (_: any[]) => void) => {
+      waitForList.resolve = resolve;
+    });
+  },
+  reset: () => {
+    waitForList.resolve = (_: any[]) => null;
+  }
+}
+
 export interface CometChatListStylesInterface {
   width?: number | string;
   height?: number | string;
@@ -229,8 +241,13 @@ export const CometChatList = React.forwardRef<
 
   const activeSwipeRows = React.useRef<anyObject>({});
 
-  const [list, setList] = React.useState<any>([]);
+  const [list, setList] = React.useState<any[]>([]);
   const [decoratorMessage, setDecoratorMessage] = React.useState(LOADING);
+
+  if (list.length > 0) {
+    waitForList.resolve(list);
+    waitForList.reset();
+  }
 
   const searchHandler = (searchText: string) => {
     setSearchInput(searchText);
@@ -351,8 +368,12 @@ export const CometChatList = React.forwardRef<
    * This will move item to first location if item doesn't exits then add it to first location.
    * @param item
    */
-  const updateAndMoveToFirst = (item: any) => {
-    let newList = [...list];
+  const updateAndMoveToFirst = async (item: any) => {
+    let thisList = list;
+    if (thisList.length <= 0) {
+      thisList = await waitForList.promise();
+    };
+    let newList = [...thisList];
     let itemKey = newList.findIndex(
       (u) => u[listItemKey] === item[listItemKey]
     );

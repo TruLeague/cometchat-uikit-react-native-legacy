@@ -174,7 +174,7 @@ export class CommonUtils {
         const diffDays = Math.floor(diff / (1000 * 60 * 60 * 24));
         const isCurrentYear = today.getFullYear() === date.getFullYear();
     
-        if (diffDays === 0) {
+        if (diffDays < 1) {
           return `Today ${getTimeFormat()}`;
         } else if (diffDays === 1) {
           return `Yesterday ${getTimeFormat()}`;

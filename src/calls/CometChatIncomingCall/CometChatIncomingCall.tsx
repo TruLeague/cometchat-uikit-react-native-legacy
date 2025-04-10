@@ -163,6 +163,12 @@ export const CometChatIncomingCall = (props: CometChatIncomingCallInterface) => 
       new CometChat.CallListener({
         onIncomingCallCancelled: (call: any) => {
           CometChatSoundManager.pause();
+        },
+        onOutgoingCallAccepted: (call: any) => {
+          CometChatSoundManager.pause();
+        },
+        onOutgoingCallRejected: (call: any) => {
+          CometChatSoundManager.pause();
         }
       })
     );

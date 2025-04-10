@@ -56,7 +56,7 @@ export interface CometChatDateInterface {
    * 2. dayDateFormat: Today, Yesterday, week-day or "d MMM, yyyy".
    * 3. dayDateTimeFormat: Today, Yesterday, week-day or "dd/mm/yyyy".
    */
-  pattern: 'timeFormat' | 'dayDateFormat' | 'dayDateTimeFormat';
+  pattern?: 'timeFormat' | 'dayDateFormat' | 'dayDateTimeFormat';
   /**
    * A string for custom date reprasentation.
    */

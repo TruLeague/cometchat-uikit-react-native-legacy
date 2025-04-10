@@ -103,11 +103,11 @@ const CometChatBottomSheet = forwardRef(
     });
 
     useEffect(() => {
-      BackHandler.addEventListener('hardwareBackPress', _onBackPress);
+      const backHandlerListener = BackHandler.addEventListener('hardwareBackPress', _onBackPress);
       // onOpen ? onOpen() : () => {};
 
       return () => {
-        BackHandler.removeEventListener('hardwareBackPress', _onBackPress);
+        backHandlerListener.remove();
       };
     }, []);
 

@@ -226,6 +226,13 @@ RCT_EXPORT_METHOD(openFileChooser:(NSString *) type callback:(RCTResponseSenderB
             imageController.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
             [presentedViewController presentViewController:imageController animated:YES completion:nil];
         });
+    } else if ([@"audio" isEqualToString:type]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIDocumentPickerViewController *documentController = [[UIDocumentPickerViewController alloc] initWithDocumentTypes: @[@"public.audio"] inMode: UIDocumentPickerModeImport];
+            documentController.delegate = self;
+            documentController.title = @"Select an audio file";
+            [presentedViewController presentViewController:documentController animated:YES completion:nil];
+        });
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
             UIDocumentPickerViewController *documentController = [[UIDocumentPickerViewController alloc] initWithDocumentTypes: @[@"public.data",@"public.content",@"public.audiovisual-content",@"public.movie",@"public.audiovisual-content",@"public.video",@"public.audio",@"public.data",@"public.zip-archive",@"com.pkware.zip-archive",@"public.composite-content",@"public.text"] inMode: UIDocumentPickerModeImport];

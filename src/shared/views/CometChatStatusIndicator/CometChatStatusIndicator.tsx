@@ -40,8 +40,8 @@ export const CometChatStatusIndicator = (
   const defaultStyleProps = new StatusIndicatorStyle({});
   const style = {
     ...defaultStyleProps,
+    ...styleProp as {},
     ...(backgroundColor ? { backgroundColor } : {}),
-    ...styleProp as {}
   };
 
   const getView = () => {

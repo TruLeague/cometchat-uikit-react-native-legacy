@@ -45,6 +45,7 @@ import {
   CometChatBadge,
   CometChatStatusIndicator,
   CometChatReceipt,
+  ReceiptStyle,
   CometChatDate,
   AudioBubbleStyleInterface,
   CometChatAudioBubble,
@@ -108,6 +109,7 @@ import {
   CometChatMessageInputInterface,
   CometChatMessageInputStyleInterface,
   CometChatReceiptInterface,
+  ReceiptStyleInterface,
   CometChatStatusIndicatorInterface,
   DateConfigurationInterface,
   DateStyleInterface,
@@ -186,6 +188,7 @@ import {
   UsersStyle,
   UsersStyleInterface,
   UsersConfigurationInterface,
+  UsersConfiguration,
 } from "./CometChatUsers";
 
 import {
@@ -193,11 +196,13 @@ import {
   GroupsConfigurationInterface,
   GroupsStyleInterface,
   CometChatGroupsInterface,
+  GroupsConfiguration,
 } from "./CometChatGroups";
 
 import {
   CometChatConversations,
   ConversationInterface,
+  ConversationsConfiguration,
   ConversationsConfigurationInterface,
   ConversationsStyleInterface,
 } from "./CometChatConversations";
@@ -261,6 +266,7 @@ import {
 import {
   CometChatMessageHeader,
   CometChatMessageHeaderInterface,
+  MessageHeaderConfiguration,
   MessageHeaderConfigurationInterface,
   MessageHeaderStyleInterface,
 } from "./CometChatMessageHeader";
@@ -279,11 +285,13 @@ import {
   CometChatMessageListProps,
   MessageListStyleInterface,
   MessageListConfigurationInterface,
+  MessageListConfiguration,
 } from "./CometChatMessageList";
 
 import {
   CometChatMessageComposer,
   CometChatMessageComposerInterface,
+  MessageComposerConfiguration,
   MessageComposerConfigurationInterface,
   MessageComposerStyleInterface,
 } from "./CometChatMessageComposer";
@@ -299,6 +307,7 @@ import {
 import {
   CometChatThreadedMessages,
   CometChatThreadedMessagesInterface,
+  ThreadedMessagesConfiguration,
   ThreadedMessagesConfigurationInterface,
   ThreadedMessagesStyleInterface,
 } from "./CometChatThreadedMessages";
@@ -488,6 +497,7 @@ export {
   CometChatBadge,
   CometChatStatusIndicator,
   CometChatReceipt,
+  ReceiptStyle,
   CometChatDate,
   CometChatAudioBubble,
   CometChatFileBubble,
@@ -581,8 +591,16 @@ export {
   /* Text Formatters */
   DateTimeElement,
   CometChatDateTimePicker,
-  CometChatMessageInformationConfiguration
+  CometChatMessageInformationConfiguration,
+  ConversationsConfiguration,
+  MessageListConfiguration,
+  MessageHeaderConfiguration,
+  MessageComposerConfiguration,
+  UsersConfiguration,
+  GroupsConfiguration,
+  ThreadedMessagesConfiguration,
 };
+
 export type {
   ThumbnailGenerationConfigurationInterface,
   PollsStyleInterface,
@@ -707,6 +725,7 @@ export type {
   CometChatMessageInputInterface,
   CometChatMessageInputStyleInterface,
   CometChatReceiptInterface,
+  ReceiptStyleInterface,
   CometChatStatusIndicatorInterface,
   DateConfigurationInterface,
   DateStyleInterface,

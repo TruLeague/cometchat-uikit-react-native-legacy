@@ -12,6 +12,7 @@ import {
   Text,
   ViewProps,
   TextStyle,
+  TextInput,
 } from 'react-native';
 import { Style } from './styles';
 import {
@@ -612,8 +613,7 @@ export const CometChatMessageComposer = React.forwardRef(
       messageComposerStyle = {},
     } = props;
 
-    const defaultAttachmentOptions =
-      ChatConfigurator.dataSource.getAttachmentOptions(user, group, id);
+    const messageComposerId = id ?? `${user ? user.getUid() : ''}${group ? group.getGuid() : ''}${parentMessageId ?? ''}`;
 
     const composerIdMap = new Map().set('parentMessageId', parentMessageId);
     const defaultAuxiliaryButtonOptions =
@@ -627,7 +627,7 @@ export const CometChatMessageComposer = React.forwardRef(
     const loggedInUser = React.useRef<any>({});
     const chatWith = React.useRef<any>(null);
     const chatWithId = React.useRef<any>(null);
-    const messageInputRef = React.useRef<any>(null);
+    const messageInputRef = React.useRef<TextInput>(null);
     const chatRef = React.useRef<any>(chatWith);
     const inputValueRef = React.useRef<any>(null);
     const plainTextInput = React.useRef<string>(text ?? '');
@@ -889,6 +889,10 @@ export const CometChatMessageComposer = React.forwardRef(
     const clearInputBox = () => {
       inputValueRef.current = '';
       setInputMessage('');
+      setTimeout(() => {
+        messageInputRef.current.clear();
+        setInputMessage('');
+      }, 100);
     };
 
     const sendTextMessage = () => {
@@ -980,7 +984,7 @@ export const CometChatMessageComposer = React.forwardRef(
 
       inputValueRef.current = '';
       setInputMessage('');
-      messageInputRef.current.textContent = '';
+      messageInputRef.current.clear();
 
       setMessagePreview(null);
 
@@ -1167,9 +1171,9 @@ export const CometChatMessageComposer = React.forwardRef(
     };
 
     const AuxiliaryButtonViewElem = () => {
-      if (AuxiliaryButtonView && id)
+      if (AuxiliaryButtonView && messageComposerId)
         return (
-          <AuxiliaryButtonView user={user} group={group} composerId={id} />
+          <AuxiliaryButtonView user={user} group={group} composerId={messageComposerId} />
         );
       else if (defaultAuxiliaryButtonOptions)
         return (
@@ -1184,8 +1188,8 @@ export const CometChatMessageComposer = React.forwardRef(
     };
 
     const SendButtonViewElem = () => {
-      if (SendButtonView && id)
-        return <SendButtonView user={user} group={group} composerId={id} />;
+      if (SendButtonView && messageComposerId)
+        return <SendButtonView user={user} group={group} composerId={messageComposerId} />;
       return (
         <ImageButton
           image={ICONS.SEND}
@@ -1206,9 +1210,9 @@ export const CometChatMessageComposer = React.forwardRef(
     };
 
     const SecondaryButtonViewElem = () => {
-      if (SecondaryButtonView && id)
+      if (SecondaryButtonView && messageComposerId)
         return (
-          <SecondaryButtonView user={user} group={group} composerId={id} />
+          <SecondaryButtonView user={user} group={group} composerId={messageComposerId} />
         );
       return (
         <AttachIconButton
@@ -1303,7 +1307,7 @@ export const CometChatMessageComposer = React.forwardRef(
       }
 
       _formatter.forEach((formatter) => {
-        id && formatter.setComposerId(id);
+        messageComposerId && formatter.setComposerId(messageComposerId);
         user && formatter.setUser(user);
         group && formatter.setGroup(group);
         let trackingCharacter = formatter.getTrackingCharacter();
@@ -1412,7 +1416,7 @@ export const CometChatMessageComposer = React.forwardRef(
       let newAiOptions: any = _getAIOptions(aiOptions);
       setAIOptionItems(newAiOptions);
       setRootAIOptionItems(newAiOptions);
-    }, [user, group, id, parentMessageId]);
+    }, [user, group, messageComposerId, parentMessageId]);
 
     const _getAIOptions = (
       options: (
@@ -1468,7 +1472,7 @@ export const CometChatMessageComposer = React.forwardRef(
           id: string | number;
           data: Array<SuggestionItem>;
         }) {
-          if (activeCharacter.current && id === item?.id) {
+          if (activeCharacter.current && messageComposerId === item?.id) {
             setMentionsSearchData(item?.data);
             setSuggestionListLoader(false);
           }
@@ -1966,7 +1970,7 @@ export const CometChatMessageComposer = React.forwardRef(
           {CustomView && CustomView}
         </Modal>
         <KeyboardAvoidingView
-          key={id}
+          key={messageComposerId}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.select({ ios: kbOffset })}
           {...keyboardAvoidingViewProps}

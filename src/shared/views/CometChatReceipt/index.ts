@@ -7,5 +7,7 @@ import {
   ReceiptConfigurationInterface,
 } from "./MessageConfiguration";
 
-export { CometChatReceipt, ReceiptConfiguration };
-export type { CometChatReceiptInterface, ReceiptConfigurationInterface };
+import {ReceiptStyle, ReceiptStyleInterface} from "./ReceiptStyle"
+
+export { CometChatReceipt, ReceiptConfiguration, ReceiptStyle };
+export type { CometChatReceiptInterface, ReceiptConfigurationInterface, ReceiptStyleInterface };
