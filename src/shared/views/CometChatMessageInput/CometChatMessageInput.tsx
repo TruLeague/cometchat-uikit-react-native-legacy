@@ -7,6 +7,7 @@ import {
   ViewStyle,
   NativeSyntheticEvent,
   TextInputSelectionChangeEventData,
+  Platform,
 } from 'react-native';
 import React, { RefObject, useContext } from 'react';
 import { styles } from './styles';
@@ -15,6 +16,7 @@ import { localize } from '../../resources/CometChatLocalize';
 import { CometChatContext } from '../../CometChatContext';
 import { CometChatContextType } from '../../base/Types';
 import { TextInputStyle } from '../CometChatTextInput/TextInputStyle';
+import { Colors } from '../../../../../../../src/common/Colors';
 
 export interface CometChatMessageInputStyleInterface {
   baseStyle?: StyleProp<ViewStyle>;
@@ -128,8 +130,14 @@ export const CometChatMessageInput = (
         backgroundColor: style?.inputBackground ?? theme.palette.getAccent100(),
         marginHorizontal: 8,
         borderRadius: 8,
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems: text?.length  == 0 ? 'center' :'flex-end',
+        paddingVertical: 5,
       }}
     >
+      {SecondaryButtonView && text?.length  == 0 && <SecondaryButtonView />}
+
       <TextInput
         ref={messageInputRef}
         style={
@@ -137,7 +145,19 @@ export const CometChatMessageInput = (
             styles.textInput,
             {
               color: style?.textColor ?? theme.palette.getAccent(),
-              maxHeight: maxHeight ?? 25 * 3,
+              height: undefined, // allow multiline to grow
+              minHeight : 40,
+              maxHeight : 100,
+              flex : 1 ,
+              marginHorizontal : 5,
+              borderWidth: 1,
+              backgroundColor : Colors.newBgGreyColor,
+              borderColor : Colors.newGreyBorder,
+              borderRadius : 25,
+              textAlignVertical: 'center', // important for Android
+              paddingVertical: Platform.OS === 'ios' ? 12 : 8,
+              paddingTop: Platform.OS === 'ios' ? 12 :4,
+              paddingHorizontal: 10
             },
             text?.length
               ? style?.textFont ?? theme.typography.body
@@ -151,7 +171,8 @@ export const CometChatMessageInput = (
             : theme.palette.getAccent600()
         }
         multiline
-        textAlignVertical="top"
+        textAlignVertical="center"
+        autoCorrect={true}
         placeholder={placeHolderText}
         onSelectionChange={onSelectionChange}
       >
@@ -170,15 +191,15 @@ export const CometChatMessageInput = (
       >
         <View style={{ flexDirection: 'row' }}>
           {SecondaryButtonView && <SecondaryButtonView />}
-          {auxiliaryButtonAlignment === 'left' && AuxiliaryButtonView && (
+          {text?.length  == 0 && auxiliaryButtonAlignment === 'left' && AuxiliaryButtonView && (
             <AuxiliaryButtonView />
           )}
         </View>
         <View style={{ flexDirection: 'row' }}>
-          {auxiliaryButtonAlignment === 'right' && AuxiliaryButtonView && (
+          { text?.length  == 0 && auxiliaryButtonAlignment === 'right' && AuxiliaryButtonView &&  (
             <AuxiliaryButtonView />
           )}
-          {PrimaryButtonView && <PrimaryButtonView />}
+          {(text?.length > 0 || text?.length == undefined) && PrimaryButtonView && <PrimaryButtonView />}
         </View>
       </View>
     </View>

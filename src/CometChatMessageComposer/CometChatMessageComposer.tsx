@@ -72,6 +72,7 @@ import { AIOptionsStyle } from '../AI/AIOptionsStyle';
 import { CommonUtils } from '../shared/utils/CommonUtils';
 import { permissionUtil } from '../shared/utils/PermissionUtil';
 import { commonVars } from '../shared/base/vars';
+import { Colors } from '../../../../../src/common/Colors';
 const { FileManager, CommonUtil } = NativeModules;
 
 const uiEventListenerShow = 'uiEvent_show_' + new Date().getTime();
@@ -90,6 +91,19 @@ const MessagePreviewTray = (props: any) => {
       onCloseClick={onClose}
     />
   ) : null;
+};
+
+const ImageButton2 = (props: any) => {
+  const { image, onClick, buttonStyle, imageStyle, disable } = props;
+  return (
+    <TouchableOpacity
+      activeOpacity={disable ? 1 : undefined}
+      onPress={disable ? () => {} : onClick}
+      style={{backgroundColor: imageStyle[1].tintColor,padding:10, borderRadius : 100}}
+    >
+      <Image source={image} style={[{ height: 24, width: 24 }]} tintColor={Colors.white} />
+    </TouchableOpacity>
+  );
 };
 
 const ImageButton = (props: any) => {
@@ -664,6 +678,7 @@ export const CometChatMessageComposer = React.forwardRef(
     const [suggestionListLoader, setSuggestionListLoader] =
       React.useState(false);
 
+    const [currentUser, setCurrentUser] = React.useState<any>(null);  
     const bottomSheetRef = React.useRef<any>(null);
 
     useLayoutEffect(() => {
@@ -903,6 +918,7 @@ export const CometChatMessageComposer = React.forwardRef(
       }
 
       let finalTextInput = getRegexString(plainTextInput.current);
+      finalTextInput = finalTextInput.trim();
 
       let textMessage: any = new CometChat.TextMessage(
         chatWithId.current,
@@ -1178,7 +1194,7 @@ export const CometChatMessageComposer = React.forwardRef(
       else if (defaultAuxiliaryButtonOptions)
         return (
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {defaultAuxiliaryButtonOptions}
+            {/* {defaultAuxiliaryButtonOptions} */}
             {shouldShowAIOptions() && <AIOptionsButtonView />}
             {!hideVoiceRecording && <RecordAudioButtonView />}
           </View>
@@ -1191,25 +1207,34 @@ export const CometChatMessageComposer = React.forwardRef(
       if (SendButtonView && messageComposerId)
         return <SendButtonView user={user} group={group} composerId={messageComposerId} />;
       return (
-        <ImageButton
-          image={ICONS.SEND}
-          imageStyle={[
-            Style.imageStyle,
-            {
-              tintColor:
-                (inputMessage as String).length === 0
-                  ? theme.palette.getAccent400()
-                  : messageComposerStyle?.sendIconTint ||
-                    theme.palette.getPrimary(),
-            },
-          ]}
-          disable={(inputMessage as String).length === 0}
-          onClick={sendTextMessage}
-        />
+       <View style={{backgroundColor: (inputMessage as String).length === 0 ? theme.palette.getAccent400() : messageComposerStyle?.sendIconTint,padding:2,borderRadius: 100}}>
+         <ImageButton
+           image={ICONS.SEND}
+           imageStyle={[
+             Style.imageStyle,
+             {
+                tintColor: 'white',
+             },
+             // {
+             //   tintColor:
+             //     (inputMessage as String).length === 0
+             //       ? theme.palette.getAccent400()
+             //       : messageComposerStyle?.sendIconTint ||
+             //         theme.palette.getPrimary(),
+             // },
+           ]}
+           disable={(inputMessage as String).length === 0}
+           onClick={sendTextMessage}
+         />
+       </View>
       );
     };
 
     const SecondaryButtonViewElem = () => {
+      if(loggedInUser.current.role == "prospect" || currentUser?.getRole() == "prospect" ){
+        return null
+      } 
+
       if (SecondaryButtonView && messageComposerId)
         return (
           <SecondaryButtonView user={user} group={group} composerId={messageComposerId} />
@@ -1249,13 +1274,13 @@ export const CometChatMessageComposer = React.forwardRef(
 
     const RecordAudioButtonView = () => {
       return (
-        <ImageButton
+        <ImageButton2
           image={voiceRecordingIconURL || ICONS.MICROPHONE}
           imageStyle={[
             Style.imageStyle,
             messageComposerStyle?.voiceRecordingIconTint
               ? { tintColor: messageComposerStyle?.voiceRecordingIconTint }
-              : {},
+              : { tintColor: messageComposerStyle?.voiceRecordingIconTint },
           ]}
           onClick={() => setShowRecordAudio(true)}
         />
@@ -1277,7 +1302,10 @@ export const CometChatMessageComposer = React.forwardRef(
     //fetch logged in user
     useEffect(() => {
       CometChat.getLoggedinUser().then(
-        (user: any) => (loggedInUser.current = user)
+         (user: any) => {
+            (loggedInUser.current = user)
+            setCurrentUser(user)
+          } 
       );
       let _formatter = [...(textFormatters ?? [])];
 
@@ -1980,7 +2008,7 @@ export const CometChatMessageComposer = React.forwardRef(
               [
                 Style.container,
                 {
-                  paddingTop: CustomViewHeader ? 0 : 8,
+                  paddingTop: CustomViewHeader ? 0 : 0,
                 },
                 messageComposerStyle,
               ] as ViewProps

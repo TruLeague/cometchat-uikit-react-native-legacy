@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-+import { Colors } from '../../../../../../../src/common/Colors';
+import { Colors } from '../../../../../../../src/common/Colors';
 
 export const Styles = StyleSheet.create({
   messageReactionListStyle: {
