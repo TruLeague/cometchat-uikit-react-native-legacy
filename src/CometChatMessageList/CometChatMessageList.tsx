@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState, useImperativeHandle, useContext, useCallback, memo, useLayoutEffect } from "react";
-import { View, FlatList, Text, Image, TouchableOpacity, ActivityIndicator, Modal, SafeAreaView, NativeModules, ScrollView, Dimensions, Platform, Keyboard, TextStyle, ViewProps } from "react-native";
+import { View, FlatList, Text, Image, TouchableOpacity, ActivityIndicator, Modal, SafeAreaView, NativeModules, ScrollView, Dimensions, Platform, Keyboard, TextStyle, ViewProps,ImageBackground } from "react-native";
 //@ts-ignore
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { LeftArrowCurve, RightArrowCurve } from "./resources";
@@ -1539,7 +1539,7 @@ export const CometChatMessageList = memo(forwardRef<
         const getStyle = useCallback((item: CometChat.BaseMessage | any): MessageBubbleStyleInterface => {
             let _style = new MessageBubbleStyle({
                 ..._messageBubbleStyle,
-                backgroundColor: theme?.palette.getAccent50()
+                backgroundColor: 'transparent'
             });
 
             if (item.getCategory() == MessageCategoryConstants.interactive) {
@@ -1551,7 +1551,7 @@ export const CometChatMessageList = memo(forwardRef<
             }
 
             if ((item.getSender()?.getUid() || item?.['sender']?.['uid']) == loggedInUser.current?.['uid'])
-                _style.backgroundColor = (alignment !== "leftAligned" && (item.getType() === MessageTypeConstants.text || item.getType() === MessageTypeConstants.meeting)) ? theme?.palette.getPrimary() : theme?.palette.getAccent50();
+                _style.backgroundColor = (alignment !== "leftAligned" && (item.getType() === MessageTypeConstants.text || item.getType() === MessageTypeConstants.meeting)) ? 'transparent' : 'transparent';
 
             if (item?.getDeletedBy()) {
                 _style.backgroundColor = 'transparent';
@@ -1986,8 +1986,9 @@ export const CometChatMessageList = memo(forwardRef<
         } = _messageListStyle;
 
         return (
+            <ImageBackground source={{uri: "https://media.truleague.com/uploads/cometchat/Mobile-BG.png"}} resizeMode="cover">
             <View style={{
-                height, width, backgroundColor, borderRadius, ...border,
+                height, width, borderRadius, ...border,
                 paddingStart: 8, paddingEnd: 8,
             } as ViewProps}>
                 {
@@ -2201,5 +2202,6 @@ export const CometChatMessageList = memo(forwardRef<
                     />
                 </CometChatBottomSheet>
             </View>
+            </ImageBackground>
         )
     }));
