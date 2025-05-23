@@ -6,6 +6,7 @@ import { Styles } from './style';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
 import { ReactionsStyle, ReactionsStyleInterface } from './ReactionsStyle';
 import { MessageBubbleAlignmentType } from '../../base/Types';
+import { Colors } from '../../../../../../../src/common/Colors';
 
 export interface CometChatReactionsInterface {
   messageObject?: CometChat.BaseMessage;
@@ -69,7 +70,7 @@ const CometChatReactions = (props: CometChatReactionsInterface) => {
         style={
           [
             Styles.reactionCountStyle,
-            { color: countColor },
+            { color: Colors.newTextColor },
             countFont,
           ] as TextStyle[]
         }
@@ -209,6 +210,10 @@ const CometChatReactions = (props: CometChatReactionsInterface) => {
               : alignment === 'center'
               ? 'center'
               : 'flex-start',
+          backgroundColor: alignment === 'right' ? Colors.newTextColor : Colors.newBgGreyColor,
+          marginLeft : alignment === 'right' ? 0 : (props?.messageObject?.getReceiverType() == "group") ? 50 : 0,
+          borderWidth : 1,
+          borderColor : Colors.newGreyBorder
         },
       ]}
     >
