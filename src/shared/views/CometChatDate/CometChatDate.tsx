@@ -5,6 +5,8 @@ import { Style } from './style';
 import { DateStyle, DateStyleInterface } from './DateStyle';
 import { CometChatContext } from '../../CometChatContext';
 import { CometChatContextType } from '../../base/Types';
+import { Colors } from '../../../../../../../src/common/Colors';
+import { Fonts } from '../../../../../../../src/common/Fonts';
 
 const patterns = {
   timeFormat: 'timeFormat',
@@ -172,6 +174,7 @@ export const CometChatDate = (props: CometChatDateInterface) => {
         {
           borderRadius: style.borderRadius,
           backgroundColor: style.backgroundColor,
+          marginTop : 5
         },
         style.border,
       ]}
@@ -179,9 +182,7 @@ export const CometChatDate = (props: CometChatDateInterface) => {
       <Text
         style={
           [
-            Style.textStyle,
-            style.textFont,
-            { color: style.textColor, textAlign: dateAlignment },
+            { color: Colors.newTextColor, textAlign: dateAlignment,fontFamily: Fonts.Lexendlight,fontSize: 14,lineHeight: 24,fontStyle : 'normal' },
           ] as TextStyle[]
         }
       >
