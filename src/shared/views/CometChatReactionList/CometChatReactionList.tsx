@@ -234,7 +234,7 @@ export const CometChatReactionList = (props: CometChatReactionListInterface) => 
 
         function getName() {
             let reactedByMe = loggedInUser.current?.uid === item?.reactedBy?.uid;
-            return reactedByMe ? localize("YOU") : item?.reactedBy?.name;
+            return reactedByMe ? localize("YOU") : item?.reactedBy?.getName();
         }
 
         return (
@@ -269,7 +269,7 @@ export const CometChatReactionList = (props: CometChatReactionListInterface) => 
             justifyContent: "center",
             alignItems: "center",
         }}>
-            <Text style={[{ color: errorTextColor, ...errorTextFont }] as TextStyle}>{errorStateText || localize("SOMETHING_WRONG")}</Text>
+            <ActivityIndicator size={"large"} color={loadingTint} />
         </View>
     }
 

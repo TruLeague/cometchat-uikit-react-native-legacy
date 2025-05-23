@@ -1,11 +1,13 @@
 import { StyleSheet } from 'react-native';
++import { Colors } from '../../../../../../../src/common/Colors';
 
 export const Styles = StyleSheet.create({
   messageReactionListStyle: {
     marginTop: -3,
     flexDirection: 'row',
     alignItems: 'center',
-    // flexWrap: 'wrap',
+    padding : 5,
+    borderRadius : 25,
   },
   reactionListStyle: {
     alignItems: 'center',
@@ -27,13 +29,11 @@ export const Styles = StyleSheet.create({
     padding: 0,
   },
   messageReactionsStyle: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 4,
-    paddingHorizontal: 6,
-    marginRight: 2,
-    // marginBottom: 5,
-    borderRadius: 20,
+   alignItems: 'center',
+   justifyContent: 'space-between',
+   paddingVertical: 2,
+   paddingHorizontal: 3,
+   borderRadius: 20,
   },
   reactionCountStyle: {
     paddingRight: 2,
