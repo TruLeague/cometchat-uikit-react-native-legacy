@@ -182,15 +182,12 @@ export const CometChatMessageInput = (
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          paddingHorizontal: 6,
-          borderTopWidth: 1,
-          borderTopColor: style?.dividerTint
-            ? style.dividerTint
-            : theme.palette.getAccent200(),
+          paddingHorizontal: 5,
+          borderRadius : 25,
         }}
       >
         <View style={{ flexDirection: 'row' }}>
-          {SecondaryButtonView && <SecondaryButtonView />}
+          {/* {SecondaryButtonView && <SecondaryButtonView />} */}
           {text?.length  == 0 && auxiliaryButtonAlignment === 'left' && AuxiliaryButtonView && (
             <AuxiliaryButtonView />
           )}
