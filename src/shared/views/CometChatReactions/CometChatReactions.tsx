@@ -90,6 +90,7 @@ const CometChatReactions = (props: CometChatReactionsInterface) => {
               : backgroundColor,
             paddingVertical: 0,
             paddingHorizontal: 0,
+            marginHorizontal : 2,
           },
           { backgroundColor: theme.palette.getBackgroundColor() },
         ]}
@@ -148,6 +149,7 @@ const CometChatReactions = (props: CometChatReactionsInterface) => {
           {
             paddingVertical: 0,
             paddingHorizontal: 0,
+            marginHorizontal : 2,
           },
           { backgroundColor: theme.palette.getBackgroundColor() },
         ]}

@@ -13,7 +13,7 @@ export const Styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: 12,
-    color: 'black',
+    color: Colors.newTextColor,
     marginVertical: 0,
     padding: 0,
   },
