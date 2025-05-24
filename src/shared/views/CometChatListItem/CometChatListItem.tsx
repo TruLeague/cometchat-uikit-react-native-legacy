@@ -25,6 +25,8 @@ import { AvatarStyleInterface } from '../CometChatAvatar/AvatarStyle';
 import { CometChatOptions } from '../../modals';
 import { CometChatContextType } from '../../base/Types';
 import { anyObject } from '../../utils';
+import { Colors } from '../../../../../../../src/common/Colors';
+import { charColor } from '../../../../../../../src/cometchat-v4-ui-kit/utils/DynamicColorUtils';
 
 /**
  *
@@ -120,12 +122,13 @@ export const CometChatListItem = (props: CometChatListItemInterface) => {
    * Component to be display the avatar
    */
   const AvatarView = () => {
+    const bgColor = charColor(avatarName?.[0]);
     return (
       <View style={[Style.avatarViewStyle, headViewContainerStyle ?? {}]}>
         <CometChatAvatar
-          style={avatarStyle}
+          style={{backgroundColor: bgColor, nameTextColor :'white'}}
           image={avatarURL}
-          name={avatarName}
+          name={avatarName?.[0] || avatarName}
         />
         {(statusIndicatorIcon || statusIndicatorColor?.length !== 0) && (
           <PresenceView />
@@ -139,7 +142,7 @@ export const CometChatListItem = (props: CometChatListItemInterface) => {
    */
   const TitleView = () => {
     return (
-      <View>
+      <View style={{flexDirection:'row', justifyContent:'flex-start',alignItems:'center'}}>
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
@@ -147,9 +150,8 @@ export const CometChatListItem = (props: CometChatListItemInterface) => {
             [
               Style.titleTextStyle,
               {
-                color: listItemStyle.titleColor,
+                color: Colors.newTextColor,
               },
-              listItemStyle.titleFont,
             ] as StyleProp<TextStyle>
           }
         >

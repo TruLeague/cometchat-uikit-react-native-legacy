@@ -1,6 +1,7 @@
 import React from 'react';
 //@ts-ignore
 import { StyleSheet } from 'react-native';
+import { Fonts } from '../../../../../../../src/common/Fonts';
 
 
 export const Style = StyleSheet.create({
@@ -31,7 +32,10 @@ export const Style = StyleSheet.create({
 
   titleTextStyle: {
     opacity: 1,
-
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 24,
+    fontFamily : Fonts.LexendMedium,
     textAlign: 'left',
   },
   tailViewStyle: {
