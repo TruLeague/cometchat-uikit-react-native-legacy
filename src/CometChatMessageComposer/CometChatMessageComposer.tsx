@@ -73,7 +73,6 @@ import { CommonUtils } from '../shared/utils/CommonUtils';
 import { permissionUtil } from '../shared/utils/PermissionUtil';
 import { commonVars } from '../shared/base/vars';
 import { Colors } from '../../../../../src/common/Colors';
-import { MentionPostProcessor } from '../../../../../src/cometchat-v4-ui-kit/utils/MentionUtility';
 const { FileManager, CommonUtil } = NativeModules;
 
 const uiEventListenerShow = 'uiEvent_show_' + new Date().getTime();
@@ -960,14 +959,7 @@ export const CometChatMessageComposer = React.forwardRef(
       if (!disableSoundForMessages) playAudio();
 
       CometChat.sendMessage(textMessage)
-        .then(async(message: any) => {
-
-          if(message?.mentionedUsers?.length > 0){
-            let localMentions = message?.data?.mentions;
-            localMentions = Object.keys(localMentions)
-            await MentionPostProcessor(message?.receiver?.guid ,localMentions)
-          }  
-            
+        .then((message: any) => {
           CometChatUIEventHandler.emitMessageEvent(
             MessageEvents.ccMessageSent,
             {
