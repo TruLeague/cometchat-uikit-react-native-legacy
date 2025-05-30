@@ -330,6 +330,10 @@ export const CometChatMessageList = memo(forwardRef<
         const [selectedEmoji, setSelectedEmoji] = useState<string | undefined>(undefined);
         // const [forwarding, setForwarding] = useState(false);
 
+        // First, modify your ScrollView to add refs to each message
+        const messageRefs = useRef(new Map());
+        const [highlightedMessageId, setHighlightedMessageId] = useState(null);
+
         const infoObject = useRef<CometChat.BaseMessage | null>();
         const inProgressMessages = useRef<any[]>([]);
         // const messageToForward = useRef<CometChat.BaseMessage>();
@@ -868,6 +872,37 @@ export const CometChatMessageList = memo(forwardRef<
             messagesContentListRef.current = tmpList;
             setMessagesList(tmpList);
         }
+
+
+        // Replace your scrollToSpecificMessageById function with this:
+        const scrollToSpecificMessageById = (messageId : any) => {
+        
+        const messageRef = messageRefs.current.get(messageId);
+        
+        if (messageRef && messageListRef.current) {
+
+            // Highlight the message
+            setHighlightedMessageId(messageId);
+
+            messageRef.measureLayout(
+            messageListRef.current.getInnerViewNode(),
+            (x: any, y: number, width: any, height: any) => {
+                messageListRef.current!.scrollTo({
+                y: Math.max(0, y - 20), // 20px offset from top
+                animated: true
+                });
+            },
+            (error : any) => {
+                console.error('Failed to measure message layout:', error);
+            }
+            );
+
+            // Remove highlight after 3 seconds
+            setTimeout(() => {
+            setHighlightedMessageId(null);
+            }, 3000);
+          }
+        };
 
         const handlePannel = (item: any) => {
             if (item.alignment === ViewAlignment.messageListBottom && (user || group) && CommonUtils.checkIdBelongsToThisComponent(item.id, user, group, parentMessageId || '')) {
@@ -1713,7 +1748,14 @@ export const CometChatMessageList = memo(forwardRef<
                     hasTemplate && openOptionsForMessage(message, hasTemplate)
                 }
 
-                return <TouchableOpacity activeOpacity={1} onLongPress={() => showOptions ? onLongPress() : undefined} >
+                const scrollToParentMessageHandeler = (message : any) => {
+                    if(message?.metadata?.hasOwnProperty("parentMessage")){
+                        scrollToSpecificMessageById(message?.metadata?.parentMessage?.id)
+                    }
+                    return ;
+                }
+
+                return <TouchableOpacity onPress={() => scrollToParentMessageHandeler(message)} activeOpacity={1} onLongPress={() => showOptions ? onLongPress() : undefined} >
                     <CometChatMessageBubble
                         id={`${message.getId()}`}
                         LeadingView={() => !isThreaded ? getLeadingView(message) : null}
@@ -2028,19 +2070,28 @@ export const CometChatMessageList = memo(forwardRef<
                                                 !currentScrollPosition.current.scrollViewHeight && messageListRef.current?.scrollToEnd({ animated: false })
                                             }}
                                             onContentSizeChange={onContentSizeChange}
-                                        >
-
+                                            >
                                             {messagesList?.length ? (
-                                                messagesList
-                                                    // .slice(0)
-                                                    // .reverse()
-                                                    .map((item, index) => (
-                                                        <View
-                                                            key={keyExtractor(item)}>
-                                                            <RenderMessageItem item={item} index={index} />
-                                                            {itemSeperator()}
-                                                        </View>
-                                                    ))
+                                                messagesList.map((item, index) => (
+                                                <View
+                                                    key={keyExtractor(item)}
+                                                    ref={(ref) => {
+                                                    if (ref) {
+                                                        messageRefs.current.set(item.getId(), ref);
+                                                    } else {
+                                                        messageRefs.current.delete(item.getId());
+                                                    }
+                                                    }}
+                                                    style={[
+                                                    highlightedMessageId === item.getId() && {
+                                                        backgroundColor: messageListStyle?.emptyStateTextColor?.toString()+"40", // Light yellow highlight
+                                                    }
+                                                    ]}
+                                                >
+                                                    <RenderMessageItem item={item} index={index} />
+                                                    {itemSeperator()}
+                                                </View>
+                                                ))
                                             ) : (
                                                 getEmptyTextView()
                                             )}
