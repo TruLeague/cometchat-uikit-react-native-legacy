@@ -900,7 +900,7 @@ export const CometChatMessageList = memo(forwardRef<
             // Remove highlight after 3 seconds
             setTimeout(() => {
             setHighlightedMessageId(null);
-            }, 3000);
+            }, 1500);
           }
         };
 
@@ -2084,7 +2084,8 @@ export const CometChatMessageList = memo(forwardRef<
                                                     }}
                                                     style={[
                                                     highlightedMessageId === item.getId() && {
-                                                        backgroundColor: messageListStyle?.emptyStateTextColor?.toString()+"40", // Light yellow highlight
+                                                        backgroundColor: messageListStyle?.emptyStateTextColor?.toString()+"40", 
+                                                        paddingTop : 8
                                                     }
                                                     ]}
                                                 >
