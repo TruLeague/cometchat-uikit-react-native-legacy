@@ -2012,15 +2012,16 @@ export const CometChatMessageComposer = React.forwardRef(
           {...keyboardAvoidingViewProps}
         >
           <View
-            style={
-              [
-                Style.container,
-                {
-                  paddingTop: CustomViewHeader ? 0 : 0,
-                },
-                messageComposerStyle,
-              ] as ViewProps
-            }
+            // style={
+            //   [
+            //     Style.container,
+            //     {
+            //       paddingTop: CustomViewHeader ? 0 : 0,
+            //     },
+            //     messageComposerStyle,
+            //   ] as ViewProps
+            // }
+            style={[Style.container]}
           >
             <EmojiBoard
               hideSearch={true}
