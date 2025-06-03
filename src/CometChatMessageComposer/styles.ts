@@ -3,6 +3,8 @@ import { StyleSheet } from 'react-native';
 export const Style = StyleSheet.create({
   container: {
     paddingVertical: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   padding: {
     paddingStart: 8,
