@@ -2012,16 +2012,15 @@ export const CometChatMessageComposer = React.forwardRef(
           {...keyboardAvoidingViewProps}
         >
           <View
-            // style={
-            //   [
-            //     Style.container,
-            //     {
-            //       paddingTop: CustomViewHeader ? 0 : 0,
-            //     },
-            //     messageComposerStyle,
-            //   ] as ViewProps
-            // }
-            style={[Style.container]}
+            style={
+              [
+                Style.container,
+                {
+                  paddingTop: CustomViewHeader ? 0 : 0,
+                },
+                messageComposerStyle,
+              ] as ViewProps
+            }
           >
             <EmojiBoard
               hideSearch={true}
@@ -2155,6 +2154,7 @@ export const CometChatMessageComposer = React.forwardRef(
                 shouldShow={messagePreview != null}
               />
             </View>
+            <View style={{paddingVertical:5, alignItems:'center',justifyContent:'center'}}>
             <CometChatMessageInput
               messageInputRef={messageInputRef}
               text={inputMessage as string}
@@ -2173,6 +2173,7 @@ export const CometChatMessageComposer = React.forwardRef(
                 auxiliaryButtonsAlignment ? auxiliaryButtonsAlignment : 'right'
               }
             />
+            </View>
             {FooterView ? (
               <FooterView />
             ) : (
