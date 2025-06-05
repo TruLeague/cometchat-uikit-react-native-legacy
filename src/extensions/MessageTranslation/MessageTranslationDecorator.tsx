@@ -24,6 +24,7 @@ import { CommonUtils } from '../../shared/utils/CommonUtils';
 import { AdditionalBubbleStylingParams, MessageBubbleAlignmentType } from '../../shared/base/Types';
 import { TextStyle } from 'react-native';
 import { anyObject } from '../../shared/utils';
+import { store } from '../../../../../../src/redux/Store';
 export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
   messageTranslationConfiguration?: MessageTranslationConfigurationInterface;
 
@@ -133,6 +134,7 @@ export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
     const messageId = message.id;
     const messageText = message.text;
     let translateToLanguage = CometChatLocalize.getLocale();
+    const languageSelectedForTranslation = store.getState()?.translationReducer?.translationLanguage
     CometChatUIEventHandler.emitUIEvent(CometChatUIEvents.ccToggleBottomSheet, {
       isBottomSheetVisible: false,
     });
@@ -143,7 +145,8 @@ export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
       {
         msgId: messageId,
         text: messageText,
-        languages: [translateToLanguage],
+        languages: languageSelectedForTranslation,
+        // languages: [translateToLanguage],
       }
     )
       .then((result: any) => {
