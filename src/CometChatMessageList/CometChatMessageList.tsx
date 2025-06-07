@@ -1847,7 +1847,7 @@ export const CometChatMessageList = memo(forwardRef<
 
         const itemSeperator = useCallback(() => <View style={{ height: 8 }} />, [])
 
-        const getEmptyTextView = useCallback(() => {
+        const getEmptyTextView = () => {
             if (EmptyStateView)
                 return (
                     <>
@@ -1874,7 +1874,7 @@ export const CometChatMessageList = memo(forwardRef<
                     {CustomListHeader && <CustomListHeader />}
                 </>
             )
-        }, [])
+        }
 
         const getErrorStateView = useCallback(() => {
             if (hideError) return null;

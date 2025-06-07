@@ -30,7 +30,8 @@ export const Style = StyleSheet.create({
         color: "white"
     },
     msgContainerStyle: {
-        flex: 1,
+        // flex: 1,
+        height: '100%',
         overflow: 'hidden',
         width: '100%',
         justifyContent: 'center',
