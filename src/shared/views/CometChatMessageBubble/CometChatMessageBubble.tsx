@@ -62,10 +62,6 @@ export interface CometChatMessageBubbleInterface {
      * @type BaseStyleInterface
      */
     style?: MessageBubbleStyleInterface,
-    /**
-     * Function to scroll the list to a specific message id
-     */
-    scrollToSpecificMessageById?: (messageId: string | number) => void,
 }
 
 export const CometChatMessageBubble = memo(({
@@ -79,8 +75,7 @@ export const CometChatMessageBubble = memo(({
     ThreadView,
     alignment = 'left',
     id,
-    style,
-    scrollToSpecificMessageById
+    style
 }: CometChatMessageBubbleInterface ) => {
 
     const {theme} = useContext<CometChatContextType>(CometChatContext);

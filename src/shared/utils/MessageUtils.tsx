@@ -15,7 +15,6 @@ type MessageViewType = {
     template?: CometChatMessageTemplate,
     alignment?: MessageBubbleAlignmentType,
     theme?: CometChatTheme,
-    scrollToSpecificMessageById?: (messageId: string | number) => void,
 }
 //TODO: Need to restructure
 const MessageContentView = (props: { message: CometChat.BaseMessage, alignment?: MessageBubbleAlignmentType, theme?: CometChatTheme }):JSX.Element | any => {
@@ -65,7 +64,6 @@ export const MessageUtils = {
             ContentView={template?.ContentView ? () => template?.ContentView ? template?.ContentView(message, alignment) : null : () => MessageContentView({message,alignment,theme})}
             BottomView={template?.BottomView && template?.BottomView?.bind(this, message, alignment)}
             style={getStyle(message)}
-            scrollToSpecificMessageById={params.scrollToSpecificMessageById}
         />;
     },
 

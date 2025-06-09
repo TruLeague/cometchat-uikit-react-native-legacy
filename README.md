@@ -18,10 +18,5 @@ The CometChat React Native UI Kit provides a pre-built user interface kit that d
 - Check the [Key Concepts](https://www.cometchat.com/docs/react-native-uikit/key-concepts) to understand the basic components of CometChat.
 - Refer to the [Integration Steps](https://www.cometchat.com/docs/react-native-uikit/integration) in our documentation to integrate the UI Kit into your React Native app.
 
-## Scrolling to a Message
-Each `CometChatMessageBubble` receives a `scrollToSpecificMessageById` prop from
-`CometChatMessageList`. Bubble components can call this function with a message
-ID to programmatically scroll the list and highlight the desired message.
-
 ## Help and Support
 For issues running the project or integrating with our UI Kits, consult our [documentation](https://www.cometchat.com/docs/react-native-uikit/integration) or create a [support ticket](https://help.cometchat.com/hc/en-us) or seek real-time support via the [CometChat Dashboard](https://app.cometchat.com/).
