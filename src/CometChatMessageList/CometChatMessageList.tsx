@@ -4,6 +4,7 @@ import { View, FlatList, Text, Image, TouchableOpacity, ActivityIndicator, Modal
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { LeftArrowCurve, RightArrowCurve } from "./resources";
 import { CometChatContext, CometChatMentionsFormatter, CometChatTextFormatter, CometChatUIKit, CometChatUiKitConstants, CometChatUrlsFormatter, ImageType, SuggestionItem } from "../shared";
+import { createScrollToSpecificMessageById } from "./scrollUtils";
 import { MessageBubbleStyle, MessageBubbleStyleInterface } from "../shared/views/CometChatMessageBubble/MessageBubbleStyle";
 import { AvatarStyle, AvatarStyleInterface } from "../shared";
 import { CometChatAvatar, CometChatDate, CometChatReceipt, DateStyle } from "../shared";
@@ -874,35 +875,11 @@ export const CometChatMessageList = memo(forwardRef<
         }
 
 
-        // Replace your scrollToSpecificMessageById function with this:
-        const scrollToSpecificMessageById = (messageId : any) => {
-        
-        const messageRef = messageRefs.current.get(messageId);
-        
-        if (messageRef && messageListRef.current) {
-
-            // Highlight the message
-            setHighlightedMessageId(messageId);
-
-            messageRef.measureLayout(
-            messageListRef.current.getInnerViewNode(),
-            (x: any, y: number, width: any, height: any) => {
-                messageListRef.current!.scrollTo({
-                y: Math.max(0, y - 20), // 20px offset from top
-                animated: true
-                });
-            },
-            (error : any) => {
-                console.error('Failed to measure message layout:', error);
-            }
-            );
-
-            // Remove highlight after 3 seconds
-            setTimeout(() => {
-            setHighlightedMessageId(null);
-            }, 1500);
-          }
-        };
+        const scrollToSpecificMessageById = createScrollToSpecificMessageById(
+            messageRefs,
+            messageListRef,
+            setHighlightedMessageId,
+        );
 
         const handlePannel = (item: any) => {
             if (item.alignment === ViewAlignment.messageListBottom && (user || group) && CommonUtils.checkIdBelongsToThisComponent(item.id, user, group, parentMessageId || '')) {
@@ -1767,6 +1744,7 @@ export const CometChatMessageList = memo(forwardRef<
                         BottomView={hasTemplate.BottomView && hasTemplate.BottomView?.bind(this, message, bubbleAlignment)}
                         StatusInfoView={hasTemplate.StatusInfoView ? hasTemplate.StatusInfoView?.bind(this, message, bubbleAlignment) : () => getStatusInfoView(message, bubbleAlignment, currentIndex)}
                         style={getStyle(message)}
+                        scrollToSpecificMessageById={scrollToSpecificMessageById}
                     />
                 </TouchableOpacity>
             } else {

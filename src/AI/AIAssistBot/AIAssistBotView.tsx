@@ -20,7 +20,8 @@ interface AIAssistBotViewProps {
     closeCallback: () => void,
     bot: CometChat.User,
     sender: CometChat.User | any,
-    onSend: (question: string, bot: CometChat.User) => Promise<any>
+    onSend: (question: string, bot: CometChat.User) => Promise<any>,
+    scrollToSpecificMessageById?: (messageId: string | number) => void
 }
 
 const AIAssistBotView = (props: AIAssistBotViewProps) => {
@@ -233,6 +234,7 @@ const AIAssistBotView = (props: AIAssistBotViewProps) => {
                     FooterView={() => getFooterView(item, getBubbleAlignment(item, sender))}
                     alignment={getBubbleAlignment(item, sender)}
                     style={getMessageBubbleStyle(item, theme, sender, configuration)}
+                    scrollToSpecificMessageById={props.scrollToSpecificMessageById}
                 />
             </View>
         )
