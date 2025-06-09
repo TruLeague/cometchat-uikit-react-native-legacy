@@ -1851,7 +1851,8 @@ export const CometChatMessageList = memo(forwardRef<
             if (EmptyStateView)
                 return (
                     <>
-                        <ScrollView contentContainerStyle={Style.msgContainerStyle}>
+                        <ScrollView contentContainerStyle={[Style.msgContainerStyle,
+                            {height : (props.user?.getRole() == 'support' || props.user?.getRole() == 'staff' || (loggedInUser.current?.getRole() == 'ambassador' && loggedInUser.current?.getRole() == 'prospect') || (loggedInUser.current?.getRole() == 'prospect' && loggedInUser.current?.getRole() == 'ambassador') || (loggedInUser.current?.getRole() == 'ambassador' && loggedInUser.current?.getRole() == 'ambassador')) ? '100%' : 'auto'}]}>
                             <EmptyStateView />
                         </ScrollView>
                     </>
