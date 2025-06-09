@@ -2085,7 +2085,9 @@ export const CometChatMessageList = memo(forwardRef<
                                                     style={[
                                                     highlightedMessageId === item.getId() && {
                                                         backgroundColor: messageListStyle?.emptyStateTextColor?.toString()+"40", 
-                                                        paddingTop : 8
+                                                        paddingTop : 8,
+                                                        borderRadius : 25,
+                                                        marginBottom : 8,
                                                     }
                                                     ]}
                                                 >
