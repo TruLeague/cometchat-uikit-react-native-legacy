@@ -36,6 +36,7 @@ import { CommonUtils } from "../shared/utils/CommonUtils";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { commonVars } from "../shared/base/vars";
 import { anyObject } from "../shared/utils";
+import { MessageListUtils } from './MessageListUtils';
 
 let templatesMap = new Map<string, CometChatMessageTemplate>();
 
@@ -914,6 +915,16 @@ export const CometChatMessageList = memo(forwardRef<
 
         }
 
+        // Register the function with the utility
+        useEffect(() => {
+            MessageListUtils.setScrollToSpecificMessageById(scrollToSpecificMessageById);
+            
+            return () => {
+                // Optional: Clear the reference when component unmounts
+                MessageListUtils.setScrollToSpecificMessageById(() => {});
+            };
+        }, []);
+
         useEffect(() => {
 
             const showSubscription = Keyboard.addListener('keyboardDidShow', (e) => onKeyboardVisibiltyChange(true, e?.endCoordinates?.height));
@@ -1228,6 +1239,7 @@ export const CometChatMessageList = memo(forwardRef<
                 /// todo: not handeled yet
                 createActionMessage,
                 updateMessageReceipt,
+                scrollToSpecificMessageById,
             }
         });
 
@@ -1755,7 +1767,7 @@ export const CometChatMessageList = memo(forwardRef<
                     return ;
                 }
 
-                return <TouchableOpacity onPress={() => scrollToParentMessageHandeler(message)} activeOpacity={1} onLongPress={() => showOptions ? onLongPress() : undefined} >
+                return <TouchableOpacity  activeOpacity={1} onLongPress={() => showOptions ? onLongPress() : undefined} >
                     <CometChatMessageBubble
                         id={`${message.getId()}`}
                         LeadingView={() => !isThreaded ? getLeadingView(message) : null}
