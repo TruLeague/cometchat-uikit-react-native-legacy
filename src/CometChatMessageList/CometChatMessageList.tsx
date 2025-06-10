@@ -1693,7 +1693,7 @@ export const CometChatMessageList = memo(forwardRef<
             setShowMessageOptions(optionsWithPressHandling);
         }, [])
 
-        const MessageView = useCallback((params: { message: CometChat.BaseMessage, showOptions?: boolean, isThreaded?: boolean, currentIndex?: number }) => {
+        const MessageView = (params: { message: CometChat.BaseMessage, showOptions?: boolean, isThreaded?: boolean, currentIndex?: number }) => {
             const { message, showOptions = true, isThreaded = false, currentIndex } = params;
             let hasTemplate = templatesMap.get(`${message.getCategory()}_${message.getType()}`)
             if (templates?.length > 0) {
@@ -1730,7 +1730,7 @@ export const CometChatMessageList = memo(forwardRef<
             } else {
                 return null;
             }
-        }, []);
+        }
 
         const getSentAtTimestamp = useCallback((item: any) => {
             return item.getSentAt() ? (item.getSentAt() * 1000) : Date.now();
@@ -1810,7 +1810,7 @@ export const CometChatMessageList = memo(forwardRef<
             setShowMessageOptions([]);
         }
 
-        const RenderMessageItem = useCallback(memo(function RenderMessageItem({ item, index }: {
+        const RenderMessageItem = function RenderMessageItem({ item, index }: {
             item: any;
             index: number;
         }) {
@@ -1841,7 +1841,7 @@ export const CometChatMessageList = memo(forwardRef<
                 {seperatorView}
                 <MessageView message={item} currentIndex={index} />
             </React.Fragment>
-        }), []);
+        }
 
         const keyExtractor = useCallback((item: any) => `${item.id}_${item.muid}`, [])
 
