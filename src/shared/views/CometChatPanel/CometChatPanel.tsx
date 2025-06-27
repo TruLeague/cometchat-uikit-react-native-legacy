@@ -38,12 +38,12 @@ export const CometChatPanel = (props: CometChatPanelInterface) => {
     return (
         <View style={[{ backgroundColor: backgroundColor, borderRadius, padding: 10 }, { ...border }]}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10 }}>
-                <Text style={[titleFont, { color: titleColor }] as TextStyle}>{title}</Text>
+                <Text style={[titleFont, { color: titleColor }] as TextStyle[]}>{title}</Text>
                 {!hideCloseButton && <TouchableOpacity onPress={_onClose}>
                     <Image style={{ width: 20, height: 20, tintColor: closeIconTint }} source={CloseIcon} />
                 </TouchableOpacity>}
             </View>
-            <Text style={[textFont, { color: textColor }] as TextStyle}>
+            <Text style={[textFont, { color: textColor }] as TextStyle[]}>
                 {textContent}
             </Text>
         </View>

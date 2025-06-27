@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { JSX, useContext } from 'react';
 import { Text, TextStyle, TouchableOpacity, View } from 'react-native';
 import { CometChatContext } from '../../CometChatContext';
 import { Styles } from './style';

@@ -1,4 +1,5 @@
 import React, {
+  JSX,
   useContext,
   useEffect,
   useImperativeHandle,
@@ -30,7 +31,7 @@ import {
 import { ICONS } from './resources';
 import styles from './styles';
 import { CometChatOptions } from '../../modals';
-import { CometChatListItem } from '../../views/CometChatListItem';
+import { CometChatListItem } from '../CometChatListItem';
 import Header from './Header';
 import { ImageType } from '../../base';
 import { BorderStyleInterface, FontStyleInterface } from '../../base';
@@ -47,21 +48,21 @@ export interface CometChatListActionsInterface {
   updateAndMoveToFirst: (item: any) => void;
   addItemToList: (item: any, position?: number) => void;
   removeItemFromList: (itemId: string | number) => void;
-  getListItem: (itemId: string | number) => void;
+  getListItem: (itemId: string | number) => any;
   getSelectedItems: () => Array<any>;
   getAllListItems: () => Array<any>;
   clearSelection: () => void;
 }
 
 const waitForList = {
-  resolve: (_: any[]) => null,
+  resolve: (_: any[]) => {},
   promise: () => {
     return new Promise((resolve: (_: any[]) => void) => {
       waitForList.resolve = resolve;
     });
   },
   reset: () => {
-    waitForList.resolve = (_: any[]) => null;
+    waitForList.resolve = (_: any[]) => {};
   }
 }
 
@@ -144,8 +145,8 @@ export const CometChatList = React.forwardRef<
 >((props, ref) => {
   const connectionListenerId = 'connectionListener_' + new Date().getTime();
   const { theme } = useContext<CometChatContextType>(CometChatContext);
-  const lastCall = useRef(null);
-  const lastReject = useRef(null);
+  const lastCall = useRef<any>(undefined);
+  const lastReject = useRef<any>(undefined);
 
   const {
     SubtitleView,
@@ -384,7 +385,7 @@ export const CometChatList = React.forwardRef<
   };
 
   const addItemToList = (item: any, position?: number) => {
-    setList((prev: [any]) => {
+    setList((prev: any[]) => {
       if (position != undefined) {
         if (position == 0) return [item, ...prev];
         if (position >= prev.length) return [...prev, item];
@@ -436,7 +437,7 @@ export const CometChatList = React.forwardRef<
         if (thrughKeyword && thrughKeyword === true) {
           setList(newlist);
         } else {
-          setList([].concat(list, newlist));
+          setList([...list, ...newlist])
         }
       })
       .catch((error) => {
@@ -622,8 +623,8 @@ export const CometChatList = React.forwardRef<
   const getList = (props: any) => {
     const promise = new Promise((resolve, reject) => {
       const cancel = () => {
-        clearTimeout(lastCall.current);
-        lastReject.current(new Error('Promise cancelled'));
+        lastCall.current && clearTimeout(lastCall.current);
+        lastReject.current && lastReject.current(new Error('Promise cancelled'));
       };
       if (lastCall.current) {
         cancel();

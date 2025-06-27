@@ -1,6 +1,6 @@
 //@ts-ignore
 import { CometChat } from '@cometchat/chat-sdk-react-native'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { JSX, useContext, useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, FlatList, Image, Text, TextStyle, TouchableOpacity, View, ViewProps } from 'react-native'
 import { StyleProp, ViewStyle } from "react-native";
 import { AvatarStyleInterface, CometChatContext, CometChatDate, CometChatListItem, CometChatOptions, DatePattern, ImageType, ListItemStyleInterface, localize } from '../../shared'
@@ -253,7 +253,7 @@ export const CometChatCallLogs = (props: CometChatCallLogsConfigurationInterface
     return (
       <View style={[Style.row]}>
         <Image source={getCallDirectionIcon(call).icon} style={{ height: 20, width: 20, alignSelf: "center", tintColor: getCallDirectionIcon(call).tintColor }} />
-        <Text style={[{ color: subtitleTextColor, marginStart: 2 }, subtitleTextFont] as TextStyle}>
+        <Text style={[{ color: subtitleTextColor, marginStart: 2 }, subtitleTextFont] as TextStyle[]}>
           {
             CallUtils.getCallStatus(call as CometChat.Call, loggedInUser.current)
           }
@@ -414,7 +414,7 @@ export const CometChatCallLogs = (props: CometChatCallLogsConfigurationInterface
       return <EmptyStateView />
     return (
       <View style={[Style.container]}>
-        <Text style={[{ color: emptyTextColor }, emptyTextFont] as TextStyle}>{emptyStateText || localize("NO_CALL_HISTORY")}</Text>
+        <Text style={[{ color: emptyTextColor }, emptyTextFont] as TextStyle[]}>{emptyStateText || localize("NO_CALL_HISTORY")}</Text>
       </View>
     )
   }
@@ -424,7 +424,7 @@ export const CometChatCallLogs = (props: CometChatCallLogsConfigurationInterface
     if (ErrorStateView)
       return <ErrorStateView />
     return <View style={[Style.container]}>
-      <Text style={[{ color: errorTextColor }, errorTextFont] as TextStyle}>{errorStateText || localize("SOMETHING_WRONG")}</Text>
+      <Text style={[{ color: errorTextColor }, errorTextFont] as TextStyle[]}>{errorStateText || localize("SOMETHING_WRONG")}</Text>
     </View>
   }
 
@@ -451,7 +451,7 @@ export const CometChatCallLogs = (props: CometChatCallLogsConfigurationInterface
                   />
                 </TouchableOpacity> : null
             }
-            <Text style={[{ color: titleColor, ...titleFont }] as TextStyle}>{title}</Text>
+            <Text style={[{ color: titleColor, ...titleFont }] as TextStyle[]}>{title}</Text>
           </View>
           <View style={Style.row}>
             {

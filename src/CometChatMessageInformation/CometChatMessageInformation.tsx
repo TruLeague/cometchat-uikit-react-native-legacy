@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { JSX, useCallback, useContext, useEffect, useState } from 'react'
 import { Dimensions, FlatList, Image, Text, TouchableOpacity, View, ScrollView, TextStyle, ViewProps, ActivityIndicator } from 'react-native'
 //@ts-ignore
 import { CometChat } from '@cometchat/chat-sdk-react-native'

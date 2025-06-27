@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { View, Text, Alert, TouchableOpacity, Image, Modal, ViewProps, TextStyle } from "react-native";
 import { kickIcon, banIcon, downArrowIcon, checkIcon } from "./resources";
 import { CometChatOptions } from "../shared/modals/CometChatOptions";
@@ -462,7 +462,7 @@ export const CometChatGroupsMembers = (props: CometChatGroupsMembersInterface) =
                         backgroundColor: isCurrent && _groupScopeStyle.selectedOptionBackgroundColor || _groupScopeStyle.backgroundColor || "transparent",
                         borderRadius: isCurrent && _groupScopeStyle.selectedOptionBorderRadius || _groupScopeStyle.optionBorderRadius,
                     }
-                ] as TextStyle}>{title}</Text>
+                ] as TextStyle[]}>{title}</Text>
             </TouchableOpacity>
         }
 

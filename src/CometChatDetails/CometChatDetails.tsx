@@ -9,7 +9,7 @@ import {
   ViewStyle,
   ViewProps,
 } from 'react-native';
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useContext, useEffect, useState, useCallback, JSX } from 'react';
 import Header from './Header';
 import { CometChatContext, CometChatListItem } from '../shared';
 import { ICONS } from './resources';
@@ -370,8 +370,8 @@ export const CometChatDetails = (props: CometChatDetailsInterface) => {
   const ccGroupMemberAddedId = 'ccGroupMemberAdded_' + new Date().getTime();
   const ccOwnershipChangedId = 'ccOwnershipChanged_' + new Date().getTime();
 
-  const [userDetails, setUserDetails] = useState<CometChat.User>(user);
-  const [groupDetails, setGroupDetails] = useState<CometChat.Group>(group);
+  const [userDetails, setUserDetails] = useState<CometChat.User | undefined>(user);
+  const [groupDetails, setGroupDetails] = useState<CometChat.Group | undefined>(group);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [detailsList, setDetailsList] = useState<any[]>(
@@ -402,11 +402,13 @@ export const CometChatDetails = (props: CometChatDetailsInterface) => {
       handleTransferOwnership();
       return;
     }
-    CometChat.leaveGroup(groupDetails.getGuid()).then(
+    CometChat.leaveGroup(groupDetails!.getGuid()).then(
       (hasLeft: boolean) => {
-        groupDetails['membersCount'] = groupDetails['membersCount'] - 1;
+        if(groupDetails) {
+          groupDetails['membersCount'] = groupDetails['membersCount'] - 1;
+        }
         let actionMessage: CometChat.Action = new CometChat.Action(
-          groupDetails.getGuid(),
+          groupDetails!.getGuid(),
           CometChat.MESSAGE_TYPE.TEXT,
           CometChat.RECEIVER_TYPE.GROUP,
           CometChat.CATEGORY_ACTION as CometChat.MessageCategory
@@ -456,7 +458,7 @@ export const CometChatDetails = (props: CometChatDetailsInterface) => {
   };
 
   const deleteGroup = () => {
-    CometChat.deleteGroup(groupDetails.getGuid()).then(
+    CometChat.deleteGroup(groupDetails!.getGuid()).then(
       (response: boolean) => {
         CometChatUIEventHandler.emitGroupEvent(
           CometChatGroupsEvents.ccGroupDeleted,
@@ -491,10 +493,10 @@ export const CometChatDetails = (props: CometChatDetailsInterface) => {
   const updateUserBlockStatus = useCallback(
     (list: any, blocked: boolean) => {
       let updatedUser = userDetails;
-      if (list[userDetails.getUid()]['success'] == true) {
-        updatedUser.setBlockedByMe(blocked);
+      if (list[userDetails!.getUid()]['success'] == true) {
+        updatedUser?.setBlockedByMe(blocked);
         if (blocked) {
-          updatedUser.setStatus('');
+          updatedUser?.setStatus('');
         }
       }
       getDefaultTemplate(loggedInUser, updatedUser);
@@ -503,11 +505,11 @@ export const CometChatDetails = (props: CometChatDetailsInterface) => {
   );
 
   const handleUserBlockUnblock = (blocked = false) => {
-    var usersList: String[] = [userDetails.getUid()];
+    var usersList: String[] = [userDetails!.getUid()];
     if (blocked) {
       CometChat.unblockUsers(usersList).then(
         (list: Object) => {
-          CometChat.getUser(userDetails.getUid()).then(
+          CometChat.getUser(userDetails?.getUid()).then(
             (fetchedUser: CometChat.User) => {
               setUserDetails(fetchedUser);
               updateUserBlockStatus(list, false);
@@ -692,7 +694,7 @@ export const CometChatDetails = (props: CometChatDetailsInterface) => {
 
   const SubtitleViewElem = useCallback(() => {
     const blocked =
-    userDetails ? (userDetails.getBlockedByMe() || userDetails.getHasBlockedMe()) : false;
+    userDetails ? (userDetails?.getBlockedByMe() || userDetails?.getHasBlockedMe()) : false;
 
     const subtitleText =
       groupDetails && groupDetails.getMembersCount() !== undefined
@@ -701,9 +703,9 @@ export const CometChatDetails = (props: CometChatDetailsInterface) => {
           : `${groupDetails.getMembersCount()} ${localize('MEMBERS')}`
         : blocked
         ? ''
-        : userDetails.getStatus() === UserStatusConstants.online
+        : userDetails?.getStatus() === UserStatusConstants.online
           ? localize('ONLINE')
-          : userDetails.getStatus() === UserStatusConstants.offline
+          : userDetails?.getStatus() === UserStatusConstants.offline
           ? localize('OFFLINE')
           : '';
     if (!subtitleText) return null;
@@ -843,7 +845,7 @@ export const CometChatDetails = (props: CometChatDetailsInterface) => {
     return (
       <CometChatGroupsMembers
         //Note: Please fix types of CometChatGroupsMembers
-        group={groupDetails}
+        group={groupDetails!}
         onBack={handleBackButtonClick}
         selectionMode="none"
         groupMemberStyle={{
@@ -856,7 +858,7 @@ export const CometChatDetails = (props: CometChatDetailsInterface) => {
   if (currentScreen === ComponentIds.ADD_MEMBERS)
     return (
       <CometChatAddMembers
-        group={groupDetails}
+        group={groupDetails!}
         onBack={handleBackButtonClick}
         usersStyle={{ backIconTint: detailsStyle?.backIconTint ?? undefined }}
         {...addMembersConfiguration}
@@ -866,7 +868,7 @@ export const CometChatDetails = (props: CometChatDetailsInterface) => {
   if (currentScreen === ComponentIds.BANNED_MEMBERS)
     return (
       <CometChatBannedMembers
-        group={groupDetails}
+        group={groupDetails!}
         onBack={handleBackButtonClick}
         bannedMemberStyle={{
           backIconTint: detailsStyle?.backIconTint ?? undefined,
@@ -878,7 +880,7 @@ export const CometChatDetails = (props: CometChatDetailsInterface) => {
   if (currentScreen === ComponentIds.TRANSFER_OWNERSHIP)
     return (
       <CometChatTransferOwnership
-        group={groupDetails}
+        group={groupDetails!}
         onBack={handleBackButtonClick}
         {...transferOwnershipConfiguration}
       />

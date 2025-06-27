@@ -31,6 +31,7 @@ export interface CometChatBottomSheetInterface {
   isOpen?: boolean;
   onOpen?: Function;
   onClose?: Function;
+  onDismiss?: () => void; //iOS
   style?: {
     shadowColor?: string;
     backgroundColor?: string;
@@ -51,6 +52,7 @@ const CometChatBottomSheet = forwardRef(
       animation = Easing.quad,
       animationDuration = 200,
       onOpen = undefined,
+      onDismiss,
       onClose = undefined,
       style = {},
     } = props;
@@ -116,6 +118,7 @@ const CometChatBottomSheet = forwardRef(
         transparent={true}
         visible={isOpen}
         onRequestClose={() => togglePanel()}
+        onDismiss={onDismiss}
       >
         <KeyboardAvoidingView
           style={{ flex: 1 }}

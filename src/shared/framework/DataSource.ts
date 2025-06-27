@@ -15,6 +15,7 @@ import { CardBubbleStyle } from "../views/CometChatCardBubble/CardBubbleStyle";
 import { SchedulerBubbleStyles } from "../views/CometChatSchedulerBubble";
 import { CometChatMentionsFormatter, CometChatTextFormatter, CometChatUrlsFormatter } from "../formatters";
 import { AdditionalBubbleStylingParams, MessageBubbleAlignmentType } from "../base/Types";
+import { JSX } from "react";
 
 export interface DataSource {
     //message options based on types

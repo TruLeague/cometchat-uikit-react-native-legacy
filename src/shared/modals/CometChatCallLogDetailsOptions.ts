@@ -1,5 +1,6 @@
 import { TextStyle } from 'react-native';
 import { ImageType } from '../base';
+import { JSX } from 'react';
 
 export interface CometChatCallLogDetailsOption {
   id?: string | number;

@@ -112,7 +112,7 @@ export const CometChatCallButtons = (props: CometChatCallButtonsInterface) => {
 
     const outGoingCall = useRef<CometChat.Call | CometChat.CustomMessage | any>(null);
     const incomingCall = useRef<CometChat.Call | any>(null);
-    const loggedInUser = useRef<CometChat.User | any>();
+    const loggedInUser = useRef<CometChat.User | any>(null);
 
     /**
      * checks CometChat.getActiveCall() if there is

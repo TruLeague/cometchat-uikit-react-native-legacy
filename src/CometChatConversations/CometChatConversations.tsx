@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { JSX, useContext } from "react";
 import { View, Text, TextStyle, ViewProps } from "react-native";
 //@ts-ignore
 import { CometChat } from "@cometchat/chat-sdk-react-native";
@@ -372,11 +372,17 @@ export const CometChatConversations = (props: ConversationInterface) => {
             if((user.getBlockedByMe() || user.getHasBlockedMe())) return;
             if (item) {
                 let updatedConversation = CommonUtils.clone(item);
-                updatedConversation.setConversationWith(args[0]);
+                const conversationWith = updatedConversation.getConversationWith();
+                if (!conversationWith) {
+                    console.error("conversationWith is null or undefined. Skipping update.");
+                    return;
+                }
+                conversationWith.setStatus(args[0].getStatus());
+                conversationWith.setLastActiveAt(args[0].getLastActiveAt());
+                updatedConversation.setConversationWith(conversationWith);
                 conversationListRef.current?.updateList(updatedConversation);
             }
     }
-
 
     const getConversationRefFromTypingIndicator = (typingIndicator: CometChat.TypingIndicator) => {
         let list = conversationListRef.current?.getAllListItems();
@@ -1227,8 +1233,8 @@ export const CometChatConversations = (props: ConversationInterface) => {
                         }
                         return;
                     }
-                    conversationListRef?.current?.removeItemFromList(user['conversationId']);
-                    removeItemFromSelectionList(user['conversationId']);
+                    conversationListRef?.current?.removeItemFromList(item?.getConversationId());
+                    removeItemFromSelectionList(item?.getConversationId());
                 },
                 ccUserUnBlocked: ({ user }: {user: CometChat.User}) => {
                     /**unblocked handling is required to enable user presence listener for the user**/
@@ -1317,12 +1323,12 @@ export const CometChatConversations = (props: ConversationInterface) => {
         //custom view check
         if (ListItemView)
             return ListItemView(conversation);
-        const conversationWith = conversation.getConversationWith();
+        const conversationWith: any = conversation.getConversationWith();
         const conversationType = conversation.getConversationType();
         const lastMessage = CometChatConversationUtils.getLastMessage(conversation);
         const name = conversationWith.getName();
         const conversationId = conversation.getConversationId();
-        let type: string;
+        let type!: string;
         if(conversationWith instanceof CometChat.Group) {
             type = conversationWith.getType();
         }
@@ -1360,7 +1366,7 @@ export const CometChatConversations = (props: ConversationInterface) => {
             listItemStyle={_listItemStyle}
             TailView={() => <TailView
                 customPattern={() => datePattern && datePattern(conversation)}
-                timestamp={lastMessage && lastMessage['sentAt'] || conversationWith['createdAt']}
+                timestamp={lastMessage && lastMessage['sentAt'] || (conversationWith as any)['createdAt']}
                 unreadCount={conversation.getUnreadMessageCount()}
             />}
             avatarStyle={_avatarStyle}

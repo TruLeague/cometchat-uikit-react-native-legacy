@@ -18,5 +18,5 @@
     "outDir": "lib",
     "declaration": true
   },
-  "include": ["src", "imageresolver.d.ts"]
+  "include": ["src"]
 }

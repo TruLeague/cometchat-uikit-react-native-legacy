@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { TouchableOpacity, View, Text, ScrollView, ViewProps } from "react-native";
 //@ts-ignore
 import { CometChat } from "@cometchat/chat-sdk-react-native";

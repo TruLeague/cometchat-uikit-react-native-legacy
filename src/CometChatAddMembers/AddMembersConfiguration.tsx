@@ -10,6 +10,7 @@ import { CometChatAddMembersInterface } from './CometChatAddMembers';
 //@ts-ignore
 import { CometChat } from '@cometchat/chat-sdk-react-native';
 import { StatusIndicatorStyleInterface } from '../shared/views/CometChatStatusIndicator/StatusIndicatorStyle';
+import { JSX } from 'react';
 export interface AddMembersConfigurationInterface
   extends Omit<
     CometChatAddMembersInterface,

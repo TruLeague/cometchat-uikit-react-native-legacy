@@ -289,7 +289,7 @@ export const CometChatFormBubble = memo((props: CometChatFormBubbleInterface) =>
         return (
             <CometChatDateTimePicker 
                 data={data}
-                style={datePickerStyle} 
+                style={datePickerStyle!} 
                 showError={currentRequiredFields.includes(data.getElementId())}
                 onChange={onChange}
             />

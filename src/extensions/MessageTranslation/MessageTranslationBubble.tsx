@@ -124,11 +124,11 @@ export const MessageTranslationBubble = (props: MessageTranslationBubble) => {
           textContainerStyle,
         ] as ViewProps}
       >
-        <Text style={[{ color: textColor }, textFont ] as TextStyle}>{formattedText}</Text>
-        <Text style={[styles.textsPadding, style.translatedTextStyle] as TextStyle}>
+        <Text style={[{ color: textColor }, textFont ] as TextStyle[]}>{formattedText}</Text>
+        <Text style={[styles.textsPadding, style.translatedTextStyle] as TextStyle[]}>
           {formattedTranslatedText}
         </Text>
-        <Text style={[styles.textsPadding, style.translatedMsgStyle] as TextStyle}>
+        <Text style={[styles.textsPadding, style.translatedMsgStyle] as TextStyle[]}>
           Translated Message
         </Text>
       </View>
@@ -136,7 +136,7 @@ export const MessageTranslationBubble = (props: MessageTranslationBubble) => {
   }
   return (
     <CometChatTextBubble
-      text={text}
+      text={text!}
       textContainerStyle={textContainerStyle}
       style={_style}
     />

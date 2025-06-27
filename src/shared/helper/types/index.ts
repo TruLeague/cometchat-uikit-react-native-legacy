@@ -2,6 +2,7 @@
 import { CometChat } from '@cometchat/chat-sdk-react-native';
 import { FontStyleInterface } from '../../base';
 import { ImageURISource } from 'react-native';
+import { JSX } from 'react';
 
 export type ImageType = ImageURISource;
 

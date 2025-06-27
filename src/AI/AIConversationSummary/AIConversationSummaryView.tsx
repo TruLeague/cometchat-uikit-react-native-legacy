@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { JSX, useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { CometChatContext, CometChatTheme, localize } from '../../shared';
 import { AIConversationSummaryConfiguration } from './configuration';

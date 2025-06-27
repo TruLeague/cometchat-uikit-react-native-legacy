@@ -6,6 +6,7 @@ import { MessageHeaderConfigurationInterface } from "../CometChatMessageHeader";
 import { MessageListConfigurationInterface } from "../CometChatMessageList/MessageListConfiguration";
 import { ThreadedMessagesConfigurationInterface } from "../CometChatThreadedMessages/ThreadedMessagesConfiguration";
 import { MessageStyleInterface } from "./MessageStyle";
+import { JSX } from "react";
 
 export interface MessagesConfigurationInterface {
     disableTyping?: boolean,

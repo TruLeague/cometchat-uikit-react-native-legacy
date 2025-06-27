@@ -1,6 +1,6 @@
 {
   "name": "@cometchat/chat-uikit-react-native",
-  "version": "4.3.25",
+  "version": "4.3.26",
   "description": "Ready-to-use Chat UI Components for React Native",
   "main": "src/index",
   "module": "src/index",
@@ -57,8 +57,7 @@
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^28.1.2",
-    "@types/react": "~17.0.21",
-    "@types/react-native": "0.68.2",
+    "@types/react": "*",
     "commitlint": "^17.0.2",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.5.0",
@@ -71,17 +70,16 @@
     "react-native-gesture-handler": "*",
     "typescript": "^5.0.4"
   },
-  "resolutions": {
-    "@types/react": "17.0.21"
-  },
   "dependencies": {
-    "@react-native-clipboard/clipboard": "^1.13.2"
+    "@react-native-clipboard/clipboard": "^1.13.2",
+    "@types/prop-types": "^15.7.14",
+    "prop-types": "^15.8.1"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*",
     "@cometchat/chat-sdk-react-native": "*",
-    "@react-native-community/datetimepicker":"*"
+    "@react-native-community/datetimepicker": "*",
+    "react": "*",
+    "react-native": "*"
   },
   "jest": {
     "preset": "react-native",

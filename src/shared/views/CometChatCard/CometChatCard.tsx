@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { JSX, useContext } from 'react'
 import { View, Text, ViewProps, TextStyle } from 'react-native'
 import { ImageType } from '../../base'
 import { CometChatCardStyle, CometChatCardStyleInterface } from './CometChatCardStyle'
@@ -53,14 +53,14 @@ export const CometChatCard = (props: CometChatCardInterface) => {
       border
     ]}>
       <View style={{alignItems: "center"}}>
-        <Text style={[{ color: titleColor, marginBottom: 8 }, titleFont] as TextStyle}>{title?.trim()}</Text>
+        <Text style={[{ color: titleColor, marginBottom: 8 }, titleFont] as TextStyle[]}>{title?.trim()}</Text>
         {
           SubtitleView && <SubtitleView />
         }
       </View>
       <CometChatAvatar
         image={avatarUrl}
-        name={avatarName}
+        name={avatarName!}
         style={{
           height: 300,
           width: 300,

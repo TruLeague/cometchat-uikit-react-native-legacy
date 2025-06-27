@@ -88,7 +88,7 @@ export const ImageModerationFilter = (
               style?.warningImageStyle,
             ]}
           />
-          <Text style={[styles.unsafeText, style?.warningTextStyle] as TextStyle}>
+          <Text style={[styles.unsafeText, style?.warningTextStyle] as TextStyle[]}>
             {warningText ?? localize('UNSAFE_CONTENT')}
           </Text>
         </TouchableOpacity>

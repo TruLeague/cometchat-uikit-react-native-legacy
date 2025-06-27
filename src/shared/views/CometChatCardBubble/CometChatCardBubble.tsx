@@ -166,7 +166,7 @@ export const CometChatCardBubble = (props: CometChatCardBubbleInterface) => {
             resizeMode={imageResizeMode}
           />
         }
-        <Text style={[textFont, { marginVertical: 10, color: textColor }] as TextStyle}>{message.getText()}</Text>
+        <Text style={[textFont, { marginVertical: 10, color: textColor }] as TextStyle[]}>{message.getText()}</Text>
       </View>
       {(message.getCardActions())?.map((action, index) => <React.Fragment key={index}>{_renderButton(action)}</React.Fragment>)}
     </View>

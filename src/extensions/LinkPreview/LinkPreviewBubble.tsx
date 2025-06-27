@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { JSX, useEffect, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, Linking, Image, Alert, Platform, TextStyle } from 'react-native'
 import { LinkPreviewBubbleStyle, LinkPreviewBubbleStyleInterface } from './LInkPreviewBubbleStyle';
 import { localize } from '../../shared/resources/CometChatLocalize';

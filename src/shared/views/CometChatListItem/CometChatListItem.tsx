@@ -13,8 +13,8 @@ import {
   ViewProps,
   //@ts-ignore
 } from 'react-native';
-import { CometChatAvatar } from '../../views/CometChatAvatar';
-import { CometChatStatusIndicator } from '../../views/CometChatStatusIndicator';
+import { CometChatAvatar } from '../CometChatAvatar';
+import { CometChatStatusIndicator } from '../CometChatStatusIndicator';
 import { CometChatContext } from '../../CometChatContext';
 //@ts-ignore
 import SwipeRow from '../../helper/SwipeRow';
@@ -125,7 +125,7 @@ export const CometChatListItem = (props: CometChatListItemInterface) => {
         <CometChatAvatar
           style={avatarStyle}
           image={avatarURL}
-          name={avatarName}
+          name={avatarName!}
         />
         {(statusIndicatorIcon || statusIndicatorColor?.length !== 0) && (
           <PresenceView />

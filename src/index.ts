@@ -1,3 +1,4 @@
+/// <reference path="./imageresolver.d.ts" />
 import {
   //Model
   BaseStyleInterface,

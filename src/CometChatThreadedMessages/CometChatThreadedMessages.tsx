@@ -1,5 +1,5 @@
 import { View, Text, Image, ViewStyle, Platform, ScrollView, TextStyle, DimensionValue, Dimensions } from 'react-native';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { JSX, useContext, useEffect, useRef, useState } from 'react';
 import Header from './Header';
 import { ICONS } from './resources';
 import {

@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, JSX } from 'react';
 import { TextStyle } from 'react-native';
 import { ImageType } from '../base';
 

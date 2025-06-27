@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useCallback } from 'react'
+import React, { useContext, useState, useEffect, useCallback, JSX } from 'react'
 //@ts-ignore
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { View, Text, TextInput, Dimensions, TouchableOpacity, Image, FlatList, TextStyle } from 'react-native'
@@ -255,7 +255,7 @@ const AIAssistBotView = (props: AIAssistBotViewProps) => {
                         avatarStyle={configuration?.avatarStyle}
                         avatarName={title || bot.getName()}
                         avatarURL={bot.getAvatar() ? { uri: bot.getAvatar() } : undefined}
-                        SubtitleView={() => <Text style={[{ color: subtitleColor }, subtitleFont] as TextStyle}>{localize("COMETCHAT_ASK_BOT_SUBTITLE")}</Text>}
+                        SubtitleView={() => <Text style={[{ color: subtitleColor }, subtitleFont] as TextStyle[]}>{localize("COMETCHAT_ASK_BOT_SUBTITLE")}</Text>}
                         TailView={() => <TouchableOpacity onPress={onClose}>
                             <Image style={{ width: 20, height: 20, tintColor: closeIconTint }} source={configuration?.closeIconURL || CloseIcon} />
                         </TouchableOpacity>}

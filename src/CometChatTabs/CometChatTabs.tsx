@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, JSX } from 'react'
 import { FlatList, Image, ListRenderItemInfo, TouchableOpacity, View, Text, Dimensions, ViewProps, TextStyle } from 'react-native'
 import { CometChatTabAlignment } from '../shared/base/Types'
 import { CometChatContext } from '../shared'

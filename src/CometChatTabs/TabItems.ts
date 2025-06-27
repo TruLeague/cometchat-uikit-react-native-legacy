@@ -1,3 +1,4 @@
+import { JSX } from "react"
 import { BaseStyleInterface, FontStyleInterface, ImageType } from "../shared"
 import { TabItemStyleInterface } from "./TabItemStyle"
 

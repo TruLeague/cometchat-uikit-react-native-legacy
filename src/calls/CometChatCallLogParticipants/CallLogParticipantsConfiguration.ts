@@ -3,6 +3,7 @@ import { StyleProp, ViewStyle } from "react-native";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { AvatarStyleInterface, CometChatOptions, ImageType, ListItemStyleInterface } from "../../shared";
 import { CallParticipantsStyleInterface } from "./CallLogParticipantsStyle";
+import { JSX } from "react";
 
 export interface CallLogParticipantsConfigurationInterface {
     SubtitleView?: (param: { participant?: CometChat.BaseMessage }) => JSX.Element,

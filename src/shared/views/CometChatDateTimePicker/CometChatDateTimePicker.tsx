@@ -35,23 +35,23 @@ export const CometChatDateTimePicker = (
     style = {},
     showError = true,
   } = props;
-  const mode = data.getMode();
-  const format = data.getDateTimeFormat();
-  const timeZone = data.getTimeZone();
+  const mode = data?.getMode();
+  const format = data?.getDateTimeFormat();
+  const timeZone = data?.getTimeZone();
 
   const { theme } = useContext<CometChatContextType>(CometChatContext);
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const [defaultTime, setDefaultTime] = useState<string | DateTime>(
-    data.getDefaultValue() ?? ''
+    data?.getDefaultValue() ?? ''
   );
   const [selectedDate, setSelectedDate] = useState<string | DateTime | Date>();
   const [fromDateTime, setFromDateTime] = useState<string | DateTime>(
-    data.getFromDateTime() ?? ''
+    data?.getFromDateTime() ?? ''
   );
   const [toDateTime, setToDateTime] = useState<string | DateTime>(
-    data.getToDateTime() ?? ''
+    data?.getToDateTime() ?? ''
   );
 
   const onDateSelected = (e: any) => {
@@ -86,11 +86,11 @@ export const CometChatDateTimePicker = (
   const convertToATimeZoneWithModes = (time: any) => {
     switch (mode) {
       case 'dateTime':
-        return convertToATimeZone(time, timeZone, 'toISO', 'fromISO');
+        return convertToATimeZone(time, timeZone!, 'toISO', 'fromISO');
       case 'date':
         return convertToATimeZone(
           `${time}T00:00:00`,
-          timeZone,
+          timeZone!,
           'toISO',
           'fromISO'
         );
@@ -107,7 +107,7 @@ export const CometChatDateTimePicker = (
           }
           return convertToATimeZone(
             dateTime.toISOString(),
-            timeZone,
+            timeZone!,
             'toISO',
             'fromISO'
           );
@@ -118,9 +118,9 @@ export const CometChatDateTimePicker = (
     }
   };
   useLayoutEffect(() => {
-    let defaultTime = convertToATimeZoneWithModes(data.getDefaultValue());
-    let fromDateTime = convertToATimeZoneWithModes(data.getFromDateTime());
-    let toDateTime = convertToATimeZoneWithModes(data.getToDateTime());
+    let defaultTime = convertToATimeZoneWithModes(data?.getDefaultValue());
+    let fromDateTime = convertToATimeZoneWithModes(data?.getFromDateTime());
+    let toDateTime = convertToATimeZoneWithModes(data?.getToDateTime());
     setDefaultTime(defaultTime);
     setSelectedDate(defaultTime);
     setFromDateTime(fromDateTime);
@@ -178,8 +178,8 @@ export const CometChatDateTimePicker = (
           ] as TextStyle[]
         }
       >
-        {data.getLabel()}
-        {!data.getOptional() && '*'}
+        {data?.getLabel()}
+        {!data?.getOptional() && '*'}
       </Text>
 
       <TouchableOpacity

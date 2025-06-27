@@ -1,6 +1,6 @@
 //@ts-ignore
 import { CometChat } from '@cometchat/chat-sdk-react-native'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { JSX, useContext, useEffect, useRef, useState } from 'react'
 import { FlatList, Image, Text, TouchableOpacity, View, NativeModules, Platform, ActivityIndicator, TextStyle, ViewProps } from 'react-native'
 import { StyleProp, ViewStyle } from "react-native";
 import { CometChatContext, CometChatDate, CometChatListItem, DatePattern, ImageType, ListItemStyleInterface, localize } from '../../shared'
@@ -214,7 +214,7 @@ export const CometChatRecordings = (props: CometChatCallLogRecordingsConfigurati
             return <EmptyStateView />
         return (
             <View style={[Style.container]}>
-                <Text style={[{ color: emptyTextColor, ...emptyTextFont }] as TextStyle}>{emptyStateText || localize("NO_RECORDINGS")}</Text>
+                <Text style={[{ color: emptyTextColor, ...emptyTextFont }] as TextStyle[]}>{emptyStateText || localize("NO_RECORDINGS")}</Text>
             </View>
         )
     }
@@ -233,7 +233,7 @@ export const CometChatRecordings = (props: CometChatCallLogRecordingsConfigurati
                                 />
                             </TouchableOpacity> : null
                     }
-                    <Text style={[{ color: titleColor, ...titleFont }] as TextStyle}>{title}</Text>
+                    <Text style={[{ color: titleColor, ...titleFont }] as TextStyle[]}>{title}</Text>
                 </View>
                 <View style={Style.row}>
                     {

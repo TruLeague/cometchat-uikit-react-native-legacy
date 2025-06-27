@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { JSX, useContext, useEffect, useLayoutEffect, useRef } from 'react';
 import {
   View,
   Image,
@@ -473,10 +473,10 @@ export interface CometChatMessageComposerInterface {
   /**
    *
    *
-   * @type {string}
+   * @type {string | ImageType}
    * @description Image URL for the voice recording icon
    */
-  voiceRecordingIconURL?: string;
+  voiceRecordingIconURL?: string | ImageType;
   /**
    *
    *
@@ -774,7 +774,7 @@ export const CometChatMessageComposer = React.forwardRef(
 
         inputValueRef.current = textComponents ?? '';
         setInputMessage(textComponents ?? '');
-        messageInputRef.current.focus();
+        messageInputRef.current && messageInputRef.current.focus();
       }
     };
 
@@ -846,12 +846,12 @@ export const CometChatMessageComposer = React.forwardRef(
     const playAudio = () => {
       if (customSoundForMessage) {
         CometChatSoundManager.play(
-          CometChatSoundManager.SoundOutput.outgoingMessage,
+          'outgoingMessage',
           customSoundForMessage
         );
       } else {
         CometChatSoundManager.play(
-          CometChatSoundManager.SoundOutput.outgoingMessage
+          'outgoingMessage',
         );
       }
     };
@@ -890,7 +890,7 @@ export const CometChatMessageComposer = React.forwardRef(
       inputValueRef.current = '';
       setInputMessage('');
       setTimeout(() => {
-        messageInputRef.current.clear();
+        messageInputRef.current && messageInputRef.current.clear();
         setInputMessage('');
       }, 100);
     };
@@ -984,7 +984,7 @@ export const CometChatMessageComposer = React.forwardRef(
 
       inputValueRef.current = '';
       setInputMessage('');
-      messageInputRef.current.clear();
+      messageInputRef.current && messageInputRef.current.clear();
 
       setMessagePreview(null);
 
@@ -1484,7 +1484,7 @@ export const CometChatMessageComposer = React.forwardRef(
       };
     }, []);
 
-    const handlePannel = (item: any) => {
+    const handlePanel = (item: any) => {
       if (item.child) {
         if (item.alignment === ViewAlignment.composerTop)
           setCustomViewHeader(() => item.child);
@@ -1500,10 +1500,10 @@ export const CometChatMessageComposer = React.forwardRef(
 
     useEffect(() => {
       CometChatUIEventHandler.addUIListener(uiEventListenerShow, {
-        showPanel: (item) => handlePannel(item),
+        showPanel: (item) => handlePanel(item),
       });
       CometChatUIEventHandler.addUIListener(uiEventListenerHide, {
-        hidePanel: (item) => handlePannel(item),
+        hidePanel: (item) => handlePanel(item),
       });
       return () => {
         CometChatUIEventHandler.removeUIListener(uiEventListenerShow);

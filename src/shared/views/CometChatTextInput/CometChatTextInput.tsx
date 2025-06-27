@@ -47,7 +47,7 @@ const CometChatTextInput = (props: CometChatTextInputInterface) => {
 
     return (
         <View style={{ marginBottom: 12 }}>
-            <Text style={[titleFont, { color: titleColor, marginBottom: 4 }] as TextStyle}>{data.getLabel()}{!data.getOptional() && "*"}</Text>
+            <Text style={[titleFont, { color: titleColor, marginBottom: 4 }] as TextStyle[]}>{data.getLabel()}{!data.getOptional() && "*"}</Text>
             <TextInput
                 // autoFocus={true}
                 value={value}

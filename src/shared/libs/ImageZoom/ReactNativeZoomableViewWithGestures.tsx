@@ -18,7 +18,7 @@ class ReactNativeZoomableViewWithGestures extends React.Component<
   ReactNativeZoomableViewWithGesturesProps,
   ReactNativeZoomableViewState
 > {
-  zoomableViewRef: React.RefObject<ReactNativeZoomableView> | undefined;
+  zoomableViewRef: React.RefObject<ReactNativeZoomableView | null> | undefined;
 
   constructor(props: ReactNativeZoomableViewWithGesturesProps) {
     super(props);

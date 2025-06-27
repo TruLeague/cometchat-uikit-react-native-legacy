@@ -1,3 +1,4 @@
+import { JSX } from "react";
 import { ImageType } from "../shared";
 import { CometChatOptions } from "../shared/modals/CometChatOptions";
 //@ts-ignore
