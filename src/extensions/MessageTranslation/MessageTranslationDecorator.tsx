@@ -25,6 +25,8 @@ import { AdditionalBubbleStylingParams, MessageBubbleAlignmentType } from '../..
 import { TextStyle } from 'react-native';
 import { anyObject } from '../../shared/utils';
 import { store } from '../../../../../../src/redux/Store';
+import { Toast, useToast } from 'react-native-toast-notifications';
+
 export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
   messageTranslationConfiguration?: MessageTranslationConfigurationInterface;
 
@@ -130,6 +132,17 @@ export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
       metaData: metaData['@injected']['extensions']['translate'],
     };
   };
+
+   showToast = (error: any) => {
+    Toast.show( error, {
+      type: 'danger',
+      placement: 'bottom',
+      duration: 3000,
+      animationType: 'zoom-in',
+      dangerColor: '#207f8a',
+    });
+  };
+
   translateMessage = (message: any) => {
     const messageId = message.id;
     const messageText = message.text;
@@ -175,6 +188,11 @@ export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
             }
           );
         }
+
+        if(result['translations'][0].error == "UnsupportedLanguagePairException"){
+          this.showToast(result['translations'][0].error_description);
+        }
+
       })
       .catch((error: any) => {
         console.log(error);
