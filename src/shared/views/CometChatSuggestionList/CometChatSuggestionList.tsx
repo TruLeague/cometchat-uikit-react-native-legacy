@@ -16,14 +16,20 @@ export interface CometChatSuggestionListInterface {
     onPress: (item: SuggestionItem) => void;
     onEndReached?: () => void;
     loading?: boolean;
-    theme?: CometChatTheme
+    theme?: CometChatTheme,
+    loggedInUser?: CometChat.User
 }
 
 export const CometChatSuggestionList = (props: CometChatSuggestionListInterface) => {
-    const { data, avatarStyle, listItemStyle, separatorColor, onPress, onEndReached, loading, theme } = props;
+    const { data, avatarStyle, listItemStyle, separatorColor, onPress, onEndReached, loading, theme ,loggedInUser } = props;
 
     const _render = ({ item, index }: ListRenderItemInfo<SuggestionItem>) => {
         let shouldLoadAvatarName = item.hideLeadingIcon ? {} : { avatarName: item.name }
+
+        if(item.id == loggedInUser?.getUid()){
+            return null;
+        }
+
         return (
             <CometChatListItem
                 key={index}

@@ -2132,6 +2132,7 @@ export const CometChatMessageComposer = React.forwardRef(
                     listItemStyle={{
                       height: 50,
                     }}
+                    loggedInUser={currentUser}
                     separatorColor={theme.palette.getAccent100()}
                     onPress={onMentionPress}
                     onEndReached={onSuggestionListEndReached}
