@@ -37,6 +37,7 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { commonVars } from "../shared/base/vars";
 import { anyObject } from "../shared/utils";
 import { MessageListUtils } from './MessageListUtils';
+import { useIsFocused } from "@react-navigation/native";
 
 let templatesMap = new Map<string, CometChatMessageTemplate>();
 
@@ -915,6 +916,8 @@ export const CometChatMessageList = memo(forwardRef<
 
         }
 
+        const isFocused = useIsFocused();
+
         // Register the function with the utility
         useEffect(() => {
             MessageListUtils.setScrollToSpecificMessageById(scrollToSpecificMessageById);
@@ -923,7 +926,7 @@ export const CometChatMessageList = memo(forwardRef<
                 // Optional: Clear the reference when component unmounts
                 MessageListUtils.setScrollToSpecificMessageById(() => {});
             };
-        }, []);
+        }, [isFocused]);
 
         useEffect(() => {
 
