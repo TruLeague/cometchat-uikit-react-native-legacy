@@ -27,6 +27,7 @@ import { CometChatContextType } from '../../base/Types';
 import { anyObject } from '../../utils';
 import { Colors } from '../../../../../../../src/common/Colors';
 import { charColor } from '../../../../../../../src/cometchat-v4-ui-kit/utils/DynamicColorUtils';
+import { decrypt } from '../../../../../../../src/services/auth/AuthServices';
 
 /**
  *
@@ -128,7 +129,8 @@ export const CometChatListItem = (props: CometChatListItemInterface) => {
         <CometChatAvatar
           style={{backgroundColor: bgColor, nameTextColor :'white'}}
           image={avatarURL}
-          name={avatarName?.[0] || avatarName}
+          name={decrypt(avatarName)?.charAt(0)}
+          // name={avatarName?.[0] || avatarName}
         />
         {(statusIndicatorIcon || statusIndicatorColor?.length !== 0) && (
           <PresenceView />
