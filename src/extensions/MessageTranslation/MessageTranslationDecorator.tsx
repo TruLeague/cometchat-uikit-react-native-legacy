@@ -26,7 +26,7 @@ import { TextStyle } from 'react-native';
 import { anyObject } from '../../shared/utils';
 import { store } from '../../../../../../src/redux/Store';
 import { Toast, useToast } from 'react-native-toast-notifications';
-
+import { Languages } from '../../../../../../src/cometchat-v4-ui-kit/utils/languages';
 export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
   messageTranslationConfiguration?: MessageTranslationConfigurationInterface;
 
@@ -70,7 +70,7 @@ export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
     };
   }
 
-  getSetMetaData = (messageObj: any, messageTranslation: any) => {
+  getSetMetaData = (messageObj: any, messageTranslation: any, languageOriginal: string, languageTranslated: string) => {
     let metaData = messageObj.getMetadata();
     if (!metaData) {
       metaData = {};
@@ -93,7 +93,11 @@ export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
           ...metaData['@injected'],
           extensions: {
             ...metaData['@injected']['extensions'],
-            translate: { [messageObj.id]: messageTranslation },
+            translate: { 
+              [messageObj.id]: messageTranslation,
+              language_original: languageOriginal,
+              language_translated: languageTranslated
+            },
           },
         },
       };
@@ -112,10 +116,14 @@ export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
         translateData = {
           ...translateData,
           [messageObj.id]: messageTranslation,
+          language_original: languageOriginal,
+          language_translated: languageTranslated
         };
       } else {
         translateData[messageObj.id] = {
           [messageObj.id]: messageTranslation,
+          language_original: languageOriginal,
+          language_translated: languageTranslated
         };
       }
       tempMetaData = {
@@ -143,6 +151,11 @@ export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
     });
   };
 
+  getLabelByValue(value : string) {
+    const language = Languages.find(lang => lang.value === value);
+    return language ? language.label : null;
+  }
+  
   translateMessage = (message: any) => {
     const messageId = message.id;
     const messageText = message.text;
@@ -168,9 +181,14 @@ export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
           result['translations']['length']
         ) {
           const messageTranslation = result['translations'][0];
+          const languageOriginal = result['language_original'];
+          const languageTranslated = messageTranslation['language_translated'];
+
           let translatedMsg = this.getSetMetaData(
             message,
-            messageTranslation['message_translated']
+            messageTranslation['message_translated'],
+            languageOriginal,
+            languageTranslated
           );
           if (translatedMsg) {
             if (translatedMsg.metaData?.translate)
@@ -179,7 +197,7 @@ export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
             this.translatedMessage = {
               [message.id]: `${messageTranslation['message_translated']}`,
             };
-
+          
           CometChatUIEventHandler.emitMessageEvent(
             MessageEvents.ccMessageEdited,
             {
