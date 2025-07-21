@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState, useImperativeHandle, useContext, useCallback, memo, useLayoutEffect } from "react";
-import { View, FlatList, Text, Image, TouchableOpacity, ActivityIndicator, Modal, SafeAreaView, NativeModules, ScrollView, Dimensions, Platform, Keyboard, TextStyle, ViewProps,ImageBackground } from "react-native";
+import { View, FlatList, Text, Image, TouchableOpacity, ActivityIndicator, Modal, SafeAreaView, NativeModules, ScrollView, Dimensions, Platform, Keyboard, TextStyle, ViewProps,ImageBackground, findNodeHandle, InteractionManager } from "react-native";
 //@ts-ignore
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { LeftArrowCurve, RightArrowCurve } from "./resources";
@@ -877,33 +877,44 @@ export const CometChatMessageList = memo(forwardRef<
 
 
         // Replace your scrollToSpecificMessageById function with this:
-        const scrollToSpecificMessageById = (messageId : any) => {
-        
-        const messageRef = messageRefs.current.get(messageId);
-        
-        if (messageRef && messageListRef.current) {
+        const scrollToSpecificMessageById = (messageId: any, retries = 3) => {
+            console.log("🟢 scrollToSpecificMessageById called for ID:", messageId);
 
-            // Highlight the message
-            setHighlightedMessageId(messageId);
+            InteractionManager.runAfterInteractions(() => {
+                setTimeout(() => {
+                    const messageRef = messageRefs.current.get(messageId);
+                    const scrollViewNode = findNodeHandle(messageListRef.current);
 
-            messageRef.measureLayout(
-            messageListRef.current.getInnerViewNode(),
-            (x: any, y: number, width: any, height: any) => {
-                messageListRef.current!.scrollTo({
-                y: Math.max(0, y - 20), // 20px offset from top
-                animated: true
-                });
-            },
-            (error : any) => {
-                console.error('Failed to measure message layout:', error);
-            }
-            );
+                    if (messageRef && scrollViewNode) {
+                        console.log("✅ Found messageRef and scrollViewNode for:", messageId);
+                        setHighlightedMessageId(messageId);
 
-            // Remove highlight after 3 seconds
-            setTimeout(() => {
-            setHighlightedMessageId(null);
-            }, 1500);
-          }
+                        messageRef.measureLayout(
+                            scrollViewNode,
+                            (x: number, y: number) => {
+                                console.log("📏 Scrolling to y:", y);
+                                messageListRef.current?.scrollTo({ y: Math.max(0, y - 20), animated: true });
+                            },
+                            (error: any) => {
+                                console.error("❌ measureLayout failed:", error);
+                            }
+                        );
+
+                        setTimeout(() => {
+                            setHighlightedMessageId(null);
+                        }, 1500);
+                    } else if (retries > 0) {
+                        console.warn(`⏳ Retrying scrollToSpecificMessageById for ${messageId}, attempts left: ${retries}`);
+                        setTimeout(() => scrollToSpecificMessageById(messageId, retries - 1), 300);
+                    } else {
+                        console.warn("❌ scrollToSpecificMessageById: messageRef or scrollViewNode still missing", {
+                            messageRef,
+                            scrollViewNode,
+                            messageId
+                        });
+                    }
+                }, 200); // Initial wait
+            });
         };
 
         const handlePannel = (item: any) => {
@@ -920,13 +931,11 @@ export const CometChatMessageList = memo(forwardRef<
 
         // Register the function with the utility
         useEffect(() => {
-            MessageListUtils.setScrollToSpecificMessageById(scrollToSpecificMessageById);
-            
-            return () => {
-                // Optional: Clear the reference when component unmounts
-                MessageListUtils.setScrollToSpecificMessageById(() => {});
-            };
-        }, [isFocused]);
+        MessageListUtils.setScrollToSpecificMessageById(scrollToSpecificMessageById);
+        return () => {
+            MessageListUtils.setScrollToSpecificMessageById(() => {});
+        };
+        }, [isFocused,messageListRef,messagesList]);
 
         useEffect(() => {
 
