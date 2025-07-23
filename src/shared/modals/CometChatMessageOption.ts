@@ -1,6 +1,7 @@
 //@ts-ignore
 import { CometChat } from '@cometchat/chat-sdk-react-native';
 import { FontStyleInterface, ImageType } from '../base';
+import { JSX } from 'react';
 
 export type CometChatMessageOption = {
   id: string;

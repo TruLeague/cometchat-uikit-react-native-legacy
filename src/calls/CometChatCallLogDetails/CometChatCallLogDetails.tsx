@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { JSX, useEffect, useRef, useState } from 'react'
 import { View, TouchableOpacity, Image, Text, SectionList, TextStyle } from 'react-native'
 //@ts-ignore
 import { CometChat } from '@cometchat/chat-sdk-react-native'
@@ -101,8 +101,8 @@ export const CometChatCallLogDetails = (props: CometChatCallLogDetailsConfigurat
 
   const { theme } = useContext(CometChatContext);
   const [tempates, setTemplates] = useState<any[]>([]);
-  const [group, setGroup] = useState(undefined);
-  const [user, setUser] = useState(undefined);
+  const [group, setGroup] = useState<CometChat.Group | undefined>(undefined);
+  const [user, setUser] = useState<CometChat.User | undefined>(undefined);
   const [error, setError] = useState(undefined);
   const [screen, setScreen] = useState(SCREEN.DETAILS);
   const [participantsData, setParticipantsData] = useState([]);
@@ -219,7 +219,7 @@ export const CometChatCallLogDetails = (props: CometChatCallLogDetailsConfigurat
                 <Image style={[Style.imageStyle, { tintColor: _callLogDetailsStyle.closeIconTint }]} source={closeButtonIconImage || CloseIcon} />
               </TouchableOpacity>
             }
-            <Text style={[theme.typography.heading, Style.heading, { color: theme.palette.getAccent() }] as TextStyle}>{title}</Text>
+            <Text style={[theme.typography.heading, Style.heading, { color: theme.palette.getAccent() }] as TextStyle[]}>{title}</Text>
           </View>
         }
         {
@@ -231,10 +231,10 @@ export const CometChatCallLogDetails = (props: CometChatCallLogDetailsConfigurat
             <View style={{ alignItems: "center", justifyContent: "center" }}>
               <CometChatAvatar
                 style={_avatarStyle}
-                image={user && user['avatar'] ? { uri: user['avatar'] } : group ? { uri: group['icon'] || group['avatar'] } : undefined}
-                name={user ? user['name'] : group ? group['name'] : undefined}
+                image={user ? { uri: user?.getAvatar()} : {uri: group?.getIcon()} }
+                name={user ? user?.getName(): group!.getName()}
               />
-              <Text style={[{ marginVertical: 10, color: _callLogDetailsStyle.titleColor }, _callLogDetailsStyle.titleFont] as TextStyle}>{user ? user['name'] : group ? group['name'] : undefined}</Text>
+              <Text style={[{ marginVertical: 10, color: _callLogDetailsStyle.titleColor }, _callLogDetailsStyle.titleFont] as TextStyle[]}>{user ? user.getName() : group ? group.getName() : undefined}</Text>
             </View>
             <SectionList
               sections={tempates}

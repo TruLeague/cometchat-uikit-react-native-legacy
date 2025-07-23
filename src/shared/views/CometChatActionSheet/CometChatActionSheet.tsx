@@ -140,10 +140,10 @@ const OptionGridView = ({
 };
 
 interface CometChatActionSheetInterface {
-  title: string;
-  layoutModeIconURL: any;
-  layoutMode: 'list' | 'grid';
-  hideLayoutMode: boolean;
+  title?: string;
+  layoutModeIconURL?: any;
+  layoutMode?: 'list' | 'grid';
+  hideLayoutMode?: boolean;
   actions: ActionItemInterface[];
   style: ActionSheetStyles;
   hideHeader?: boolean;

@@ -1,5 +1,5 @@
 import closeButton from "./resources/close.png";
-import { localize } from "../../../shared/resources/CometChatLocalize";
+import { localize } from "../../resources/CometChatLocalize";
 import { MessagePreviewStyle } from "./MessagePreviewStyle";
 
 /**

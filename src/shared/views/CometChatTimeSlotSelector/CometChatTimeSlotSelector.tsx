@@ -59,7 +59,7 @@ export const CometChatTimeSlotSelector = memo(
               theme.typography.subtitle3,
               style?.slotTextFont ?? {},
               { color: style?.slotTextColor ?? theme.palette.getAccent800() },
-            ] as TextStyle}
+            ] as TextStyle[]}
           >
             {timeFormat === "12Hr" ? convert24to12(time) : time}
           </Text>
@@ -77,7 +77,7 @@ export const CometChatTimeSlotSelector = memo(
               marginLeft: 10,
               marginBottom: 5,
             },
-          ] as TextStyle}
+          ] as TextStyle[]}
         >
           Select a Time
         </Text>
@@ -96,7 +96,7 @@ export const CometChatTimeSlotSelector = memo(
               alignSelf: "flex-end",
               paddingHorizontal: 10,
             },
-          ] as TextStyle}
+          ] as TextStyle[]}
         >
           <Image
             source={ICONS.EARTH}

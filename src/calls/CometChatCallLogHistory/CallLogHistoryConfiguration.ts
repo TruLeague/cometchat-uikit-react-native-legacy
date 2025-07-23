@@ -5,6 +5,7 @@ import { AvatarStyleInterface, CometChatOptions, ImageType, ListItemStyleInterfa
 import { StatusIndicatorStyleInterface } from "../../shared/views/CometChatStatusIndicator/StatusIndicatorStyle";
 import { CallLogHistoryStyleInterface } from "./CallLogHistoryStyle";
 import { DatePattern, SelectionMode } from "../../shared/base/Types";
+import { JSX } from "react";
 
 export interface CallLogHistoryConfigurationInterface {
     SubtitleView?: (param: { call?: CometChat.Call }) => JSX.Element,

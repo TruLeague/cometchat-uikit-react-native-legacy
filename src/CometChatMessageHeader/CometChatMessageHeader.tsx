@@ -15,6 +15,7 @@ import React, {
   useRef,
   useContext,
   useCallback,
+  JSX,
 } from 'react';
 import { AvatarStyle, CometChatContext, CometChatListItem } from '../shared';
 import { localize } from '../shared';
@@ -322,7 +323,7 @@ export const CometChatMessageHeader = (
   const handleUserStatus = useCallback(
     (userDetails: any) => {
       if (userDetails.uid === user?.getUid()) {
-        if (user.getHasBlockedMe() || user.getBlockedByMe()) {
+        if (user?.getHasBlockedMe() || user?.getBlockedByMe()) {
           setUserStatus('');
           return;
         }
@@ -435,12 +436,12 @@ export const CometChatMessageHeader = (
   useEffect(() => {
     CometChatUIEventHandler.addUserListener(userListenerId, {
       ccUserBlocked: ({ user: blockedUser }: { user: CometChat.User }) => {
-        if (user.getUid() === blockedUser.getUid()) {
+        if (user?.getUid() === blockedUser.getUid()) {
           setUserStatus('');
         }
       },
       ccUserUnBlocked: ({ user: unblockedUser }: { user: CometChat.User }) => {
-        if (user.getUid() !== unblockedUser.getUid()) {
+        if (user?.getUid() !== unblockedUser.getUid()) {
           return;
         }
         setUserStatus(unblockedUser.getStatus());
@@ -466,7 +467,7 @@ export const CometChatMessageHeader = (
       return (
         <AppBarOptions
           {...(user
-            ? { user: clonedUser }
+            ? { user: clonedUser! }
             : groupObj
             ? { group: groupObj }
             : {})}
@@ -495,7 +496,7 @@ export const CometChatMessageHeader = (
       {!hideBackIcon && <BackButton />}
       <View style={{ flex: 1 }}>
         {ListItemView ? (
-          <ListItemView user={user} group={group} />
+          <ListItemView user={user ?? undefined} group={group ?? undefined} />
         ) : (
           <CometChatListItem
             id={user ? user.getUid() : groupObj ? groupObj.getGuid() : ''}

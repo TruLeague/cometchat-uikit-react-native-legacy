@@ -9,6 +9,7 @@ import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { StatusIndicatorStyleInterface } from "../shared/views/CometChatStatusIndicator/StatusIndicatorStyle";
 import { DateStyleInterface } from "../shared/views/CometChatDate/DateStyle";
 import { BadgeStyleInterface } from "../shared/views/CometChatBadge";
+import { JSX } from "react";
 
 export interface ConversationsConfigurationInterface {
     disableUsersPresence?: boolean,

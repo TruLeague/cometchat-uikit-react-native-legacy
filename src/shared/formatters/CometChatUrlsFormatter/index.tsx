@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { Linking, Text } from "react-native";
 import { CometChatTextFormatter } from "../CometChatTextFormatter";
 import { emailPattern, phoneNumPattern, urlPattern } from "../../constants/UIKitConstants";

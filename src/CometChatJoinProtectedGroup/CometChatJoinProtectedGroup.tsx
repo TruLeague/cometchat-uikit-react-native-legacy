@@ -163,7 +163,9 @@ export const CometChatJoinProtectedGroup = (
       .then((response: any) => {
         setPassword('');
         onBack && onBack();
-        group['membersCount'] = group['membersCount'] + 1;
+        if(group) {
+          group['membersCount'] = group['membersCount'] + 1;
+        }
         CometChatUIEventHandler.emitGroupEvent(
           CometChatGroupsEvents.ccGroupMemberJoined,
           {
@@ -230,7 +232,7 @@ export const CometChatJoinProtectedGroup = (
           joinProtectedGroupStyle?.closeIconTint ?? theme.palette.getPrimary()
         }
         onSubmit={
-          onJoinClick ? () => onJoinClick({ group, password }) : joinGroup
+          onJoinClick ? () => onJoinClick({ group: group!, password }) : joinGroup
         }
         onCancel={onBack}
       />

@@ -10,6 +10,7 @@ import {
 } from '../shared';
 import { ListRenderItem, StyleProp, ViewStyle } from 'react-native';
 import { StatusIndicatorStyleInterface } from '../shared/views/CometChatStatusIndicator/StatusIndicatorStyle';
+import { JSX } from 'react';
 
 export interface BannedMembersConfigurationInterface
   extends Omit<

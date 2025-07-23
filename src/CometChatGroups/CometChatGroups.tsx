@@ -1,5 +1,5 @@
 //@ts-ignore
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, JSX } from 'react';
 //@ts-ignore
 import { Text, TextStyle, View, ViewProps } from 'react-native';
 import {

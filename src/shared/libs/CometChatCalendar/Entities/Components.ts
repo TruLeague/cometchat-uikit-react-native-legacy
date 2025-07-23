@@ -3,6 +3,7 @@ import type { Props as TitleProps } from '../Components/Title';
 import type { Props as MonthProps } from '../Components/Month';
 import type { Props as DayProps } from '../Components/Day';
 import type { Props as WeekdaysProps } from '../Components/Weekdays';
+import { JSX } from 'react';
 
 export type ArrowComponentType = (props: ArrowProps) => JSX.Element | null;
 export type TitleComponentType = (props: TitleProps) => JSX.Element | null;

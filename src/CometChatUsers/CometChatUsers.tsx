@@ -1,6 +1,6 @@
 //@ts-ignore
 import { View, ListRenderItem } from 'react-native';
-import React, { useRef, useEffect, useImperativeHandle } from 'react';
+import React, { useRef, useEffect, useImperativeHandle, JSX } from 'react';
 //@ts-ignore
 import { CometChat } from '@cometchat/chat-sdk-react-native';
 import {
@@ -15,6 +15,7 @@ import {
 } from '../shared';
 import { UsersStyle, UsersStyleInterface } from './UsersStyle';
 import { CometChatUIEventHandler } from '../shared/events/CometChatUIEventHandler/CometChatUIEventHandler';
+import { CommonUtils } from '../shared/utils/CommonUtils';
 
 export interface CometChatUsersInterface
   extends Omit<
@@ -162,11 +163,21 @@ export const CometChatUsers = React.forwardRef<
       new CometChat.UserListener({
         onUserOnline: (onlineUser: any) => {
           /* when someuser/friend comes online, user will be received here */
-          userRef.current?.updateList(onlineUser);
+          let item = userRef.current?.getListItem(onlineUser.uid);
+          if (item) {
+              let updatedConversation = CommonUtils.clone(item) as CometChat.User;
+              updatedConversation.setStatus(onlineUser.status);
+              userRef.current?.updateList(updatedConversation);
+          }
         },
         onUserOffline: (offlineUser: any) => {
           /* when someuser/friend went offline, user will be received here */
-          userRef.current?.updateList(offlineUser);
+        let item = userRef.current?.getListItem(offlineUser.uid);
+          if (item) {
+              let updatedConversation = CommonUtils.clone(item) as CometChat.User;
+              updatedConversation.setStatus(offlineUser.status);
+              userRef.current?.updateList(updatedConversation);
+          }
         },
       })
     );

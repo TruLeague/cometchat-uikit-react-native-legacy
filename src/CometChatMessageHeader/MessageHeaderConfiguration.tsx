@@ -11,6 +11,7 @@ import {
 import { CometChat } from '@cometchat/chat-sdk-react-native';
 import { StyleProp, ViewStyle } from 'react-native';
 import { StatusIndicatorStyleInterface } from '../shared/views/CometChatStatusIndicator/StatusIndicatorStyle';
+import { JSX } from 'react';
 
 export interface MessageHeaderConfigurationInterface
   extends Omit<CometChatMessageHeaderInterface, 'user' | 'group'> {}

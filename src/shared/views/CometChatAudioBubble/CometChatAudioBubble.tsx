@@ -193,7 +193,7 @@ export const CometChatAudioBubble = ({
             }
             <View style={{ flex: 1 }}>
                 <Text
-                    style={[Style.titleStyle, { ...titleFont, color: titleColor }] as TextStyle}
+                    style={[Style.titleStyle, { ...titleFont, color: titleColor }] as TextStyle[]}
                     numberOfLines={1}
                     ellipsizeMode="middle"
                 >

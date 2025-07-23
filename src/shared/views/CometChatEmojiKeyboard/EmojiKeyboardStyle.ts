@@ -1,4 +1,4 @@
-import { BaseStyle, FontStyle } from "../../../shared/base";
+import { BaseStyle, FontStyle } from "../../base";
 
 /**
  * @class EmojiKeyboardStyle

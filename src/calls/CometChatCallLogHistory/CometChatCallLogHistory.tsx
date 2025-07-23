@@ -1,6 +1,6 @@
 //@ts-ignore
 import { CometChat } from '@cometchat/chat-sdk-react-native'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { JSX, useContext, useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, FlatList, Image, StyleProp, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { DatePattern, ImageType } from '../../shared/base/Types'
 import { CometChatContext, CometChatDate, CometChatListItem, CometChatOptions, ListItemStyleInterface, localize } from '../../shared'
@@ -191,7 +191,7 @@ export const CometChatCallLogHistory = (props: CometChatCallLogHistoryInterface)
         <View style={{ width: 70 }}>
           <CometChatDate timeStamp={call['initiatedAt'] * 1000} pattern={datePattern || 'timeFormat'} style={{ textColor: dateTextColor, textFont: dateTextFont }} />
         </View>
-        <Text style={[{ color: callStatusTextColor, marginStart: 2 }, callStatusTextFont] as TextStyle}>
+        <Text style={[{ color: callStatusTextColor, marginStart: 2 }, callStatusTextFont] as TextStyle[]}>
           {
             CallUtils.getCallStatus(call as CometChat.Call, loggedInUser.current)
           }
@@ -203,7 +203,7 @@ export const CometChatCallLogHistory = (props: CometChatCallLogHistoryInterface)
   const DefaultTailView = ({ call }: any) => {
     return (
       <View style={[Style.row, { alignItems: "center" }]}>
-        <Text style={[{ color: callDurationTextColor, marginStart: 2 }, callDurationTextFont] as TextStyle}>
+        <Text style={[{ color: callDurationTextColor, marginStart: 2 }, callDurationTextFont] as TextStyle[]}>
           {
             CallUtils.convertMinutesToHoursMinutesSeconds(call['totalDurationInMinutes'])
           }
@@ -287,7 +287,7 @@ export const CometChatCallLogHistory = (props: CometChatCallLogHistoryInterface)
       return <EmptyStateView />
     return (
       <View style={[Style.container]}>
-        <Text style={[{ color: emptyTextColor, ...emptyTextFont }] as TextStyle}>{emptyStateText || localize("NO_CALL_HISTORY")}</Text>
+        <Text style={[{ color: emptyTextColor, ...emptyTextFont }] as TextStyle[]}>{emptyStateText || localize("NO_CALL_HISTORY")}</Text>
       </View>
     )
   }
@@ -297,7 +297,7 @@ export const CometChatCallLogHistory = (props: CometChatCallLogHistoryInterface)
     if (ErrorStateView)
       return <ErrorStateView />
     return <View style={[Style.container]}>
-      <Text style={[{ color: errorTextColor, ...errorTextFont }] as TextStyle}>{errorStateText || localize("SOMETHING_WRONG")}</Text>
+      <Text style={[{ color: errorTextColor, ...errorTextFont }] as TextStyle[]}>{errorStateText || localize("SOMETHING_WRONG")}</Text>
     </View>
   }
 
@@ -323,7 +323,7 @@ export const CometChatCallLogHistory = (props: CometChatCallLogHistoryInterface)
                 />
               </TouchableOpacity> : null
           }
-          <Text style={[{ color: titleColor, ...titleFont }] as TextStyle}>{title}</Text>
+          <Text style={[{ color: titleColor, ...titleFont }] as TextStyle[]}>{title}</Text>
         </View>
         <View style={Style.row}>
           {

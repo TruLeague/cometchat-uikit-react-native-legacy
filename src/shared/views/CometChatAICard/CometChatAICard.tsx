@@ -54,15 +54,15 @@ const CometChatAICard = (props: CometChatAICardInterface) => {
                 state === States.loading ? <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
                     {!loadingIconURL ? <ActivityIndicator color={loadingIconTint} /> :
                         <Image style={{ width: 25, height: 25, tintColor: loadingIconTint }} source={{uri:loadingIconURL}} />}
-                    <Text style={[loadingStateTextFont, { color: loadingStateTextColor, marginLeft: 10 }] as TextStyle}>{loadingStateText}</Text>
+                    <Text style={[loadingStateTextFont, { color: loadingStateTextColor, marginLeft: 10 }] as TextStyle[]}>{loadingStateText}</Text>
                 </View>
                     : state === States.error ? <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
                         <Image style={{ width: 25, height: 25, tintColor: errorIconTint }} source={errorIconURL || ErrorMessageIcon} />
-                        <Text style={[errorStateTextFont, { color: errorStateTextColor, marginLeft: 10 }] as TextStyle}>{errorStateText}</Text>
+                        <Text style={[errorStateTextFont, { color: errorStateTextColor, marginLeft: 10 }] as TextStyle[]}>{errorStateText}</Text>
                     </View>
                         : state === States.empty ? <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
                             <Image style={{ width: 25, height: 25, tintColor: emptyIconTint }} source={emptyIconURL || NoMessageIcon} />
-                            <Text style={[emptyStateTextFont, { color: emptyStateTextColor, marginLeft: 10 }] as TextStyle}>{emptyStateText}</Text>
+                            <Text style={[emptyStateTextFont, { color: emptyStateTextColor, marginLeft: 10 }] as TextStyle[]}>{emptyStateText}</Text>
                         </View>
                             : null}
         </View>

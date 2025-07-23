@@ -5,6 +5,7 @@ import { AvatarStyleInterface, CometChatOptions, ImageType, ListItemStyleInterfa
 import { CallLogsStyleInterface } from "./CallLogsStyle";
 import { DatePattern } from "../../shared/base/Types";
 import { CometChatOutgoingCallInterface } from "../CometChatOutgoingCall";
+import { JSX } from "react";
 
 export interface CallLogsConfigurationInterface {
     SubtitleView?: (param: { call?: CometChat.BaseMessage }) => JSX.Element,

@@ -4,7 +4,7 @@ import { CometChat } from '@cometchat/chat-sdk-react-native';
 // import { ImageModerationConfigurationInterface } from './ImageModerationConfiguration';
 import { ImageBubbleStyleInterface } from '../../shared/views/CometChatImageBubble';
 // @ts-ignore
-import React from 'react';
+import React, { JSX } from 'react';
 import { CometChatTheme } from '../../shared/resources/CometChatTheme';
 import { ImageModerationFilter } from './ImageModerationFilter';
 import { ImageModerationConfigurationInterface } from './ImageModerationExtension';

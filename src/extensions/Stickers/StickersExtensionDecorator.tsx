@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { JSX, useEffect, useRef, useState } from "react";
 //@ts-ignore
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { CometChatMessageTemplate } from "../../shared/modals";

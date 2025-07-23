@@ -705,7 +705,7 @@ export const CometChatSchedulerBubble = memo(
               style={[
                 theme.typography.subtitle5,
                 { color: theme.palette.getAccent600(), lineHeight: 22 },
-              ] as TextStyle}
+              ] as TextStyle[]}
             >
               {interactiveData?.duration}
               {localize("MIN_MEETING")} • {interactiveData?.timezoneCode}
@@ -729,7 +729,7 @@ export const CometChatSchedulerBubble = memo(
                     ? theme.palette.getPrimary()
                     : theme.palette.getAccent800(),
                 },
-              ] as TextStyle}
+              ] as TextStyle[]}
             >
               {localize("MORE_TIMES")}
             </Text>
@@ -779,7 +779,7 @@ export const CometChatSchedulerBubble = memo(
                   ? style?.suggestedTimeTextColor ?? theme.palette.getPrimary()
                   : theme.palette.getAccent800(),
               },
-            ] as TextStyle}
+            ] as TextStyle[]}
           >
             {text}
           </Text>
@@ -816,7 +816,7 @@ export const CometChatSchedulerBubble = memo(
                     style?.titleTextColor ?? theme?.palette?.getAccent800(),
                   textAlign: "center",
                 },
-              ] as TextStyle}
+              ] as TextStyle[]}
             >
               {title}
             </Text>
@@ -862,7 +862,7 @@ export const CometChatSchedulerBubble = memo(
                       style?.titleTextColor ?? theme?.palette?.getAccent800(),
                     flex: 1,
                   },
-                ] as TextStyle}
+                ] as TextStyle[]}
               >
                 {title}
               </Text>
@@ -892,7 +892,7 @@ export const CometChatSchedulerBubble = memo(
                         style?.summaryTextColor ??
                         theme?.palette?.getAccent600(),
                     },
-                  ] as TextStyle}
+                  ] as TextStyle[]}
                 >
                   {" "}
                   {subTitle}
@@ -947,7 +947,7 @@ export const CometChatSchedulerBubble = memo(
               style={[
                 theme.typography.text1,
                 { color: theme?.palette?.getAccent900() },
-              ] as TextStyle}
+              ] as TextStyle[]}
             >
               {localize("SELECT_DAY")}
             </Text>
@@ -992,7 +992,7 @@ export const CometChatSchedulerBubble = memo(
                 style={[
                   theme.typography.subtitle2,
                   { color: theme.palette.getAccent900() },
-                ] as TextStyle}
+                ] as TextStyle[]}
               >
                 <Image
                   source={ICONS.EARTH}
@@ -1058,7 +1058,7 @@ export const CometChatSchedulerBubble = memo(
                   color: theme.palette.getAccent800(),
                   lineHeight: 30,
                 },
-              ] as TextStyle}
+              ] as TextStyle[]}
             >
               <Image
                 source={ICONS.CALENDAR}
@@ -1084,7 +1084,7 @@ export const CometChatSchedulerBubble = memo(
                 marginBottom: 5,
                 marginTop: 2,
               },
-            ] as TextStyle}
+            ] as TextStyle[]}
           >
             {localize("SELECT_TIME")}
           </Text>
@@ -1097,7 +1097,7 @@ export const CometChatSchedulerBubble = memo(
                   color: theme.palette.getAccent500(),
                   textAlign: "center",
                 },
-              ] as TextStyle}
+              ] as TextStyle[]}
             >
               {localize("NO_TIME_SLOT_AVAILABLE")}
             </Text>
@@ -1111,7 +1111,7 @@ export const CometChatSchedulerBubble = memo(
                   marginBottom: 4,
                   marginRight: 2,
                 },
-              ] as TextStyle}
+              ] as TextStyle[]}
             >
               <Image
                 source={ICONS.EARTH}
@@ -1163,7 +1163,7 @@ export const CometChatSchedulerBubble = memo(
                   color: theme.palette.getAccent800(),
                   lineHeight: 30,
                 },
-              ] as TextStyle}
+              ] as TextStyle[]}
             >
               <Image
                 source={ICONS.CALENDAR}
@@ -1358,7 +1358,7 @@ export const CometChatSchedulerBubble = memo(
                   {
                     color: theme.palette.getAccent800(),
                   },
-                ] as TextStyle}
+                ] as TextStyle[]}
               >
                 {`${selectedSlotState?.startTime?.slice(
                   0,
@@ -1381,7 +1381,7 @@ export const CometChatSchedulerBubble = memo(
                     color: theme.palette.getAccent800(),
                     paddingVertical: 10,
                   },
-                ] as TextStyle}
+                ] as TextStyle[]}
               >
                 {" "}
                 {interactiveData.timezoneCode}
@@ -1402,7 +1402,7 @@ export const CometChatSchedulerBubble = memo(
                       textAlign: "center",
                       marginHorizontal: 15,
                     },
-                  ] as TextStyle}
+                  ] as TextStyle[]}
                 >
                   {slotError === slotErrorEnum.noSlot
                     ? localize("TIME_SLOT_UNAVAILABLE")
@@ -1454,7 +1454,7 @@ export const CometChatSchedulerBubble = memo(
                   theme.palette.getAccent800(),
               },
               style?.goalCompletionTextFont ?? {},
-            ] as TextStyle}
+            ] as TextStyle[]}
           >
             {message.getGoalCompletionText() ||
               localize("FORM_COMPLETION_MESSAGE")}

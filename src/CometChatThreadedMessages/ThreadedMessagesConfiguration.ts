@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { MessageComposerConfigurationInterface } from '../CometChatMessageComposer';
 import { MessageListConfigurationInterface } from '../CometChatMessageList/MessageListConfiguration';
 import { ImageType } from '../shared';

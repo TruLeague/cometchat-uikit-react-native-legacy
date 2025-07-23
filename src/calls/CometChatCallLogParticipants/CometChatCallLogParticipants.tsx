@@ -1,6 +1,6 @@
 //@ts-ignore
 import { CometChat } from '@cometchat/chat-sdk-react-native'
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { JSX, useContext, useEffect, useRef } from 'react'
 import { FlatList, Image, Text, TextStyle, TouchableOpacity, View, ViewProps } from 'react-native'
 import { StyleProp, ViewStyle } from "react-native";
 import { AvatarStyleInterface, CometChatContext, CometChatDate, CometChatListItem, DatePattern, ListItemStyleInterface, localize } from '../../shared'
@@ -113,7 +113,7 @@ export const CometChatParticipants = (props: CometChatCallLogParticipantsConfigu
             return SubtitleView(participant);
         return (
             <View style={[Style.row]}>
-                <Text style={[{ color: durationTextColor }, durationTextFont] as TextStyle}>{CallUtils.convertMinutesToHoursMinutesSeconds(participant['totalDurationInMinutes'])}</Text>
+                <Text style={[{ color: durationTextColor }, durationTextFont] as TextStyle[]}>{CallUtils.convertMinutesToHoursMinutesSeconds(participant['totalDurationInMinutes'])}</Text>
             </View>
         );
     }
@@ -181,7 +181,7 @@ export const CometChatParticipants = (props: CometChatCallLogParticipantsConfigu
             return <EmptyStateView />
         return (
             <View style={[Style.container]}>
-                <Text style={[{ color: emptyTextColor, ...emptyTextFont }] as TextStyle}>{emptyStateText || localize("NO_PARTICIPANTS")}</Text>
+                <Text style={[{ color: emptyTextColor, ...emptyTextFont }] as TextStyle[]}>{emptyStateText || localize("NO_PARTICIPANTS")}</Text>
             </View>
         )
     }
@@ -200,7 +200,7 @@ export const CometChatParticipants = (props: CometChatCallLogParticipantsConfigu
                                 />
                             </TouchableOpacity> : null
                     }
-                    <Text style={[{ color: titleColor, ...titleFont }] as TextStyle}>{title}</Text>
+                    <Text style={[{ color: titleColor, ...titleFont }] as TextStyle[]}>{title}</Text>
                 </View>
                 <View style={Style.row}>
                     {

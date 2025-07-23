@@ -47,7 +47,7 @@ const CometChatCheckBox = (props: CometChatCheckBoxInterface) => {
     return (
         <View style={{ marginBottom: 12 }}>
 
-            <Text style={[titleFont, { color: titleColor, marginBottom: 4 }] as TextStyle}>{data.getLabel()}{!data.getOptional() && "*"}</Text>
+            <Text style={[titleFont, { color: titleColor, marginBottom: 4 }] as TextStyle[]}>{data.getLabel()}{!data.getOptional() && "*"}</Text>
 
             {data.getOptions().map((option, index) => (
                 <View key={index} style={{ flexDirection: "row", alignItems: "center", marginVertical: 1 }}>
@@ -68,7 +68,7 @@ const CometChatCheckBox = (props: CometChatCheckBoxInterface) => {
                             source={ICONS.CHECK_MARK}
                         />}
                     </TouchableOpacity>
-                    <Text style={[optionFont, { color: optionColor }] as TextStyle}>{option.getLabel()}</Text>
+                    <Text style={[optionFont, { color: optionColor }] as TextStyle[]}>{option.getLabel()}</Text>
                 </View>
             ))}
 

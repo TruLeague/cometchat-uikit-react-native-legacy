@@ -1,5 +1,5 @@
 // index.js by Dewansh Yadav @ 23 May 2025
-
+/// <reference path="./imageresolver.d.ts" />
 import {
   //Model
   BaseStyleInterface,

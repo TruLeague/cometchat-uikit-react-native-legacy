@@ -10,6 +10,7 @@ import { CometChatUsersInterface } from './CometChatUsers';
 //@ts-ignore
 import { CometChat } from '@cometchat/chat-sdk-react-native';
 import { UsersStyleInterface } from './UsersStyle'
+import { JSX } from 'react';
 
 export interface UsersConfigurationInterface
   extends Omit<

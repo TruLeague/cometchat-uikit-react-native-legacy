@@ -11,7 +11,7 @@ import {
   VideoBubbleStyleInterface,
 } from '../../shared/views';
 // @ts-ignore
-import React from 'react';
+import React, { JSX } from 'react';
 import { CometChatTheme } from '../../shared/resources/CometChatTheme';
 import { ThumbnailGenerationConfigurationInterface } from './ThumbnailGenerationExtension';
 import { defaultThumbnail } from './resources';

@@ -5,6 +5,7 @@ import { CallLogDetailsStyleInterface } from "./CallLogDetailsStyle"
 import { CallLogHistoryConfiguration } from "../CometChatCallLogHistory";
 import { CallLogParticipantsConfiguration } from "../CometChatCallLogParticipants";
 import { CallLogRecordingsConfiguration } from "../CometChatCallLogRecordings/CallLogRecordingsConfiguration";
+import { JSX } from "react";
 
 export interface CallLogDetailsConfigurationInterface {
     /**

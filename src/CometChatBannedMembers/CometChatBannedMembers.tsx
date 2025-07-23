@@ -17,6 +17,7 @@ import { localize, ImageType } from '../shared';
 import { CometChatGroupsEvents } from '../shared/events';
 import { CometChatUIEventHandler } from '../shared/events/CometChatUIEventHandler/CometChatUIEventHandler';
 import { MessageTypeConstants } from '../shared/constants/UIKitConstants';
+import { CommonUtils } from '../shared/utils/CommonUtils';
 
 export interface CometChatBannedMembersInterface
   extends Omit<
@@ -113,11 +114,21 @@ export const CometChatBannedMembers = (
       new CometChat.UserListener({
         onUserOnline: (onlineUser: any) => {
           /* when someuser/friend comes online, user will be received here */
-          listRef.current?.updateList(onlineUser);
+          let item = listRef.current?.getListItem(onlineUser.uid);
+          if (item) {
+              let updatedConversation = CommonUtils.clone(item) as CometChat.User;
+              updatedConversation.setStatus(onlineUser.status);
+              listRef.current?.updateList(updatedConversation);
+          }
         },
         onUserOffline: (offlineUser: any) => {
           /* when someuser/friend went offline, user will be received here */
-          listRef.current?.updateList(offlineUser);
+        let item = listRef.current?.getListItem(offlineUser.uid);
+          if (item) {
+              let updatedConversation = CommonUtils.clone(item) as CometChat.User;
+              updatedConversation.setStatus(offlineUser.status);
+              listRef.current?.updateList(updatedConversation);
+          }
         },
       })
     );

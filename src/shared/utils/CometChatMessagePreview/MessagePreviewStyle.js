@@ -1,4 +1,4 @@
-import { BaseStyle, BorderStyle } from "../../../shared/base";
+import { BaseStyle, BorderStyle } from "../../base";
 /**
  * @class MessagePreviewStyle
  * @param {String} border

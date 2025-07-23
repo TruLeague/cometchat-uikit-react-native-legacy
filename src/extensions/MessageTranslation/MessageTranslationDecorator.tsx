@@ -8,7 +8,7 @@ import {
 } from '../../shared/resources/CometChatLocalize';
 import { CometChatMessageOption } from "../../shared/modals";
 // @ts-ignore
-import React from 'react';
+import React, { JSX } from 'react';
 import { CometChatTheme } from '../../shared/resources/CometChatTheme';
 import {
   MessageOptionConstants,

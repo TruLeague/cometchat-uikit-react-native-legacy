@@ -1,9 +1,9 @@
-import React, { forwardRef, useEffect, useRef, useState, useImperativeHandle, useContext, useCallback, memo, useLayoutEffect } from "react";
-import { View, FlatList, Text, Image, TouchableOpacity, ActivityIndicator, Modal, SafeAreaView, NativeModules, ScrollView, Dimensions, Platform, Keyboard, TextStyle, ViewProps,ImageBackground } from "react-native";
+import React, { forwardRef, useEffect, useRef, useState, useImperativeHandle, useContext, useCallback, memo, useLayoutEffect, JSX } from "react";
+import { View, Text, Image, TouchableOpacity, ActivityIndicator, NativeModules, ScrollView, Dimensions, Platform, Keyboard, TextStyle, ViewProps, ImageBackground  } from "react-native";
 //@ts-ignore
 import { CometChat } from "@cometchat/chat-sdk-react-native";
-import { LeftArrowCurve, RightArrowCurve } from "./resources";
-import { CometChatContext, CometChatMentionsFormatter, CometChatTextFormatter, CometChatUIKit, CometChatUiKitConstants, CometChatUrlsFormatter, ImageType, SuggestionItem } from "../shared";
+import { LeftArrowCurve } from "./resources";
+import { CometChatContext, CometChatMentionsFormatter, CometChatTextFormatter, CometChatUiKitConstants, CometChatUrlsFormatter, ImageType, SuggestionItem } from "../shared";
 import { MessageBubbleStyle, MessageBubbleStyleInterface } from "../shared/views/CometChatMessageBubble/MessageBubbleStyle";
 import { AvatarStyle, AvatarStyleInterface } from "../shared";
 import { CometChatAvatar, CometChatDate, CometChatReceipt, DateStyle } from "../shared";
@@ -20,11 +20,10 @@ import { ChatConfigurator } from "../shared/framework/ChatConfigurator";
 import { CometChatActionSheet, ActionSheetStyles, CometChatBottomSheet } from "../shared";
 import { getUnixTimestamp, messageStatus } from "../shared/utils/CometChatMessageHelper";
 import { DateStyleInterface } from "../shared/views/CometChatDate/DateStyle";
-import { CometChatContextType, MessageBubbleAlignmentType, MessageListAlignmentType, MessageReceipt, MessageTimeAlignmentType } from "../shared/base/Types";
+import { CometChatContextType, MessageBubbleAlignmentType, MessageListAlignmentType, MessageTimeAlignmentType } from "../shared/base/Types";
 import { CometChatUIEventHandler } from "../shared/events/CometChatUIEventHandler/CometChatUIEventHandler";
 import { ActionSheetStylesInterface } from "../shared/views/CometChatActionSheet/ActionSheetStyle";
 import { CometChatMessageInformation } from "../CometChatMessageInformation/CometChatMessageInformation";
-// import { CometChatContacts, ForwardMessageConfigurationInterface } from "../CometChatContacts";
 import { CometChatMessageInformationConfigurationInterface } from "../CometChatMessageInformation";
 import { InteractiveMessageUtils } from "../shared/utils/InteractiveMessageUtils";
 import { CometChatEmojiKeyboard, EmojiKeyboardStyle } from "../shared/views/CometChatEmojiKeyboard";
@@ -35,7 +34,6 @@ import { CommonUtils } from "../shared/utils/CommonUtils";
 //@ts-ignore
 import Clipboard from "@react-native-clipboard/clipboard";
 import { commonVars } from "../shared/base/vars";
-import { anyObject } from "../shared/utils";
 
 let templatesMap = new Map<string, CometChatMessageTemplate>();
 
@@ -137,6 +135,7 @@ export interface CometChatMessageListActionsInterface {
     removeMessage: (messageObject: CometChat.BaseMessage) => void,
     deleteMessage: (messageObject: CometChat.BaseMessage) => void,
     scrollToBottom: () => void,
+    isNearBottom: () => boolean,
     createActionMessage: () => void, //todo: get clarification what is this method, when gets called and its responsibility
     updateMessageReceipt: (message: CometChat.BaseMessage) => void
 }
@@ -311,7 +310,7 @@ export const CometChatMessageList = memo(forwardRef<
         const messageRequest = useRef<CometChat.MessagesRequest | null>(null);
         const messagesContentListRef = useRef<any[]>([]);
 
-        const msgRequestBuilder = useRef<CometChat.MessagesRequestBuilder>();
+        const msgRequestBuilder = useRef<CometChat.MessagesRequestBuilder>(undefined);
         const lastMessageDate = useRef(new Date().getTime());
 
         // states
@@ -328,9 +327,10 @@ export const CometChatMessageList = memo(forwardRef<
         const [showEmojiKeyboard, setShowEmojiKeyboard] = useState(false);
         const [showReactionList, setShowReactionList] = useState(false);
         const [selectedEmoji, setSelectedEmoji] = useState<string | undefined>(undefined);
+        const [hasDismissed, setHasDismissed] = useState(false);
         // const [forwarding, setForwarding] = useState(false);
 
-        const infoObject = useRef<CometChat.BaseMessage | null>();
+        const infoObject = useRef<CometChat.BaseMessage | null>(undefined);
         const inProgressMessages = useRef<any[]>([]);
         // const messageToForward = useRef<CometChat.BaseMessage>();
         const bottomSheetRef = useRef<any>(null)
@@ -869,7 +869,7 @@ export const CometChatMessageList = memo(forwardRef<
             setMessagesList(tmpList);
         }
 
-        const handlePannel = (item: any) => {
+        const handlePanel = (item: any) => {
             if (item.alignment === ViewAlignment.messageListBottom && (user || group) && CommonUtils.checkIdBelongsToThisComponent(item.id, user, group, parentMessageId || '')) {
                 if (item.child)
                     setCustomListHeader(() => item.child)
@@ -879,6 +879,7 @@ export const CometChatMessageList = memo(forwardRef<
 
         }
 
+
         useEffect(() => {
 
             const showSubscription = Keyboard.addListener('keyboardDidShow', (e) => onKeyboardVisibiltyChange(true, e?.endCoordinates?.height));
@@ -887,16 +888,13 @@ export const CometChatMessageList = memo(forwardRef<
             CometChatUIEventHandler.addUIListener(
                 uiEventListenerShow,
                 {
-                    showPanel: (item) => handlePannel(item),
-                    // ccMentionClick: (item) => {
-                    //     // console.log("item", item)
-                    // }
+                    showPanel: (item) => handlePanel(item),
                 }
             )
             CometChatUIEventHandler.addUIListener(
                 uiEventListenerHide,
                 {
-                    hidePanel: (item) => handlePannel(item)
+                    hidePanel: (item) => handlePanel(item)
                 }
             )
             CometChatUIEventHandler.addUIListener(uiEventListener, {
@@ -1193,6 +1191,7 @@ export const CometChatMessageList = memo(forwardRef<
                 /// todo: not handeled yet
                 createActionMessage,
                 updateMessageReceipt,
+                isNearBottom,
             }
         });
 
@@ -1201,7 +1200,16 @@ export const CometChatMessageList = memo(forwardRef<
                 if (isVisible && currentScrollPosition.current.y && keyboardHeight) {
                     Keyboard_Height = keyboardHeight;
                     scrollPos = (currentScrollPosition.current.y + Keyboard_Height) - ((commonVars.safeAreaInsets.top as number) / 2);
-                    messageListRef.current.scrollTo({ y: scrollPos, animated: false })
+                    // We use a double requestAnimationFrame here to handle keyboard layout changes:
+                    //  1. ScrollView’s height and offsets are final.
+                    //  2. scrollTo is called with the correct y-offset, preventing jerky jumps or overshoot.
+                    //  double requestAnimationFrame is a lightweight way to wait for the keyboard-induced
+                    // layout pass to finish before performing a scroll, avoiding flicker.
+                    requestAnimationFrame(() =>
+                        requestAnimationFrame(() => {
+                          messageListRef.current?.scrollTo({ y: scrollPos, animated: false });
+                        })
+                      );
                     isKeyBoardVisible.current = true;
                 } else {
                     isKeyBoardVisible.current = false;
@@ -1305,7 +1313,7 @@ export const CometChatMessageList = memo(forwardRef<
                     {Boolean(senderName) && <Text style={[Style.nameStyle, {
                         color: _messageListStyle.nameTextColor,
                         ..._messageListStyle.nameTextFont,
-                    }] as TextStyle} numberOfLines={1} ellipsizeMode={"tail"} >{senderName}</Text>}
+                    }] as TextStyle[]} numberOfLines={1} ellipsizeMode={"tail"} >{senderName}</Text>}
                     {
                         timeStampAlignment == "bottom" || item['category'] == "action" ?
                             null :
@@ -1462,7 +1470,7 @@ export const CometChatMessageList = memo(forwardRef<
                     }}
                 >
                     {alignment === "left" && <Image style={{ resizeMode: "contain", tintColor: theme?.palette.getAccent600(), width: 30, height: 18 }} source={LeftArrowCurve} />}
-                    <Text style={style  as TextStyle}>{`${item.getReplyCount()} ${item.getReplyCount() > 1 ? localize("REPLIES") : localize("REPLY")}`}</Text>
+                    <Text style={style  as TextStyle[]}>{`${item.getReplyCount()} ${item.getReplyCount() > 1 ? localize("REPLIES") : localize("REPLY")}`}</Text>
 
                     {/**  NOTE: uncomment below code when want unread count in thread view  **/}
                     {/* {alignment === "left" && !!unreadReplyCount &&
@@ -1560,87 +1568,6 @@ export const CometChatMessageList = memo(forwardRef<
             return _style;
         }, []);
 
-        // const clearForwarding = () => {
-        //     messageToForward.current = null;
-        //     setForwarding(false);
-        // }
-
-        // const showForwardMessage = (message: CometChat.BaseMessage) => {
-        //     setShowMessageOptions([]);
-        //     messageToForward.current = message;
-        //     setForwarding(true);
-        // }
-
-        // const forwardingMessage = (receiverId, receiver, receiverType) => {
-        //     return new Promise((resolve, reject) => {
-        //         if (messageToForward.current.getCategory() == MessageCategoryConstants.message) {
-        //             switch (messageToForward.current.getType()) {
-        //                 case MessageTypeConstants.text:
-        //                     let textMessage: CometChat.TextMessage = new CometChat.TextMessage(
-        //                         receiverId,
-        //                         messageToForward.current['text'],
-        //                         ReceiverTypeConstants.user
-        //                     );
-
-        //                     textMessage.setReceiverId(`${receiverId}`);
-        //                     textMessage.setSender(messageToForward.current['sender']);
-        //                     textMessage.setReceiver(receiver);
-        //                     textMessage.setMuid(`${getUnixTimestamp()}`);
-        //                     textMessage['_composedAt'] = getUnixTimestamp();
-        //                     textMessage.setReceiverType(receiverType);
-        //                     CometChatUIKit.sendTextMessage(textMessage).then(resolve).catch(reject)
-        //                     break;
-        //                 case MessageTypeConstants.image:
-        //                 case MessageTypeConstants.video:
-        //                 case MessageTypeConstants.audio:
-        //                 case MessageTypeConstants.file:
-        //                     let mediaMessage: CometChat.MediaMessage = new CometChat.MediaMessage(
-        //                         receiverId,
-        //                         messageToForward.current['file'],
-        //                         messageToForward.current['type'],
-        //                         ReceiverTypeConstants.user);
-
-
-        //                     mediaMessage.setReceiverId(`${receiverId}`);
-        //                     mediaMessage.setSender(messageToForward.current['sender']);
-        //                     mediaMessage.setReceiver(receiver);
-        //                     mediaMessage.setReceiverType(receiverType);
-        //                     mediaMessage.setMuid(`${getUnixTimestamp()}`);
-        //                     mediaMessage['_composedAt'] = getUnixTimestamp();
-
-        //                     mediaMessage.setType(messageToForward.current.getType());
-        //                     mediaMessage['_id'] = '_' + Math.random().toString(36).substr(2, 9);
-
-        //                     mediaMessage.setData(messageToForward.current['data']);
-
-        //                     CometChatUIKit.sendMediaMessage(mediaMessage).then(resolve).catch(reject);
-        //                     break;
-        //                 default:
-        //                     break;
-        //             }
-        //         }
-        //     });
-        // }
-
-        // const forwardMessage = (list: {users:Array<CometChat.User>, groups:Array<CometChat.Group>}, navigate: boolean = false) => {
-        //     const {users, groups} = list;
-        //     setForwarding(false);
-        //     CometChatUIEventHandler.emitMessageEvent('ccMessageForwarded',{users, groups, status: messageStatus.inprogress});
-        //     let allSelected;
-        //     if (users && users.length > 0) {
-        //         allSelected = users?.map((item) => {
-        //             return forwardingMessage(item.getUid(), item, ReceiverTypeConstants.user);
-        //         })
-        //     }
-        //     if (groups && groups.length > 0)
-        //         allSelected.push(...groups.map((item) => {
-        //             return forwardingMessage(item.getGuid(), item, ReceiverTypeConstants.group);
-        //         }));
-        //     Promise.all(allSelected).then(complete => {
-        //         clearForwarding();
-        //         CometChatUIEventHandler.emitMessageEvent('ccMessageForwarded',{users, groups, status: messageStatus.success});
-        //     });
-        // }
 
         const openOptionsForMessage = useCallback((item: CometChat.BaseMessage | any, template: CometChatMessageTemplate) => {
             let options = template?.options ? loggedInUser.current ? template.options(loggedInUser.current, item, group) : [] : [];
@@ -1866,7 +1793,7 @@ export const CometChatMessageList = memo(forwardRef<
                                     Style.msgTxtStyle, {
                                         ...(messageListStyle?.emptyStateTextFont),
                                         color: messageListStyle?.emptyStateTextColor
-                                    }] as TextStyle}
+                                    }] as TextStyle[]}
                             >
                                 {emptyStateText}
                             </Text>
@@ -1887,7 +1814,7 @@ export const CometChatMessageList = memo(forwardRef<
                         style={[Style.msgTxtStyle, {
                             ...messageListStyle?.errorStateTextFont,
                             color: messageListStyle?.errorStateTextColor
-                        }] as TextStyle}
+                        }] as TextStyle[]}
                     >
                         {errorStateText}
                     </Text>
@@ -1977,6 +1904,16 @@ export const CometChatMessageList = memo(forwardRef<
                 }
             }
         }, [])
+
+        const modalCheck = (): boolean => {
+            if (Platform.OS === 'ios') {
+                return !!(showEmojiKeyboard && hasDismissed);
+            }
+            if (Platform.OS === 'android') {
+                return showEmojiKeyboard;
+            }
+            return false;
+        }
 
         const {
             height,
@@ -2082,37 +2019,6 @@ export const CometChatMessageList = memo(forwardRef<
                         :
                         null
                 }
-                {/* {
-                    forwarding &&
-                    <Modal
-                        style={{flex: 1, backgroundColor: theme.palette.getBackgroundColor()}}
-                    >
-                            <SafeAreaView style={{flex: 1}}>
-                                <CometChatContacts
-                                    {...forwardMessageConfiguration}
-                                    onSubmitIconClick={(list) => {
-                                        if (forwardMessageConfiguration?.onSubmitIconClick) {
-                                            forwardMessageConfiguration.onSubmitIconClick(list);
-                                            clearForwarding();
-                                        } else {
-                                            forwardMessage(list);
-                                        }
-                                    }}
-                                    onClose={() => {
-                                        clearForwarding();
-                                        forwardMessageConfiguration?.onClose && forwardMessageConfiguration.onClose()
-                                    }}
-                                    selectionMode={forwardMessageConfiguration?.selectionMode || 'multiple'}
-                                    selectionLimit={forwardMessageConfiguration?.selectionLimit || 5}
-                                    onItemPress={forwardMessageConfiguration?.selectionMode == 'single' ?
-                                        forwardMessageConfiguration?.onItemPress || (({ group, user }) => {
-                                            forwardMessage({ users: user && [user], groups: group && [group] }, true);
-                                        }) : undefined}
-                                    hideSubmit={forwardMessageConfiguration?.selectionMode == 'single'}
-                                />
-                            </SafeAreaView>
-                    </Modal>
-                } */}
 
                 <CometChatBottomSheet ref={bottomSheetRef} onClose={() => {
                     if (ExtensionsComponent) setExtensionsComponent(null)
@@ -2122,6 +2028,13 @@ export const CometChatMessageList = memo(forwardRef<
                 }} isOpen={showMessageOptions.length > 0 || Boolean(ExtensionsComponent) || messageInfo}
                     sliderMaxHeight={Dimensions.get('window').height * 0.5}
                     sliderMinHeight={Dimensions.get('window').height * 0.5}
+                    onDismiss={() => {
+                        setShowMessageOptions([])
+                        if (Platform.OS === 'ios') {
+                            setHasDismissed(true)
+                        }
+                    }
+                    }
                 >
                     {
                         ExtensionsComponent ? ExtensionsComponent :
@@ -2160,8 +2073,13 @@ export const CometChatMessageList = memo(forwardRef<
                     }
                 </CometChatBottomSheet>
                 <CometChatBottomSheet
-                    isOpen={showEmojiKeyboard}
-                    onClose={() => setShowEmojiKeyboard(false)}
+                    isOpen={modalCheck()}
+                    onClose={() => {
+                        setShowEmojiKeyboard(false);
+                        if (Platform.OS === 'ios') {
+                            setHasDismissed(false);
+                        }
+                    }}
                 >
                     <CometChatEmojiKeyboard
                         onClick={(item) => {

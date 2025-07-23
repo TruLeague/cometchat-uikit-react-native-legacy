@@ -1,5 +1,5 @@
 
-import { FontStyle } from "../../../shared/base";
+import { FontStyle } from "../../base";
 
 /**
  *

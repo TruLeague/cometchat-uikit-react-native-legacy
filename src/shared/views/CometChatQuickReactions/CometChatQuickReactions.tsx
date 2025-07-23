@@ -50,7 +50,7 @@ export const CometChatQuickReactions = (props: CometChatQuickReactionsInterface)
                     backgroundColor: emojiBackgroundColor, borderRadius: 40,
                     alignItems: "center", justifyContent: "center"
                 }} onPress={() => onReactionPress && onReactionPress(item as string)}>
-                    <Text style={[{ fontSize: 25, color: theme?.palette?.getPrimary(), }, theme?.typography?.heading] as TextStyle}>{item}</Text>
+                    <Text style={[{ fontSize: 25, color: theme?.palette?.getPrimary(), }, theme?.typography?.heading] as TextStyle[]}>{item}</Text>
                 </TouchableOpacity>
             )}
             <TouchableOpacity

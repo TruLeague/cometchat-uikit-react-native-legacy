@@ -22,6 +22,7 @@ import { ReactionListConfigurationInterface } from '../shared/views/CometChatRea
 import { QuickReactionsConfigurationInterface } from '../shared/views/CometChatQuickReactions';
 import { EmojiKeyboardStyle } from '../shared/views/CometChatEmojiKeyboard';
 import { CometChatMessageInformationConfigurationInterface } from '../CometChatMessageInformation/MessageInformationConfiguration';
+import { JSX } from 'react';
 
 export interface MessageListConfigurationInterface {
   ErrorStateView?: (e: CometChat.CometChatException) => JSX.Element;

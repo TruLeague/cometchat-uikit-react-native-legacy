@@ -1,6 +1,7 @@
 //@ts-ignore
 import {CometChat} from '@cometchat/chat-sdk-react-native'
 import { emptyIcon, errorIcon, loadingIcon } from "./resources";
+import { JSX } from 'react';
 export class AIBaseConfiguration {
     apiConfiguration?: (user?: CometChat.User, group?: CometChat.Group) => Promise<Object>;
     ErrorStateView?: (e?: CometChat.CometChatException) => JSX.Element;

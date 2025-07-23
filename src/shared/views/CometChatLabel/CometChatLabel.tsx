@@ -19,7 +19,7 @@ const CometChatLabel = (props: CometChatCardBubbleInterface) => {
     } = _style;
     return (
         <View style={{ padding: 10, paddingBottom: 12 }}>
-            <Text style={[labelFont, { color: labelColor }] as TextStyle}>{text}</Text>
+            <Text style={[labelFont, { color: labelColor }] as TextStyle[]}>{text}</Text>
         </View>
     )
 };

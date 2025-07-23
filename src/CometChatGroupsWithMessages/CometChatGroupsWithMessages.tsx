@@ -49,7 +49,7 @@ export const CometChatGroupsWithMessages = (props: CometChatGroupsWithMessagesIn
     // const [showForwarding, setShowForwarding] = useState(false);
 
     const selectedGroup= useRef<any>(group && group instanceof CometChat.Group ? group : undefined);
-    const selectedUser = useRef<any>();
+    const selectedUser = useRef<any>(null);
 
     const _createGroupConfig = new CreateGroupConfiguration({...createGroupConfiguration});
 

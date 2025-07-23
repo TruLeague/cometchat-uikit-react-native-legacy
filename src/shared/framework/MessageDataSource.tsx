@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 //@ts-ignore
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { CometChatMessageTypes, GroupMemberScope, MessageCategoryConstants, MessageOptionConstants, MessageTypeConstants } from "../constants/UIKitConstants";

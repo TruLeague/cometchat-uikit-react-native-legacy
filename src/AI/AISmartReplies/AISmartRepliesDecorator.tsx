@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { CometChatMessageComposerActionInterface, CometChatTheme, CometChatUIEventHandler, CometChatUIEvents, DataSource, DataSourceDecorator, MessageEvents, localize } from "../../shared";
 //@ts-ignore
 import { CometChat } from "@cometchat/chat-sdk-react-native";

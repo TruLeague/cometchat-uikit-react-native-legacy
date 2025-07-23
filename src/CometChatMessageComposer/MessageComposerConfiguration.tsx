@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { CometChatMentionsFormatter, CometChatTextFormatter, CometChatUrlsFormatter, ImageType } from '../shared';
 import {
   CometChatMessageComposerInterface,
@@ -42,7 +42,7 @@ export class MessageComposerConfiguration {
   maxHeight?: number;
   messageComposerStyle?: MessageComposerStyleInterface;
   hideVoiceRecording?: boolean;
-  voiceRecordingIconURL?: string;
+  voiceRecordingIconURL?: string | ImageType;
   mediaRecorderStyle?: MediaRecorderStyle;
   pauseIconUrl?: ImageType;
   playIconUrl?: ImageType;

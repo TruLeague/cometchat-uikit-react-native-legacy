@@ -3,6 +3,7 @@ import { StyleProp, ViewStyle } from "react-native";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { DatePattern, ImageType, ListItemStyleInterface } from "../../shared";
 import { CallRecordingsStyleInterface } from "./CallLogRecordingsStyle";
+import { JSX } from "react";
 
 export interface CallLogRecordingsConfigurationInterface {
     SubtitleView?: (param: { recording?: CometChat.BaseMessage }) => JSX.Element,

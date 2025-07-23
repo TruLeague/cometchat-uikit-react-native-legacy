@@ -1,6 +1,6 @@
 //@ts-ignore
 import { View, Text, TouchableOpacity, TextInput, Image, NativeSyntheticEvent, TextInputSubmitEditingEventData, TextStyle } from 'react-native';
-import React from 'react';
+import React, { JSX } from 'react';
 import styles from './styles';
 import { ICONS } from '../shared/assets/images';
 import { ImageType } from '../shared/helper/types';
@@ -90,7 +90,7 @@ export function Header(props: {
                 styles.titleStyle,
                 { color: titleColor ?? undefined },
                 titleFontStyle ?? {},
-              ] as TextStyle}
+              ] as TextStyle[]}
             >
               {title}
             </Text>
@@ -157,7 +157,7 @@ export function Header(props: {
               styles.searchTextStyle,
               searchTextFontStyle ?? {},
               { color: searchTextColor ?? undefined },
-            ] as TextStyle}
+            ] as TextStyle[]}
             onSubmitEditing={onSubmitEditing}
           />
         </View>
