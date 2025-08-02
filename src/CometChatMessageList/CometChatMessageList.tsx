@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState, useImperativeHandle, useContext, useCallback, memo, useLayoutEffect, JSX } from "react";
-import { View, Text, Image, TouchableOpacity, ActivityIndicator, NativeModules, ScrollView, Dimensions, Platform, Keyboard, TextStyle, ViewProps, ImageBackground  } from "react-native";
+import { View, FlatList, Text, Image, TouchableOpacity, ActivityIndicator, Modal, SafeAreaView, NativeModules, ScrollView, Dimensions, Platform, Keyboard, TextStyle, ViewProps,ImageBackground, findNodeHandle, InteractionManager } from "react-native";
 //@ts-ignore
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { LeftArrowCurve } from "./resources";
@@ -34,6 +34,8 @@ import { CommonUtils } from "../shared/utils/CommonUtils";
 //@ts-ignore
 import Clipboard from "@react-native-clipboard/clipboard";
 import { commonVars } from "../shared/base/vars";
+import { MessageListUtils } from './MessageListUtils';
+import { useIsFocused } from "@react-navigation/native";
 
 let templatesMap = new Map<string, CometChatMessageTemplate>();
 
@@ -331,6 +333,10 @@ export const CometChatMessageList = memo(forwardRef<
         // const [forwarding, setForwarding] = useState(false);
 
         const infoObject = useRef<CometChat.BaseMessage | null>(undefined);
+        // First, modify your ScrollView to add refs to each message
+        const messageRefs = useRef(new Map());
+        const [highlightedMessageId, setHighlightedMessageId] = useState(null);
+
         const inProgressMessages = useRef<any[]>([]);
         // const messageToForward = useRef<CometChat.BaseMessage>();
         const bottomSheetRef = useRef<any>(null)
@@ -879,6 +885,56 @@ export const CometChatMessageList = memo(forwardRef<
 
         }
 
+        // Replace your scrollToSpecificMessageById function with this:
+        const scrollToSpecificMessageById = (messageId: any, retries = 3) => {
+            console.log("🟢 scrollToSpecificMessageById called for ID:", messageId);
+
+            InteractionManager.runAfterInteractions(() => {
+                setTimeout(() => {
+                    const messageRef = messageRefs.current.get(messageId);
+                    const scrollViewNode = findNodeHandle(messageListRef.current);
+
+                    if (messageRef && scrollViewNode) {
+                        console.log("✅ Found messageRef and scrollViewNode for:", messageId);
+                        setHighlightedMessageId(messageId);
+
+                        messageRef.measureLayout(
+                            scrollViewNode,
+                            (x: number, y: number) => {
+                                console.log("📏 Scrolling to y:", y);
+                                messageListRef.current?.scrollTo({ y: Math.max(0, y - 20), animated: true });
+                            },
+                            (error: any) => {
+                                console.error("❌ measureLayout failed:", error);
+                            }
+                        );
+
+                        setTimeout(() => {
+                            setHighlightedMessageId(null);
+                        }, 1500);
+                    } else if (retries > 0) {
+                        console.warn(`⏳ Retrying scrollToSpecificMessageById for ${messageId}, attempts left: ${retries}`);
+                        setTimeout(() => scrollToSpecificMessageById(messageId, retries - 1), 300);
+                    } else {
+                        console.warn("❌ scrollToSpecificMessageById: messageRef or scrollViewNode still missing", {
+                            messageRef,
+                            scrollViewNode,
+                            messageId
+                        });
+                    }
+                }, 200); // Initial wait
+            });
+        };
+
+        const isFocused = useIsFocused();
+
+        // Register the function with the utility
+        useEffect(() => {
+        MessageListUtils.setScrollToSpecificMessageById(scrollToSpecificMessageById);
+        return () => {
+            MessageListUtils.setScrollToSpecificMessageById(() => {});
+        };
+        }, [isFocused,messageListRef,messagesList]);
 
         useEffect(() => {
 
@@ -1192,6 +1248,7 @@ export const CometChatMessageList = memo(forwardRef<
                 createActionMessage,
                 updateMessageReceipt,
                 isNearBottom,
+                scrollToSpecificMessageById,
             }
         });
 
@@ -1640,7 +1697,14 @@ export const CometChatMessageList = memo(forwardRef<
                     hasTemplate && openOptionsForMessage(message, hasTemplate)
                 }
 
-                return <TouchableOpacity activeOpacity={1} onLongPress={() => showOptions ? onLongPress() : undefined} >
+                const scrollToParentMessageHandeler = (message : any) => {
+                    if(message?.metadata?.hasOwnProperty("parentMessage")){
+                        scrollToSpecificMessageById(message?.metadata?.parentMessage?.id)
+                    }
+                    return ;
+                }
+
+                return <TouchableOpacity  activeOpacity={1} onLongPress={() => showOptions ? onLongPress() : undefined} >
                     <CometChatMessageBubble
                         id={`${message.getId()}`}
                         LeadingView={() => !isThreaded ? getLeadingView(message) : null}
@@ -1966,19 +2030,31 @@ export const CometChatMessageList = memo(forwardRef<
                                                 !currentScrollPosition.current.scrollViewHeight && messageListRef.current?.scrollToEnd({ animated: false })
                                             }}
                                             onContentSizeChange={onContentSizeChange}
-                                        >
-
+                                            >
                                             {messagesList?.length ? (
-                                                messagesList
-                                                    // .slice(0)
-                                                    // .reverse()
-                                                    .map((item, index) => (
-                                                        <View
-                                                            key={keyExtractor(item)}>
-                                                            <RenderMessageItem item={item} index={index} />
-                                                            {itemSeperator()}
-                                                        </View>
-                                                    ))
+                                                messagesList.map((item, index) => (
+                                                <View
+                                                    key={keyExtractor(item)}
+                                                    ref={(ref) => {
+                                                    if (ref) {
+                                                        messageRefs.current.set(item.getId(), ref);
+                                                    } else {
+                                                        messageRefs.current.delete(item.getId());
+                                                    }
+                                                    }}
+                                                    style={[
+                                                    highlightedMessageId === item.getId() && {
+                                                        backgroundColor: messageListStyle?.emptyStateTextColor?.toString()+"40", 
+                                                        paddingTop : 8,
+                                                        borderRadius : 25,
+                                                        marginBottom : 8,
+                                                    }
+                                                    ]}
+                                                >
+                                                    <RenderMessageItem item={item} index={index} />
+                                                    {itemSeperator()}
+                                                </View>
+                                                ))
                                             ) : (
                                                 getEmptyTextView()
                                             )}

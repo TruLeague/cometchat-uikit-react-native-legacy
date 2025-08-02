@@ -11,8 +11,9 @@ import {
   MessageListConfiguration,
   MessageListConfigurationInterface,
 } from "./MessageListConfiguration";
+import { MessageListUtils } from "./MessageListUtils";
 
-export { CometChatMessageList, MessageListStyle, MessageListConfiguration };
+export { CometChatMessageList, MessageListStyle, MessageListConfiguration,MessageListUtils };
 export type {
   CometChatMessageListActionsInterface,
   CometChatMessageListProps,

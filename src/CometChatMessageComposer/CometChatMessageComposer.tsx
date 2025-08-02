@@ -74,6 +74,10 @@ import { permissionUtil } from '../shared/utils/PermissionUtil';
 import { commonVars } from '../shared/base/vars';
 import { Colors } from '../../../../../src/common/Colors';
 import { MentionPostProcessor } from '../../../../../src/cometchat-v4-ui-kit/utils/MentionUtility';
+import { useDispatch, useSelector } from 'react-redux'
+import { setMessageToBeReplied } from '../../../../../src/redux/action/ReplyMessageAction'
+import { minifyParentMessage } from '../../../../../src/cometchat-v4-ui-kit/utils/MessageUtils';
+
 const { FileManager, CommonUtil } = NativeModules;
 
 const uiEventListenerShow = 'uiEvent_show_' + new Date().getTime();
@@ -682,6 +686,18 @@ export const CometChatMessageComposer = React.forwardRef(
     const [currentUser, setCurrentUser] = React.useState<any>(null);  
     const bottomSheetRef = React.useRef<any>(null);
 
+    const dispatch = useDispatch()
+
+    const messageToBeReplied = useSelector((state: any) => {
+      return state.replyMessageReducer?.message_to_be_replied
+    })
+
+    // keep a ref pointing at the current reply message
+    const messageToBeRepliedRef = useRef(messageToBeReplied);
+    useEffect(() => {
+      messageToBeRepliedRef.current = messageToBeReplied;
+    }, [messageToBeReplied]);
+
     useLayoutEffect(() => {
       if (Platform.OS === 'ios') {
         if (Number.isInteger(commonVars.safeAreaInsets.top)) {
@@ -927,12 +943,22 @@ export const CometChatMessageComposer = React.forwardRef(
         chatWith.current
       );
 
+      let PARENT_MESSAGE = messageToBeReplied
+
+
       textMessage.setSender(loggedInUser.current);
       textMessage.setReceiver(chatWith.current);
       textMessage.setText(finalTextInput);
       textMessage.setMuid(String(getUnixTimestampInMilliseconds()));
       parentMessageId &&
         textMessage.setParentMessageId(parentMessageId as number);
+
+       
+      if(PARENT_MESSAGE){
+        textMessage.setMetadata({
+          parentMessage: PARENT_MESSAGE
+        })
+      }
 
       allFormatters.current.forEach((item) => {
         textMessage = item.handlePreMessageSend(textMessage);
@@ -975,6 +1001,9 @@ export const CometChatMessageComposer = React.forwardRef(
               status: messageStatus.success,
             }
           );
+          setTimeout(() => {
+            dispatch(setMessageToBeReplied(null))
+          }, 500);
         })
         .catch((error: any) => {
           onError && onError(error);
@@ -1043,6 +1072,9 @@ export const CometChatMessageComposer = React.forwardRef(
       messageType?: any,
       receiverType?: any
     ) => {
+      
+      let PARENT_MESSAGE = messageToBeRepliedRef.current;
+
       setShowActionSheet(false);
       let mediaMessage: any = new CometChat.MediaMessage(
         receiverId,
@@ -1063,6 +1095,13 @@ export const CometChatMessageComposer = React.forwardRef(
         url: messageInput['uri'],
         sender: loggedInUser.current,
       });
+
+      if(PARENT_MESSAGE){
+        mediaMessage.setMetadata({
+          parentMessage: PARENT_MESSAGE
+        })
+      }
+
       parentMessageId &&
         mediaMessage.setParentMessageId(parentMessageId as number);
 
@@ -1085,6 +1124,13 @@ export const CometChatMessageComposer = React.forwardRef(
         url: messageInput['uri'],
         sender: loggedInUser.current,
       });
+
+      if(PARENT_MESSAGE){
+        localMessage.setMetadata({
+          parentMessage: PARENT_MESSAGE
+        })
+      }
+
       parentMessageId &&
         localMessage.setParentMessageId(parentMessageId as number);
       localMessage.setData({
@@ -1113,6 +1159,10 @@ export const CometChatMessageComposer = React.forwardRef(
             }
           );
           setShowRecordAudio(false);
+          setTimeout(() => {
+            dispatch(setMessageToBeReplied(null))
+          }, 500);
+
         })
         .catch((error: any) => {
           setShowRecordAudio(false);
