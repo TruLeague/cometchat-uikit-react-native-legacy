@@ -1035,6 +1035,12 @@ export const CometChatMessageComposer = React.forwardRef(
       parentMessageId &&
         textMessage.setParentMessageId(parentMessageId as number);
 
+      if(message?.metadata?.hasOwnProperty('parentMessage')){
+        textMessage.setMetadata({
+          parentMessage: message.metadata.parentMessage
+        })
+      }
+
       inputValueRef.current = '';
       setInputMessage('');
       messageInputRef.current && messageInputRef.current.clear();
