@@ -132,9 +132,9 @@ export const CometChatMediaRecorder = (props: CometChatMediaRecorderInterface) =
     }
 
     const ImageButton = (props: any) => {
-        const { image, onClick, buttonStyle, imageStyle, disabled } = props;
+        const { image, onClick, buttonStyle, imageStyle, disabled, label} = props;
         return (
-            <TouchableOpacity onPress={disabled ? () => { } : onClick}
+            <TouchableOpacity accessible={true} accessibilityLabel={label} onPress={disabled ? () => { } : onClick}
                 activeOpacity={disabled ? 1 : .5}
                 style={buttonStyle}>
                 <Image source={image} style={[{ height: 24, width: 24 }, imageStyle]} />
@@ -248,12 +248,14 @@ export const CometChatMediaRecorder = (props: CometChatMediaRecorderInterface) =
                         imageStyle={[Style.imageStyle, playIconTint && { tintColor: playIconTint }]}
                         onClick={_onPlay}
                         buttonStyle={[Style.buttonStyle, { width: "10%" }]}
+                        label="Play"
                     /> :
                         <ImageButton
                             image={pauseIconUrl || ICONS.PAUSE}
                             imageStyle={[Style.imageStyle, pauseIconTint && { tintColor: pauseIconTint }]}
                             onClick={_onPause}
                             buttonStyle={[Style.buttonStyle, { width: "10%" }]}
+                            label="Pause"
                         />
                     }
                 </>}
@@ -284,6 +286,7 @@ export const CometChatMediaRecorder = (props: CometChatMediaRecorderInterface) =
                     imageStyle={[Style.imageStyle, closeIconTint && { tintColor: closeIconTint }]}
                     onClick={_onClose}
                     buttonStyle={[Style.buttonStyle]}
+                    label="Delete"
                 />
                 {Boolean(recordedFile) ?
                     <ImageButton
@@ -291,12 +294,14 @@ export const CometChatMediaRecorder = (props: CometChatMediaRecorderInterface) =
                         imageStyle={[Style.imageStyle, stopIconTint && { tintColor: stopIconTint }]}
                         onClick={_onStart}
                         buttonStyle={[Style.buttonStyle]}
+                        label="Microphone"
                     />
                     : <ImageButton
                         image={stopIconUrl || ICONS.STOP_PLAYER}
                         imageStyle={[Style.imageStyle, stopIconTint && { tintColor: stopIconTint }]}
                         onClick={_onStop}
                         buttonStyle={[Style.buttonStyle]}
+                        label="Stop"
                     />}
                 <ImageButton
                     image={submitIconUrl || ICONS.SEND}
@@ -304,6 +309,7 @@ export const CometChatMediaRecorder = (props: CometChatMediaRecorderInterface) =
                     onClick={_onSend}
                     disabled={!Boolean(recordedFile)}
                     buttonStyle={[Style.buttonStyle]}
+                    label="Send"
                 />
             </View>
         </View>

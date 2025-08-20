@@ -156,6 +156,8 @@ const CometChatBottomSheet = forwardRef(
                   // {..._childPanResponder?.panHandlers}
                 >
                   <TouchableOpacity
+                    accessible={true}
+                    accessibilityLabel={'Button to toggle bottom sheet'}
                     onPress={togglePanel.bind(this)}
                     activeOpacity={1}
                     style={{ height: style?.lineHeight || 30 }}

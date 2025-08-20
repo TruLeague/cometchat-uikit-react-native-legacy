@@ -86,6 +86,8 @@ export const CometChatAvatar = (props: CometChatAvatarProps) => {
 
   return (
     <View
+      accessible={true}
+      accessibilityLabel={`Profile picture of ${name}`}
       style={[
         Styles.containerStyle,
         {

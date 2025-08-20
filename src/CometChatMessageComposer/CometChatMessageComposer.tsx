@@ -102,6 +102,8 @@ const ImageButton2 = (props: any) => {
   const { image, onClick, buttonStyle, imageStyle, disable } = props;
   return (
     <TouchableOpacity
+      accessible={true}
+      accessibilityLabel={`Button to record audio`}
       activeOpacity={disable ? 1 : undefined}
       onPress={disable ? () => {} : onClick}
       style={{backgroundColor: imageStyle[1].tintColor,padding:10, borderRadius : 100}}
@@ -112,12 +114,14 @@ const ImageButton2 = (props: any) => {
 };
 
 const ImageButton = (props: any) => {
-  const { image, onClick, buttonStyle, imageStyle, disable } = props;
+  const { image, onClick, buttonStyle, imageStyle, disable, label } = props;
   return (
     <TouchableOpacity
       activeOpacity={disable ? 1 : undefined}
       onPress={disable ? () => {} : onClick}
       style={buttonStyle}
+      accessible={true}
+      accessibilityLabel={label}
     >
       <Image source={image} style={[{ height: 24, width: 24 }, imageStyle]} />
     </TouchableOpacity>
@@ -132,6 +136,7 @@ const AttachIconButton = (props: any) => {
         image={icon}
         imageStyle={[Style.imageStyle, style]}
         onClick={onClick}
+        label={"Button to attach media"}
       />
     );
   } else {
@@ -1242,6 +1247,7 @@ export const CometChatMessageComposer = React.forwardRef(
           image={ICONS.EMOJI}
           imageStyle={Style.imageStyle}
           onClick={() => setShowEmojiboard(true)}
+          label={"Button to open emoji keyboard"}
         />
       );
     };
@@ -1286,7 +1292,8 @@ export const CometChatMessageComposer = React.forwardRef(
              //       : messageComposerStyle?.sendIconTint ||
              //         theme.palette.getPrimary(),
              // },
-           ]}
+            ]}
+           label={"Button to send message"}
            disable={(inputMessage as String).length === 0}
            onClick={sendTextMessage}
          />
@@ -1331,6 +1338,7 @@ export const CometChatMessageComposer = React.forwardRef(
             image={liveReactionIcon}
             imageStyle={[Style.imageStyle, Style.liveReactionBtnStyle]}
             onClick={liveReactionHandler}
+            label={"Button to send live reaction"}
           />
         </View>
       );
@@ -1359,6 +1367,7 @@ export const CometChatMessageComposer = React.forwardRef(
             setShowAIOptions(true);
             setAIOptionItems(rootAIOptionItems);
           }}
+          label={"Button to open AI options"}
         />
       );
     };
