@@ -95,7 +95,7 @@ export const CometChatMessageBubble = memo(({
     } = _style;
 
     return (
-        <View key={id} style={{
+        <View style={{
             width: "100%",
             alignItems: alignment == "right" ?
                 "flex-end" :
