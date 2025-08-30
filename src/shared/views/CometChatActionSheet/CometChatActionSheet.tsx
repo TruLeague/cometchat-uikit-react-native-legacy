@@ -230,7 +230,7 @@ export const CometChatActionSheet = (props: CometChatActionSheetInterface) => {
       img = listMode ? ICONS.GRID : ICONS.LIST;
     }
     return (
-      <TouchableOpacity onPress={() => setListMode(!listMode)}>
+      <TouchableOpacity accessible={true} accessibilityLabel={'Button to change layout mode of attachments'} onPress={() => setListMode(!listMode)}>
         <Image
           style={[
             Style.layoutBtnStyle,

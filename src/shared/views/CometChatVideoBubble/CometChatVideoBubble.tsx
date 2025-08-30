@@ -176,7 +176,7 @@ export const CometChatVideoBubble = (props: CometChatVideoBubbleInterface) => {
     }
 
     return (
-        <>
+        <View accessible={true} accessibilityLabel="Video message" accessibilityHint="Double tap to play video">
             <CometChatVideoPlayer
                 videoUri={videoUrl}
                 isVisible={isVideoPlayerVisible}
@@ -206,6 +206,6 @@ export const CometChatVideoBubble = (props: CometChatVideoBubbleInterface) => {
                     }
                 </View>
             </ImageBackground>
-        </>
+        </View>
     )
 }

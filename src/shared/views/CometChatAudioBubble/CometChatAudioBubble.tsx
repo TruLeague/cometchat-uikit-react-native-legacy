@@ -180,6 +180,9 @@ export const CometChatAudioBubble = ({
                         onTouchStart={handleTouchStart}
                         onTouchEnd={handleTouchEnd}
                         onTouchMove={onTouchMove}
+                        accessible={true}
+                        accessibilityLabel="Audio message"
+                        accessibilityHint="Double tap to play audio"
                     >
                         <Image
                             source={

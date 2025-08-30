@@ -54,6 +54,8 @@ export const CometChatQuickReactions = (props: CometChatQuickReactionsInterface)
                 </TouchableOpacity>
             )}
             <TouchableOpacity
+                accessible={true}
+                accessibilityLabel={'Button to add more reactions'}
                 onPress={() => onAddReactionPress && onAddReactionPress()}
                 style={{
                     marginRight: 10,
