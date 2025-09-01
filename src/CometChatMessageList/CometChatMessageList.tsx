@@ -1704,7 +1704,7 @@ export const CometChatMessageList = memo(forwardRef<
                     return ;
                 }
 
-                return <TouchableOpacity accessible={false}>
+                return <TouchableOpacity accessible={false} activeOpacity={1} onLongPress={() => showOptions ? onLongPress() : undefined} >
                     <CometChatMessageBubble
                         id={`${message.getId()}`}
                         LeadingView={() => !isThreaded ? getLeadingView(message) : null}
