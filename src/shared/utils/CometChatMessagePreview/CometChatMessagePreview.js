@@ -95,6 +95,9 @@ const CometChatMessagePreview = ({
           {messagePreviewTitle}
         </Text>
         <TouchableOpacity
+          accessible={true}
+          accessibilityLabel="close button"
+          accessibilityHint="Double tap to close message preview"
           style={Styles.previewCloseStyle(style)}
           onPress={onCloseClick}
         >
