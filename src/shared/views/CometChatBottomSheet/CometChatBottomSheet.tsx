@@ -127,7 +127,7 @@ const CometChatBottomSheet = forwardRef(
           <View style={Styles.wrapperStyle}>
             <View
               style={Styles.greyWrapperStyle}
-              onStartShouldSetResponder={() => togglePanel()}
+              // onStartShouldSetResponder={() => togglePanel()}
             />
             {
               //@ts-ignore
