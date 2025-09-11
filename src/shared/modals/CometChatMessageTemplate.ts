@@ -18,6 +18,9 @@ interface MessageTemplateInterface {
      */
     type: (typeof CometChat.MESSAGE_TYPE)[keyof typeof CometChat.MESSAGE_TYPE],
 
+
+    LeadingView?: (messageObject: CometChat.BaseMessage, alignment?: MessageBubbleAlignmentType) => JSX.Element | null,
+
     /**
      * The content view of the message template.
      * @param messageObject - The message object.
@@ -86,6 +89,10 @@ export class CometChatMessageTemplate implements MessageTemplateInterface {
      * The type of the message template.
      */
     type: (typeof CometChat.MESSAGE_TYPE)[keyof typeof CometChat.MESSAGE_TYPE];
+
+    LeadingView?: (messageObject: CometChat.BaseMessage, alignment?: MessageBubbleAlignmentType) => JSX.Element | null;
+
+
     /**
      * The content view of the message template.
      * @param messageObject - The message object.
@@ -142,6 +149,7 @@ export class CometChatMessageTemplate implements MessageTemplateInterface {
     constructor({
         category = "MESSAGE",
         type = CometChat.MESSAGE_TYPE.TEXT,
+        LeadingView,
         ContentView,
         BottomView,
         BubbleView,
@@ -152,6 +160,7 @@ export class CometChatMessageTemplate implements MessageTemplateInterface {
     }: MessageTemplateInterface) {
         this.category = category;
         this.type = type;
+        this.LeadingView = LeadingView;
         this.ContentView = ContentView;
         this.BottomView = BottomView;
         this.BubbleView = BubbleView;
