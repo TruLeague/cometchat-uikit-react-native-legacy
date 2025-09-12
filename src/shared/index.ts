@@ -129,6 +129,7 @@ import {
   CometChatConfirmDialog,
   ListItemStyleInterface,
   CometChatList,
+  CometChatList2,
   CometChatListProps,
   CometChatListActionsInterface,
   CometChatListStylesInterface,
@@ -288,6 +289,7 @@ export {
   CometChatSoundManager,
   //
   CometChatList,
+  CometChatList2,
   CometChatMediaRecorder,
   MediaRecorderStyle,
   CometChatFormBubble,
