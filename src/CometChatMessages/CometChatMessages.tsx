@@ -15,6 +15,7 @@ import { CometChatThreadedMessages } from "../CometChatThreadedMessages";
 import { infoIcon } from "./resources";
 import { Style } from "./style";
 import { CometChatUIEventHandler } from "../shared/events/CometChatUIEventHandler/CometChatUIEventHandler";
+import { useKeyboard } from "../../../../../src/cometchat-v4-ui-kit/hooks/useKeyboard";
 
 const currentTime = new Date().getTime();
 const msgListenerId = "messages_" + currentTime;
@@ -102,7 +103,7 @@ export const CometChatMessages = (props: CometChatMessagesInterface) => {
             return () => keyboardDidHideListener.remove();
         }, []);
     
-
+    const keyboardHeight = useKeyboard();
 
     //calculated styles and configurations
     const _messagesStyles = new MessageStyle({
@@ -311,7 +312,7 @@ export const CometChatMessages = (props: CometChatMessagesInterface) => {
                     />
                 </View>
             }
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, paddingBottom:keyboardHeight }}>
                 {
                     hideMessageHeader ?
                         null :
