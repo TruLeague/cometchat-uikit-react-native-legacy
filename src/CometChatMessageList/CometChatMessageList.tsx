@@ -1763,10 +1763,10 @@ export const CometChatMessageList = memo(forwardRef<
                 const newMessageObj = CommonUtils.clone(msgObj);
                 newMessageObj.setReactions(updatedReactions);
 
-                CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: newMessageObj, status: messageStatus.success });
+                CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: newMessageObj, status: messageStatus.success , source : "reaction" });
                 CometChat.removeReaction(messageId, emoji).then((message: any) => {
                 }).catch((error: any) => {
-                    CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: msgObj, status: messageStatus.success });
+                    CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: msgObj, status: messageStatus.success, source : "reaction" });
                     console.log(error);
                 });
             } else {
@@ -1792,14 +1792,14 @@ export const CometChatMessageList = memo(forwardRef<
 
                 newMessageObj.setReactions(updatedReactions);
 
-                CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: newMessageObj, status: messageStatus.success });
+                CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: newMessageObj, status: messageStatus.success, source : "reaction" });
 
                 CometChat.addReaction(messageId, emoji)
                     .then((response: any) => {
                     })
                     .catch((error: any) => {
                         console.log(error);
-                        CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: msgObj, status: messageStatus.success });
+                        CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: msgObj, status: messageStatus.success, source : "reaction" });
                     });
             }
 

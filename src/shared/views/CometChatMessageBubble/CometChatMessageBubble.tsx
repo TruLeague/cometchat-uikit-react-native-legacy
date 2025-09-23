@@ -167,7 +167,7 @@ export const CometChatMessageBubble = memo(({
                         accessibilityRole='button'
                         accessibilityHint={ checkMessageIdInArray(messageObject.rawMessage?.id) ? 'Double tap to save this message' : ""}
                         onPress={() => { saveConversationMessage(messageObject.rawMessage?.id, messageObject.rawMessage.text) }}
-                        style={{ height: 42, width: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.newBgGreyColor, marginRight: 5 }}
+                        style={{ height: 42, width: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.newBgGreyColor, marginRight: 5,marginBottom : messageObject.data?.reactions?.length > 0 ? 36 : 0 }}
                     >
                         <Image source={Icons.IcSave} style={{ height: 22, width: 22 }}
                             tintColor={checkMessageIdInArray(messageObject.rawMessage?.id) ? Colors.green : Colors.newTextColor}
