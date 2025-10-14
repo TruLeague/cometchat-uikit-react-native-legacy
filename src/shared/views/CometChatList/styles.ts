@@ -48,9 +48,9 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   backButtonStyle: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
+    width: 28,
+    height: 42,
+    marginRight: 0,
   },
   searchTextStyle: {
     flex: 1,
