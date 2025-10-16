@@ -38,7 +38,7 @@ export default function Header({
         {(showBackButton || title?.length !== 0) && (
           <View style={styles.headerLeftContainer}>
             {showBackButton ? (
-              <TouchableOpacity onPress={onBack}>
+              <TouchableOpacity onPress={onBack} accessible={true} accessibilityLabel="back-button">
                 <Image
                   source={
                     typeof backButtonIcon == 'string'
