@@ -2,7 +2,7 @@ import React, { JSX } from "react";
 import { View, Text, Alert, TouchableOpacity, Image, Modal, ViewProps, TextStyle } from "react-native";
 import { kickIcon, banIcon, downArrowIcon, checkIcon } from "./resources";
 import { CometChatOptions } from "../shared/modals/CometChatOptions";
-import { AvatarStyle, AvatarStyleInterface, CometChatContext, CometChatUiKitConstants, ListItemStyle, ListItemStyleInterface, StatusIndicatorStyle } from "../shared";
+import { AvatarStyle, AvatarStyleInterface, CometChatContext, CometChatList2, CometChatUiKitConstants, ListItemStyle, ListItemStyleInterface, StatusIndicatorStyle } from "../shared";
 import { GroupMembersStyle, GroupMembersStyleInterface } from "./GroupMemberStyle";
 //@ts-ignore
 import { CometChat } from "@cometchat/chat-sdk-react-native";
@@ -668,7 +668,7 @@ export const CometChatGroupsMembers = (props: CometChatGroupsMembersInterface) =
         }
     }, []);
 
-    return <CometChatList
+    return <CometChatList2
         ref={groupRef}
         listItemKey={"uid"}
         SubtitleView={SubtitleView}

@@ -76,6 +76,7 @@ import {
 } from "./CometChatDate";
 import {
   CometChatList,
+  CometChatList2,
   CometChatListProps,
   CometChatListActionsInterface,
   CometChatListStylesInterface,
@@ -202,6 +203,7 @@ export {
   CometChatBottomSheet,
   CometChatConfirmDialog,
   CometChatList,
+  CometChatList2,
   CometChatMediaRecorder,
   MediaRecorderStyle,
   CometChatFormBubble,
