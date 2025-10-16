@@ -1707,7 +1707,7 @@ export const CometChatMessageList = memo(forwardRef<
                 return <TouchableOpacity accessible={false} activeOpacity={1} onLongPress={() => showOptions ? onLongPress() : undefined} >
                     <CometChatMessageBubble
                         id={`${message.getId()}`}
-                        LeadingView={() => !isThreaded ? getLeadingView(message) : null}
+                        LeadingView={hasTemplate.LeadingView ? hasTemplate.LeadingView?.bind(this, message, bubbleAlignment) : () => !isThreaded ? getLeadingView(message) : null}
                         HeaderView={hasTemplate.HeaderView ? hasTemplate.HeaderView?.bind(this, message, bubbleAlignment) : () => !isThreaded ? getHeaderView(message) : null}
                         FooterView={hasTemplate.FooterView ? hasTemplate.FooterView?.bind(this, message, bubbleAlignment) : () => (disableReactions || isThreaded) ? null : getFooterView(message, bubbleAlignment)}
                         alignment={isThreaded ? "left" : bubbleAlignment}
@@ -1716,6 +1716,11 @@ export const CometChatMessageList = memo(forwardRef<
                         BottomView={hasTemplate.BottomView && hasTemplate.BottomView?.bind(this, message, bubbleAlignment)}
                         StatusInfoView={hasTemplate.StatusInfoView ? hasTemplate.StatusInfoView?.bind(this, message, bubbleAlignment) : () => getStatusInfoView(message, bubbleAlignment, currentIndex)}
                         style={getStyle(message)}
+                        messageObject={message}
+                        type={message.getType()}
+                        group={group}
+                        user={user}
+                        loggedInUser={loggedInUser.current}
                     />
                 </TouchableOpacity>
             } else {
@@ -1758,10 +1763,10 @@ export const CometChatMessageList = memo(forwardRef<
                 const newMessageObj = CommonUtils.clone(msgObj);
                 newMessageObj.setReactions(updatedReactions);
 
-                CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: newMessageObj, status: messageStatus.success });
+                CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: newMessageObj, status: messageStatus.success , source : "reaction" });
                 CometChat.removeReaction(messageId, emoji).then((message: any) => {
                 }).catch((error: any) => {
-                    CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: msgObj, status: messageStatus.success });
+                    CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: msgObj, status: messageStatus.success, source : "reaction" });
                     console.log(error);
                 });
             } else {
@@ -1787,14 +1792,14 @@ export const CometChatMessageList = memo(forwardRef<
 
                 newMessageObj.setReactions(updatedReactions);
 
-                CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: newMessageObj, status: messageStatus.success });
+                CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: newMessageObj, status: messageStatus.success, source : "reaction" });
 
                 CometChat.addReaction(messageId, emoji)
                     .then((response: any) => {
                     })
                     .catch((error: any) => {
                         console.log(error);
-                        CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: msgObj, status: messageStatus.success });
+                        CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageEdited, { message: msgObj, status: messageStatus.success, source : "reaction" });
                     });
             }
 
