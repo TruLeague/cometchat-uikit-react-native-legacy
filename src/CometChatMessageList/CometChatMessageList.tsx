@@ -1733,7 +1733,7 @@ export const CometChatMessageList = memo(forwardRef<
                             }}
                         >
                             <Text style={{color : Colors.newTextColor, fontSize: 14, fontFamily: Fonts.LexendMedium, lineHeight: 24}}>
-                               {isActionByUserMe ? "You" : pinnedByUser} pinned this message
+                               {isActionByUserMe ? "You" : pinnedByUser} pinned a message
                             </Text>
                         </View>
                         :
