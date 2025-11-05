@@ -2295,6 +2295,12 @@ export const CometChatMessageComposer = React.forwardRef(
                     muted={false}
                   /> 
                   :
+                  mediaMessageToSend?.MessageType == "audio" ?
+                  <View style={{width:'100%',justifyContent:'center',alignItems:'center'}}>
+                     <Image source={Icons.ICAttachAudio} tintColor={Colors.newGreyBorder} style={{height:80,width:80}} />
+                     <Text style={{color:'white',fontSize:18,fontFamily:Fonts.LexendMedium,marginTop:10}}>{mediaMessageToSend?.File?.name}</Text>
+                    </View>
+                    :
                   <View style={{width:'100%',justifyContent:'center',alignItems:'center'}}>
                      <Image source={Icons.IcNewPDF} style={{height:80,width:80}} />
                      <Text style={{color:'white',fontSize:18,fontFamily:Fonts.LexendMedium,marginTop:10}}>{mediaMessageToSend?.File?.name}</Text>
