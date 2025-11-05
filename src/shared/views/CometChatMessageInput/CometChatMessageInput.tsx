@@ -105,6 +105,8 @@ export interface CometChatMessageInputInterface {
    * @description ref of {TextInput}
    */
   messageInputRef?: RefObject<any>;
+
+  mediaPreviewUri?: string
 }
 export const CometChatMessageInput = (
   props: CometChatMessageInputInterface
@@ -122,6 +124,7 @@ export const CometChatMessageInput = (
     auxiliaryButtonAlignment = 'right',
     style = {},
     text = '',
+    mediaPreviewUri
   } = props;
 
   return (
@@ -188,15 +191,15 @@ export const CometChatMessageInput = (
       >
         <View style={{ flexDirection: 'row' }}>
           {/* {SecondaryButtonView && <SecondaryButtonView />} */}
-          {text?.length  == 0 && auxiliaryButtonAlignment === 'left' && AuxiliaryButtonView && (
+          {(text?.length  == 0 && mediaPreviewUri == null) && auxiliaryButtonAlignment === 'left' && AuxiliaryButtonView && (
             <AuxiliaryButtonView />
           )}
         </View>
         <View style={{ flexDirection: 'row' }}>
-          { text?.length  == 0 && auxiliaryButtonAlignment === 'right' && AuxiliaryButtonView &&  (
+          {( text?.length == 0 && mediaPreviewUri == null) && auxiliaryButtonAlignment === 'right' && AuxiliaryButtonView &&  (
             <AuxiliaryButtonView />
           )}
-          {(text?.length > 0 || text?.length == undefined) && PrimaryButtonView && <PrimaryButtonView />}
+          {(text?.length > 0 || text?.length == undefined || mediaPreviewUri) && PrimaryButtonView && <PrimaryButtonView />}
         </View>
       </View>
     </View>
