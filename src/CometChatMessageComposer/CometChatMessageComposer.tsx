@@ -2311,6 +2311,7 @@ export const CometChatMessageComposer = React.forwardRef(
 
               <View style={{ paddingBottom: keyboardHeight}}>
                 <CometChatMessageInput
+                  source="media_preview"
                   mediaPreviewUri={mediaPreviewUri}
                   messageInputRef={messageInputRef}
                   text={inputMessage as string}
@@ -2488,6 +2489,7 @@ export const CometChatMessageComposer = React.forwardRef(
             </View>
             <View style={{paddingVertical:5, alignItems:'center',justifyContent:'center'}}>
             <CometChatMessageInput
+              source="main_composer"
               mediaPreviewUri={mediaPreviewUri}
               messageInputRef={messageInputRef}
               text={inputMessage as string}
