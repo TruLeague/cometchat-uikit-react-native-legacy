@@ -14,6 +14,8 @@ import {
   TextStyle,
   TextInput,
   SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { Style } from './styles';
 import {
@@ -2274,6 +2276,8 @@ export const CometChatMessageComposer = React.forwardRef(
 
                   <Text style={{ fontSize: 20, fontFamily: Fonts.LexendSemiBold, color: Colors.white }}>Preview</Text>
                 </View>
+                
+                <TouchableWithoutFeedback accessible={false} onPress={Keyboard.dismiss}>
 
                 <View style={{ width: '100%', flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
 
@@ -2308,6 +2312,7 @@ export const CometChatMessageComposer = React.forwardRef(
                     
                   }
                 </View>
+                </TouchableWithoutFeedback>
 
               <View style={{ paddingBottom: keyboardHeight}}>
                 <CometChatMessageInput
