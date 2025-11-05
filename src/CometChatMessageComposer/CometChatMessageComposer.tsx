@@ -715,6 +715,8 @@ export const CometChatMessageComposer = React.forwardRef(
       messageToBeRepliedRef.current = messageToBeReplied;
     }, [messageToBeReplied]);
 
+    const keyboardHeight = useKeyboard();
+
     useLayoutEffect(() => {
       if (Platform.OS === 'ios') {
         if (Number.isInteger(commonVars.safeAreaInsets.top)) {
@@ -2249,8 +2251,13 @@ export const CometChatMessageComposer = React.forwardRef(
         </Modal>
 
             {mediaPreviewVisbility &&
-            <View style={{flex:1,position:'absolute',width:'100%',height:'100%',zIndex:100,paddingBottom:keyboardHeight}}>
-              <SafeAreaView style={{ flex: 1 }}>
+            <View style={{flex:1,position:'absolute',width:'100%',height:'100%',zIndex:100}}>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                keyboardVerticalOffset={Platform.select({ ios: kbOffset })}
+                style={{ flex: 1 }}
+              >
+              <SafeAreaView style={{ flex: 1, paddingBottom: Platform.OS === 'android' ? keyboardHeight : 0 }}>
 
                 <View style={{ height: 70, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', borderWidth: 1, padding: 10, backgroundColor: 'black' }}>
                   <TouchableOpacity
@@ -2296,6 +2303,7 @@ export const CometChatMessageComposer = React.forwardRef(
                   }
                 </View>
 
+              <View style={{ paddingBottom: keyboardHeight}}>
                 <CometChatMessageInput
                   mediaPreviewUri={mediaPreviewUri}
                   messageInputRef={messageInputRef}
@@ -2315,7 +2323,9 @@ export const CometChatMessageComposer = React.forwardRef(
                     auxiliaryButtonsAlignment ? auxiliaryButtonsAlignment : 'right'
                   }
                 />
+                </View>
               </SafeAreaView>
+              </KeyboardAvoidingView>
             </View>
             }
             
