@@ -2269,10 +2269,10 @@ export const CometChatMessageComposer = React.forwardRef(
                       setMediaPreviewVisibility(false)
                     }}
                   >
-                    <Image source={Icons.IcCross} style={{ width: 18, height: 18 }} tintColor={Colors.white} />
+                    <Image source={Icons.IcClear} style={{ width: 18, height: 18 }} tintColor={Colors.white} />
                   </TouchableOpacity>
 
-                  <Text style={{ fontSize: 24, fontFamily: Fonts.LexendSemiBold, color: Colors.white, paddingLeft: 5 }}>Preview</Text>
+                  <Text style={{ fontSize: 20, fontFamily: Fonts.LexendSemiBold, color: Colors.white }}>Preview</Text>
                 </View>
 
                 <View style={{ width: '100%', flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
