@@ -159,7 +159,7 @@ export const CometChatMessageBubble = memo(({
                 alignItems: "center",
             } as ViewProps}>
                 {
-                    LeadingView && type == "text" && alignment == "right" && (group == undefined && loggedInUser?.role == "ambassador" && (user.getRole() == "prospect" || user.getRole() == "ambassador")) &&
+                    LeadingView && type == "text" && alignment == "right" && (group == undefined && loggedInUser?.role == "ambassador" && (user?.getRole() == "prospect" || user?.getRole() == "ambassador")) &&
                     <TouchableOpacity
                         disabled={checkMessageIdInArray(messageObject.rawMessage?.id)}
                         accessible
