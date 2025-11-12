@@ -31,13 +31,14 @@ export default function Header({
   searchIconTint,
   searchBackground,
   selectionIconTint,
+  list
 }: any) {
   return (
     <View style={styles.listBaseHeaderStyle}>
       <View style={styles.upperContainer}>
         {(showBackButton || title?.length !== 0) && (
           <View style={styles.headerLeftContainer}>
-            {showBackButton ? (
+            {showBackButton && list?.length === 0 ? (
               <TouchableOpacity onPress={onBack} accessible={true} accessibilityLabel="back-button">
                 <Image
                   source={

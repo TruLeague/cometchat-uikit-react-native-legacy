@@ -807,6 +807,7 @@ export const CometChatList = React.forwardRef<
         searchBackground={
           listStyle?.searchBackground ?? theme.palette.getAccent50()
         }
+        list={list}
       />
       <View style={styles.container}>{getMessageContainer()}</View>
     </View>
