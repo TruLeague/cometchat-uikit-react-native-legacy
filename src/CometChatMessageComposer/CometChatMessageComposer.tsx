@@ -1280,6 +1280,10 @@ export const CometChatMessageComposer = React.forwardRef(
         url: messageInput['uri'],
         sender: loggedInUser.current,
       });
+      mediaMessage.setMetadata({
+        captionedMediaMessage: finalTextInput
+      })
+      
 
       if(PARENT_MESSAGE){
         mediaMessage.setMetadata({
@@ -1309,6 +1313,9 @@ export const CometChatMessageComposer = React.forwardRef(
         url: messageInput['uri'],
         sender: loggedInUser.current,
       });
+      localMessage.setMetadata({
+        captionedMediaMessage: finalTextInput
+      })
 
       if(PARENT_MESSAGE){
         localMessage.setMetadata({
@@ -1333,6 +1340,9 @@ export const CometChatMessageComposer = React.forwardRef(
         status: messageStatus.inprogress,
       });
 
+      clearInputBox();
+
+
       if (!disableSoundForMessages) playAudio();
       CometChat.sendMediaMessage(mediaMessage)
         .then((message: any) => {
@@ -1348,10 +1358,6 @@ export const CometChatMessageComposer = React.forwardRef(
             dispatch(setMessageToBeReplied(null))
           }, 500);
 
-
-          if(finalTextInput?.length > 0){
-            sendTextMessage();
-          }
 
 
         })
