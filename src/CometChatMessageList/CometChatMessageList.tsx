@@ -36,6 +36,9 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { commonVars } from "../shared/base/vars";
 import { MessageListUtils } from './MessageListUtils';
 import { useIsFocused } from "@react-navigation/native";
+import { Colors } from "../../../../../src/common/Colors";
+import { decrypt } from "../../../../../src/services/auth/AuthServices";
+import { Fonts } from "../../../../../src/common/Fonts";
 
 let templatesMap = new Map<string, CometChatMessageTemplate>();
 
@@ -1677,7 +1680,7 @@ export const CometChatMessageList = memo(forwardRef<
             setShowMessageOptions(optionsWithPressHandling);
         }, [])
 
-        const MessageView = useCallback((params: { message: CometChat.BaseMessage, showOptions?: boolean, isThreaded?: boolean, currentIndex?: number }) => {
+        const MessageView = useCallback((params: { message: CometChat.BaseMessage | any, showOptions?: boolean, isThreaded?: boolean, currentIndex?: number }) => {
             const { message, showOptions = true, isThreaded = false, currentIndex } = params;
             let hasTemplate = templatesMap.get(`${message.getCategory()}_${message.getType()}`)
             if (templates?.length > 0) {
@@ -1703,6 +1706,44 @@ export const CometChatMessageList = memo(forwardRef<
                     }
                     return ;
                 }
+
+
+                if (message.getCategory() == "custom" && message.getType() == "pin_message_update") {
+
+                let pinnedByUser = decrypt(message?.customData?.actionBy?.name);
+                let isActionByUserMe = (loggedInUser.current?.uid == message?.customData?.actionBy?.uid)
+                let eventType = message?.customData?.eventType
+ 
+                
+                    return (
+                        <>
+                        { eventType == "pin" ?
+                        <View
+                            key={`${message.getId()}`}
+                            style={{
+                                backgroundColor: Colors.white,
+                                borderRadius: 25,
+                                padding: 10,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 0 },
+                                shadowOpacity: 0.1,
+                                shadowRadius: 3,
+                                elevation: 1,
+                                alignSelf: 'center',
+                            }}
+                        >
+                            <Text style={{color : Colors.newTextColor, fontSize: 14, fontFamily: Fonts.LexendMedium, lineHeight: 24}}>
+                               {isActionByUserMe ? "You" : pinnedByUser} pinned a message
+                            </Text>
+                        </View>
+                        :
+                        null
+                        }
+                        </>
+
+                    )
+                }
+                
 
                 return <TouchableOpacity accessible={false} activeOpacity={1} onLongPress={() => showOptions ? onLongPress() : undefined} >
                     <CometChatMessageBubble
