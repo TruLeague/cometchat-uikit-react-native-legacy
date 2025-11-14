@@ -1,4 +1,4 @@
-import { View, Text, Image, ViewStyle, Platform, ScrollView, TextStyle, DimensionValue, Dimensions } from 'react-native';
+import { View, Text, Image, ViewStyle, Platform, ScrollView, TextStyle, DimensionValue, Dimensions, TouchableOpacity, ImageBackground } from 'react-native';
 import React, { JSX, useContext, useEffect, useRef, useState } from 'react';
 import Header from './Header';
 import { ICONS } from './resources';
@@ -23,6 +23,9 @@ import { CometChatContextType } from '../shared/base/Types';
 import { useKeyboard } from '../shared/helper/useKeyboard';
 import { CometChatUIEventHandler } from '../shared/events/CometChatUIEventHandler/CometChatUIEventHandler';
 import { commonVars } from '../shared/base/vars';
+import { Icons } from '../../../../../src/assets/Images';
+import { Colors } from '../../../../../src/common/Colors';
+import { Fonts } from '../../../../../src/common/Fonts';
 const screenHeight = Dimensions.get('window').height;
 
 const uiEventId = 'ccUiEvent' + new Date().getTime();
@@ -141,8 +144,8 @@ export const CometChatThreadedMessages = (
   } = props;
 
   const loggedInUser = useRef<CometChat.User | null>(null);
-  const [group, setGroup] = useState(undefined);
-  const [user, setUser] = useState(undefined);
+  const [group, setGroup] = useState<any>(undefined);
+  const [user, setUser] = useState<any>(undefined);
   const [message, setMessage] = useState<any>(parentMessage);
   const [replyCount, setReplyCount] = useState(
     parentMessage.getReplyCount() || 0
@@ -253,7 +256,7 @@ export const CometChatThreadedMessages = (
         } as ViewStyle,
       ]}
     >
-      <Header
+      {/* <Header
         title={title}
         showCloseButton
         closeButtonIcon={closeIcon ?? ICONS.CLOSE}
@@ -267,12 +270,23 @@ export const CometChatThreadedMessages = (
         closeIconTint={
           threadedMessagesStyle?.closeIconTint ?? theme.palette.getPrimary()
         }
-      />
-      <View style={[styles.msgBubbleContainer, { maxHeight: bubbleViewMaxHeight }]}>
-        <ScrollView>
-          {BubbleView && BubbleView(message)}
-        </ScrollView>
+      /> */}
+
+      <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: threadedMessagesStyle?.closeIconTint, height: 70, justifyContent: 'flex-start', paddingHorizontal: 15}}>
+        <TouchableOpacity onPress={onClose} accessible accessibilityLabel='Back button' >
+          <Image source={Icons.IcBack} style={{ height: 42, width: 28 }} tintColor={Colors.white} />
+        </TouchableOpacity>
+        <Text numberOfLines={1} style={{ color: Colors.white, fontSize: 18, fontFamily: Fonts.LexendMedium, marginLeft: 5 }}>Thread ({group ? group?.getName() : user?.getName()})</Text>
       </View>
+
+
+
+      <ImageBackground source={{ uri: "https://media.truleague.com/uploads/cometchat/Mobile-BG.png" }} resizeMode="cover">
+        <View style={[styles.msgBubbleContainer]}>
+            {BubbleView && BubbleView(message)}
+        </View>
+      </ImageBackground>
+
       {MessageActionView ? (
         MessageActionView(message)
       ) : (
@@ -280,15 +294,17 @@ export const CometChatThreadedMessages = (
           style={[
             styles.actionViewContainer,
             {
-              borderColor: theme.palette.getAccent200(),
+              borderColor: Colors.newGreyBorder,
             },
           ]}
         >
           <Text
             style={[
-              theme.typography.text1,
+              // theme.typography.text1,
               {
-                color: theme.palette.getAccent600(),
+                color: Colors.newTextColor,
+                fontSize: 14,
+                fontFamily: Fonts.LexendMedium,
               },
             ] as TextStyle[]}
           >
@@ -296,7 +312,7 @@ export const CometChatThreadedMessages = (
           </Text>
         </View>
       )}
-      <View style={{ flex: 1, paddingHorizontal: 8 }}>
+      <View style={{ flex: 1}}>
         {(user !== null || group !== null) && (
           MessageListView ?
             <MessageListView user={user} group={group} parentMessage={message} /> :

@@ -230,13 +230,25 @@ export const CometChatMessageList = memo(forwardRef<
             //updating users request builder
             let _updatedCustomRequestBuilder = _defaultRequestBuilder;
             if (messageRequestBuilder) {
-                _updatedCustomRequestBuilder = messageRequestBuilder;
+                _updatedCustomRequestBuilder = Object.assign(
+                    new CometChat.MessagesRequestBuilder(),
+                    messageRequestBuilder
+                );
                 if (user)
                     _updatedCustomRequestBuilder = _updatedCustomRequestBuilder.setUID(user.getUid())
                 if (group)
                     _updatedCustomRequestBuilder = _updatedCustomRequestBuilder.setGUID(group.getGuid())
+                if (parentMessageId)
+                    _updatedCustomRequestBuilder = _updatedCustomRequestBuilder
+                        .setParentMessageId(parseInt(parentMessageId))
+                        .hideReplies(false);
+                else
+                    _updatedCustomRequestBuilder = _updatedCustomRequestBuilder.hideReplies(true);
             } else {
-                _updatedCustomRequestBuilder.hideReplies(true);
+                if (parentMessageId)
+                    _updatedCustomRequestBuilder = _updatedCustomRequestBuilder.hideReplies(false);
+                else
+                    _updatedCustomRequestBuilder = _updatedCustomRequestBuilder.hideReplies(true);
                 if (user)
                     _updatedCustomRequestBuilder = _updatedCustomRequestBuilder.setUID(user.getUid())
                 if (group)
@@ -1513,7 +1525,7 @@ export const CometChatMessageList = memo(forwardRef<
             let isThreaded = item.getReplyCount() > 0;
 
             let style = [{
-                color: theme?.palette.getAccent900(),
+                color: Colors.newTextColor,
             }, theme?.typography?.subtitle1];
 
             // let unreadReplyCount = item?.getUnreadReplyCount && item?.getUnreadReplyCount();
