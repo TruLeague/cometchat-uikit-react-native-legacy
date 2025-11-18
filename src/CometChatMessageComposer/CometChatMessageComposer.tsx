@@ -1294,6 +1294,9 @@ export const CometChatMessageComposer = React.forwardRef(
       parentMessageId &&
         mediaMessage.setParentMessageId(parentMessageId as number);
 
+      plainTextInput.current = '';
+      setMentionsSearchData([])
+
       let localMessage: any = new CometChat.MediaMessage(
         receiverId,
         messageInput,
