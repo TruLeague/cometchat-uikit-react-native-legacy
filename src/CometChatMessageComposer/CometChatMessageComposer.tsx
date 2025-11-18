@@ -1464,7 +1464,7 @@ export const CometChatMessageComposer = React.forwardRef(
       if (SendButtonView && messageComposerId)
         return <SendButtonView user={user} group={group} composerId={messageComposerId} />;
       return (
-       <View style={{backgroundColor: (inputMessage as String).length > 0 || mediaPreviewUri ? messageComposerStyle?.sendIconTint : theme.palette.getAccent400() ,padding:2,borderRadius: 100}}>
+       <View style={{backgroundColor: (inputMessage as String).length > 0 || inputMessage || mediaPreviewUri ? messageComposerStyle?.sendIconTint : theme.palette.getAccent400() ,padding:2,borderRadius: 100}}>
          <ImageButton
            image={ICONS.SEND}
            imageStyle={[
