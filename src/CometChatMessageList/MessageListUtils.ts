@@ -3,10 +3,10 @@ import { CometChat } from "@cometchat/chat-sdk-react-native";
 
 // Create a singleton to store the reference to the function
 class MessageListUtilsClass {
-  private _scrollToSpecificMessageById: ((messageId: any) => void) | null = null;
+  private _scrollToSpecificMessageById: ((messageId: any) => void | Promise<void>) | null = null;
 
   // Method to set the function reference
-  setScrollToSpecificMessageById(fn: (messageId: any) => void) {
+  setScrollToSpecificMessageById(fn: (messageId: any) => void | Promise<void>) {
     this._scrollToSpecificMessageById = fn;
   }
 
