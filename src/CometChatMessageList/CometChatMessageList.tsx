@@ -2185,10 +2185,22 @@ export const CometChatMessageList = memo(forwardRef<
                                         }
 
                                         {
-                                            scrollToMessageLoader && (
-                                                <View style={{ position: "absolute", alignSelf: "center",flex :1, zIndex : 9999, backgroundColor : "#00000080"}}>
-                                                    {getLoadingStateView()}
-                                                 </View>
+                                           scrollToMessageLoader  && (
+                                                <View
+                                                    style={{
+                                                        position: "absolute",
+                                                        backgroundColor: "#00000055",
+                                                        alignSelf: "center",
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                        zIndex: 2,
+                                                        flex : 1,
+                                                        height: "100%",
+                                                        width: "105%"
+                                                    }}
+                                                >
+                                                    <ActivityIndicator size={50}  color={Colors.newBgGreyColor} />
+                                                </View>
                                             )
                                         }
 
@@ -2204,6 +2216,7 @@ export const CometChatMessageList = memo(forwardRef<
                                             {messagesList?.length ? (
                                                 messagesList.map((item, index) => {
                                                     const messageKey = normalizeMessageKey(item.getId());
+                                                    const shouldHighlight = !!(messageKey && highlightedMessageId === messageKey);
                                                     return (
                                                         <View
                                                             key={keyExtractor(item)}
@@ -2216,7 +2229,7 @@ export const CometChatMessageList = memo(forwardRef<
                                                                 }
                                                             }}
                                                             style={[
-                                                                highlightedMessageId === messageKey && {
+                                                                shouldHighlight && {
                                                                     backgroundColor: messageListStyle?.emptyStateTextColor?.toString()+"40",
                                                                     paddingTop : 8,
                                                                     borderRadius : 25,
