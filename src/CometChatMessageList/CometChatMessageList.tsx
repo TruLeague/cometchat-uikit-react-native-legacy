@@ -2178,10 +2178,18 @@ export const CometChatMessageList = memo(forwardRef<
                                             </View>
                                         }
                                         {
-                                            (loadingMessages || scrollToMessageLoader) &&
+                                            (loadingMessages && !scrollToMessageLoader) &&
                                             <View style={{ position: "absolute", alignSelf: "center" }}>
                                                 <ActivityIndicator size="small" color={_messageListStyle.loadingIconTint} />
                                             </View>
+                                        }
+
+                                        {
+                                            scrollToMessageLoader && (
+                                                <View style={{ position: "absolute", alignSelf: "center",flex :1, zIndex : 9999, backgroundColor : "#00000080"}}>
+                                                    {getLoadingStateView()}
+                                                 </View>
+                                            )
                                         }
 
                                         <ScrollView
