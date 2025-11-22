@@ -349,8 +349,34 @@ export const CometChatMessageList = memo(forwardRef<
 
         const infoObject = useRef<CometChat.BaseMessage | null>(undefined);
         // First, modify your ScrollView to add refs to each message
-        const messageRefs = useRef(new Map());
-        const [highlightedMessageId, setHighlightedMessageId] = useState(null);
+        const messageRefs = useRef(new Map<string, View | null>());
+        const [highlightedMessageId, setHighlightedMessageId] = useState<string | null>(null);
+        const [scrollToMessageLoader, setScrollToMessageLoader] = useState(false);
+        const scrollToMessageInProgressRef = useRef(false);
+        const queuedScrollRequestIdRef = useRef<string | null>(null);
+        const previousMessagesPromiseRef = useRef<Promise<number> | null>(null);
+
+        const normalizeMessageKey = (value: any): string | null => {
+            if (value === null || value === undefined) return null;
+            if (typeof value === "string") return value;
+            if (typeof value === "number" && !Number.isNaN(value)) return value.toString();
+            try {
+                return `${value}`;
+            } catch (error) {
+                return null;
+            }
+        };
+
+        const doesMessageExistInList = (key: string | null) => {
+            if (!key) return false;
+            return messagesContentListRef.current.some((messageObject: any) => {
+                const messageId = typeof messageObject?.getId === "function"
+                    ? messageObject.getId()
+                    : (messageObject?.id ?? messageObject?.messageId);
+                if (messageId === undefined || messageId === null) return false;
+                return normalizeMessageKey(messageId) === key;
+            });
+        };
 
         const inProgressMessages = useRef<any[]>([]);
         // const messageToForward = useRef<CometChat.BaseMessage>();
@@ -408,24 +434,45 @@ export const CometChatMessageList = memo(forwardRef<
             markUnreadMessageAsRead();
         };
 
-        const getPreviousMessages = async () => {
+        const getPreviousMessages = async (options?: { skipUIUpdate?: boolean }): Promise<number> => {
 
-            if (messagesList.length == 0)
-                setListState("loading");
-            else
-                setLoadingMessages(true);
-            // TODO: this condition is applied because somewhere from whiteboard extention group scope is set to undefined.
-            if (group != undefined && group.getGuid() == undefined) {
-                let fetchedGroup: any = await CometChat.getGroup(group.getGuid()).catch((e: any) => {
-                    console.log("Error: fetching group", e);
-                    onError && onError(e)
-                })
-                group.setScope(fetchedGroup['scope']);
+            if (previousMessagesPromiseRef.current) {
+                await previousMessagesPromiseRef.current;
             }
-            messageRequest.current?.fetchPrevious()
-                .then((msgs: any[]) => {
+
+            const fetchPromise = (async () => {
+                const shouldUpdateUI = !(options?.skipUIUpdate);
+
+                if (shouldUpdateUI) {
+                    if (messagesList.length == 0)
+                        setListState("loading");
+                    else
+                        setLoadingMessages(true);
+                }
+
+                // TODO: this condition is applied because somewhere from whiteboard extention group scope is set to undefined.
+                if (group != undefined && group.getGuid() == undefined) {
+                    let fetchedGroup: any = await CometChat.getGroup(group.getGuid()).catch((e: any) => {
+                        console.log("Error: fetching group", e);
+                        onError && onError(e)
+                    })
+                    group.setScope(fetchedGroup['scope']);
+                }
+
+                if (!messageRequest.current) {
+                    if (shouldUpdateUI) {
+                        if (messagesList.length == 0)
+                            setListState("error");
+                        else
+                            setLoadingMessages(false);
+                    }
+                    return 0;
+                }
+
+                try {
+                    const msgs: any[] = await messageRequest.current.fetchPrevious() || [];
                     let reversed = msgs.reverse();
-                    if (messagesList.length === 0 && msgs?.length > 0) {
+                    if (messagesList.length === 0 && msgs.length > 0) {
                         CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccActiveChatChanged, { message: reversed[0], user: user, group: group, theme: theme, parentMessageId: parentMessageId });
                         if (conversationId.current == null)
                             conversationId.current = reversed[0].getConversationId();
@@ -445,7 +492,7 @@ export const CometChatMessageList = memo(forwardRef<
                         } else
                             break;
                     }
-                    reversed = reversed.map((item: CometChat.BaseMessage, index: any) => {
+                    reversed = reversed.map((item: CometChat.BaseMessage) => {
                         if (item.getCategory() === MessageCategoryConstants.interactive) {
                             return InteractiveMessageUtils.convertInteractiveMessage(item);
                         } else {
@@ -454,22 +501,36 @@ export const CometChatMessageList = memo(forwardRef<
                     })
                     if (reversed.length > 0) {
                         let reversedData = [...reversed.reverse()];
-                        messagesContentListRef.current = [...reversedData, ...messagesContentListRef.current];
-                        setMessagesList([...reversedData, ...messagesList]);
+                        const updatedList = [...reversedData, ...messagesContentListRef.current];
+                        messagesContentListRef.current = updatedList;
+                        setMessagesList(updatedList);
                     }
-                    if (messagesList.length == 0)
-                        setListState("");
-                    else
-                        setLoadingMessages(false);
+                    if (shouldUpdateUI) {
+                        if (messagesList.length == 0)
+                            setListState("");
+                        else
+                            setLoadingMessages(false);
+                    }
+                    return reversed.length;
 
-                })
-                .catch((e: any) => {
-                    if (messagesList.length == 0)
-                        setListState("error");
-                    else
-                        setLoadingMessages(false);
+                } catch (e: any) {
+                    if (shouldUpdateUI) {
+                        if (messagesList.length == 0)
+                            setListState("error");
+                        else
+                            setLoadingMessages(false);
+                    }
                     onError && onError(e)
-                })
+                    return 0;
+                }
+            })();
+
+            previousMessagesPromiseRef.current = fetchPromise;
+            try {
+                return await fetchPromise;
+            } finally {
+                previousMessagesPromiseRef.current = null;
+            }
         }
 
         const getUpdatedPreviousMessages = () => {
@@ -900,45 +961,88 @@ export const CometChatMessageList = memo(forwardRef<
 
         }
 
-        // Replace your scrollToSpecificMessageById function with this:
-        const scrollToSpecificMessageById = (messageId: any, retries = 3) => {
-            console.log("🟢 scrollToSpecificMessageById called for ID:", messageId);
-
+        const scrollToRenderedMessage = (targetKey: string, retries = 5) => {
             InteractionManager.runAfterInteractions(() => {
                 setTimeout(() => {
-                    const messageRef = messageRefs.current.get(messageId);
+                    const messageRef = messageRefs.current.get(targetKey);
                     const scrollViewNode = findNodeHandle(messageListRef.current);
 
                     if (messageRef && scrollViewNode) {
-                        console.log("✅ Found messageRef and scrollViewNode for:", messageId);
-                        setHighlightedMessageId(messageId);
-
+                        setHighlightedMessageId(targetKey);
                         messageRef.measureLayout(
                             scrollViewNode,
                             (x: number, y: number) => {
-                                console.log("📏 Scrolling to y:", y);
                                 messageListRef.current?.scrollTo({ y: Math.max(0, y - 20), animated: true });
                             },
                             (error: any) => {
-                                console.error("❌ measureLayout failed:", error);
+                                console.error("scrollToSpecificMessageById: measureLayout failed", error);
                             }
                         );
 
                         setTimeout(() => {
-                            setHighlightedMessageId(null);
+                            setHighlightedMessageId(current => current === targetKey ? null : current);
                         }, 1500);
                     } else if (retries > 0) {
-                        console.warn(`⏳ Retrying scrollToSpecificMessageById for ${messageId}, attempts left: ${retries}`);
-                        setTimeout(() => scrollToSpecificMessageById(messageId, retries - 1), 300);
+                        setTimeout(() => scrollToRenderedMessage(targetKey, retries - 1), 300);
                     } else {
-                        console.warn("❌ scrollToSpecificMessageById: messageRef or scrollViewNode still missing", {
-                            messageRef,
-                            scrollViewNode,
-                            messageId
+                        console.warn("scrollToSpecificMessageById: message is not rendered yet", {
+                            messageId: targetKey,
+                            hasRef: !!messageRef,
+                            hasScrollView: !!scrollViewNode
                         });
                     }
-                }, 200); // Initial wait
+                }, 200);
             });
+        };
+
+        const loadMessageUntilFound = async (targetKey: string): Promise<boolean> => {
+            if (!messageRequest.current) return false;
+            setScrollToMessageLoader(true);
+            try {
+                let fetchedCount = 0;
+                do {
+                    fetchedCount = await getPreviousMessages({ skipUIUpdate: true });
+                } while (fetchedCount > 0 && !doesMessageExistInList(targetKey));
+
+                return doesMessageExistInList(targetKey);
+            } finally {
+                setScrollToMessageLoader(false);
+            }
+        };
+
+        const attemptScrollToMessage = async (targetKey: string) => {
+            if (!targetKey) return;
+
+            let messageAvailable = doesMessageExistInList(targetKey);
+            if (!messageAvailable) {
+                messageAvailable = await loadMessageUntilFound(targetKey);
+            }
+
+            if (messageAvailable) {
+                scrollToRenderedMessage(targetKey);
+            } else {
+                console.warn(`scrollToSpecificMessageById: unable to find message with id ${targetKey}`);
+            }
+        };
+
+        const scrollToSpecificMessageById = async (messageId: any) => {
+            const targetKey = normalizeMessageKey(messageId);
+            if (!targetKey) return;
+
+            if (scrollToMessageInProgressRef.current) {
+                queuedScrollRequestIdRef.current = targetKey;
+                return;
+            }
+
+            scrollToMessageInProgressRef.current = true;
+            await attemptScrollToMessage(targetKey);
+            scrollToMessageInProgressRef.current = false;
+
+            if (queuedScrollRequestIdRef.current) {
+                const queuedKey = queuedScrollRequestIdRef.current;
+                queuedScrollRequestIdRef.current = null;
+                scrollToSpecificMessageById(queuedKey);
+            }
         };
 
         const isFocused = useIsFocused();
@@ -2074,10 +2178,30 @@ export const CometChatMessageList = memo(forwardRef<
                                             </View>
                                         }
                                         {
-                                            loadingMessages &&
+                                            (loadingMessages && !scrollToMessageLoader) &&
                                             <View style={{ position: "absolute", alignSelf: "center" }}>
                                                 <ActivityIndicator size="small" color={_messageListStyle.loadingIconTint} />
                                             </View>
+                                        }
+
+                                        {
+                                           scrollToMessageLoader  && (
+                                                <View
+                                                    style={{
+                                                        position: "absolute",
+                                                        backgroundColor: "#00000055",
+                                                        alignSelf: "center",
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                        zIndex: 2,
+                                                        flex : 1,
+                                                        height: "100%",
+                                                        width: "105%"
+                                                    }}
+                                                >
+                                                    <ActivityIndicator size={50}  color={Colors.newBgGreyColor} />
+                                                </View>
+                                            )
                                         }
 
                                         <ScrollView
@@ -2090,29 +2214,34 @@ export const CometChatMessageList = memo(forwardRef<
                                             onContentSizeChange={onContentSizeChange}
                                             >
                                             {messagesList?.length ? (
-                                                messagesList.map((item, index) => (
-                                                <View
-                                                    key={keyExtractor(item)}
-                                                    ref={(ref) => {
-                                                    if (ref) {
-                                                        messageRefs.current.set(item.getId(), ref);
-                                                    } else {
-                                                        messageRefs.current.delete(item.getId());
-                                                    }
-                                                    }}
-                                                    style={[
-                                                    highlightedMessageId === item.getId() && {
-                                                        backgroundColor: messageListStyle?.emptyStateTextColor?.toString()+"40", 
-                                                        paddingTop : 8,
-                                                        borderRadius : 25,
-                                                        marginBottom : 8,
-                                                    }
-                                                    ]}
-                                                >
-                                                    <RenderMessageItem item={item} index={index} />
-                                                    {itemSeperator()}
-                                                </View>
-                                                ))
+                                                messagesList.map((item, index) => {
+                                                    const messageKey = normalizeMessageKey(item.getId());
+                                                    const shouldHighlight = !!(messageKey && highlightedMessageId === messageKey);
+                                                    return (
+                                                        <View
+                                                            key={keyExtractor(item)}
+                                                            ref={(ref) => {
+                                                                if (!messageKey) return;
+                                                                if (ref) {
+                                                                    messageRefs.current.set(messageKey, ref);
+                                                                } else {
+                                                                    messageRefs.current.delete(messageKey);
+                                                                }
+                                                            }}
+                                                            style={[
+                                                                shouldHighlight && {
+                                                                    backgroundColor: messageListStyle?.emptyStateTextColor?.toString()+"40",
+                                                                    paddingTop : 8,
+                                                                    borderRadius : 25,
+                                                                    marginBottom : 8,
+                                                                }
+                                                            ]}
+                                                        >
+                                                            <RenderMessageItem item={item} index={index} />
+                                                            {itemSeperator()}
+                                                        </View>
+                                                    )
+                                                })
                                             ) : (
                                                 getEmptyTextView()
                                             )}
