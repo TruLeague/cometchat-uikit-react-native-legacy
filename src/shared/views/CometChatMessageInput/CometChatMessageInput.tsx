@@ -105,6 +105,9 @@ export interface CometChatMessageInputInterface {
    * @description ref of {TextInput}
    */
   messageInputRef?: RefObject<any>;
+
+  mediaPreviewUri?: string,
+  source?: string
 }
 export const CometChatMessageInput = (
   props: CometChatMessageInputInterface
@@ -122,21 +125,23 @@ export const CometChatMessageInput = (
     auxiliaryButtonAlignment = 'right',
     style = {},
     text = '',
+    mediaPreviewUri,
+    source
   } = props;
 
   return (
     <View
       style={{
-        backgroundColor: style?.inputBackground ?? theme.palette.getAccent100(),
-        marginHorizontal: 8,
-        borderRadius: 8,
+        backgroundColor: (source == "media_preview"? 'black' : style?.inputBackground) ?? theme.palette.getAccent100(),
+        marginHorizontal: source == "media_preview"? 0 : 8,
+        borderRadius: source == "media_preview" ? 0 : 8,
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems: text?.length  == 0 ? 'center' :'flex-end',
         paddingVertical: 5,
       }}
     >
-      {SecondaryButtonView && text?.length  == 0 && <SecondaryButtonView />}
+      {SecondaryButtonView && text?.length  == 0 && source == "main_composer" && <SecondaryButtonView />}
 
       <TextInput
         ref={messageInputRef}
@@ -144,14 +149,14 @@ export const CometChatMessageInput = (
           [
             styles.textInput,
             {
-              color: style?.textColor ?? theme.palette.getAccent(),
+              color: source == "media_preview" ? Colors.white : style?.textColor ?? theme.palette.getAccent(),
               height: undefined, // allow multiline to grow
               minHeight : 40,
               maxHeight : 100,
               flex : 1 ,
               marginHorizontal : 5,
-              borderWidth: 1,
-              backgroundColor : Colors.newBgGreyColor,
+              borderWidth: source == "media_preview" ? 0 : 1,
+              backgroundColor : source == "media_preview" ? Colors.newTextColor.toString()+'80' : Colors.newBgGreyColor,
               borderColor : Colors.newGreyBorder,
               borderRadius : 25,
               textAlignVertical: 'center', // important for Android
@@ -166,6 +171,8 @@ export const CometChatMessageInput = (
         }
         onChangeText={onChangeText}
         placeholderTextColor={
+          source == "media_preview"?
+          Colors.newTextColor :
           style?.placeholderTextColor
             ? style?.placeholderTextColor
             : theme.palette.getAccent600()
@@ -173,7 +180,7 @@ export const CometChatMessageInput = (
         multiline
         textAlignVertical="center"
         autoCorrect={true}
-        placeholder={placeHolderText}
+        placeholder={source == "media_preview" ? "Add a caption (optional)" : placeHolderText}
         onSelectionChange={onSelectionChange}
       >
         {text}
@@ -188,15 +195,15 @@ export const CometChatMessageInput = (
       >
         <View style={{ flexDirection: 'row' }}>
           {/* {SecondaryButtonView && <SecondaryButtonView />} */}
-          {text?.length  == 0 && auxiliaryButtonAlignment === 'left' && AuxiliaryButtonView && (
+          {(text?.length  == 0 && mediaPreviewUri == null) && auxiliaryButtonAlignment === 'left' && AuxiliaryButtonView && (
             <AuxiliaryButtonView />
           )}
         </View>
         <View style={{ flexDirection: 'row' }}>
-          { text?.length  == 0 && auxiliaryButtonAlignment === 'right' && AuxiliaryButtonView &&  (
+          {( text?.length == 0 && mediaPreviewUri == null) && auxiliaryButtonAlignment === 'right' && AuxiliaryButtonView &&  (
             <AuxiliaryButtonView />
           )}
-          {(text?.length > 0 || text?.length == undefined) && PrimaryButtonView && <PrimaryButtonView />}
+          {(text?.length > 0 || text?.length == undefined || mediaPreviewUri) && PrimaryButtonView && <PrimaryButtonView />}
         </View>
       </View>
     </View>

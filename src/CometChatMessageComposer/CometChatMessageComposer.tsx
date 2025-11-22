@@ -13,6 +13,9 @@ import {
   ViewProps,
   TextStyle,
   TextInput,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { Style } from './styles';
 import {
@@ -77,6 +80,12 @@ import { MentionPostProcessor } from '../../../../../src/cometchat-v4-ui-kit/uti
 import { useDispatch, useSelector } from 'react-redux'
 import { setMessageToBeReplied } from '../../../../../src/redux/action/ReplyMessageAction'
 import { minifyParentMessage } from '../../../../../src/cometchat-v4-ui-kit/utils/MessageUtils';
+import FastImage from 'react-native-fast-image';
+import { Icons, Images } from '../../../../../src/assets/Images';
+import { Fonts } from '../../../../../src/common/Fonts';
+import CustomStatusBar from '../../../../../src/components/CustomStatusBar';
+import Video from 'react-native-video';
+import { useKeyboard } from '../../../../../src/cometchat-v4-ui-kit/hooks/useKeyboard';
 
 const { FileManager, CommonUtil } = NativeModules;
 
@@ -691,6 +700,11 @@ export const CometChatMessageComposer = React.forwardRef(
     const [currentUser, setCurrentUser] = React.useState<any>(null);  
     const bottomSheetRef = React.useRef<any>(null);
 
+    // media message preview states 
+    const [mediaPreviewUri, setMediaPreviewUri] = React.useState<any>(null);
+    const [mediaMessageToSend, setMediaMessageToSend] = React.useState<any>({});
+    const [mediaPreviewVisbility,setMediaPreviewVisibility] = React.useState<boolean>(false);
+
     const dispatch = useDispatch()
 
     const messageToBeReplied = useSelector((state: any) => {
@@ -702,6 +716,8 @@ export const CometChatMessageComposer = React.forwardRef(
     useEffect(() => {
       messageToBeRepliedRef.current = messageToBeReplied;
     }, [messageToBeReplied]);
+
+    const keyboardHeight = useKeyboard();
 
     useLayoutEffect(() => {
       if (Platform.OS === 'ios') {
@@ -825,12 +841,24 @@ export const CometChatMessageComposer = React.forwardRef(
         type,
         uri,
       };
-      sendMediaMessage(
-        chatWithId.current,
-        file,
-        MessageTypeConstants.image,
-        chatWith.current
-      );
+
+      setMediaPreviewUri(uri);
+      setShowActionSheet(false);
+      setMediaPreviewVisibility(true);
+      
+      // sendMediaMessage(
+      //   chatWithId.current,
+      //   file,
+      //   MessageTypeConstants.image,
+      //   chatWith.current
+      // );
+
+      setMediaMessageToSend({
+         ChatWithId : chatWithId.current,
+         File : file,
+         MessageType : MessageTypeConstants.image,
+         ChatWith : chatWith.current
+      })
     };
 
     const fileInputHandler = async (fileType: string) => {
@@ -852,13 +880,26 @@ export const CometChatMessageComposer = React.forwardRef(
         fileType === MessageTypeConstants.video
       ) {
         NativeModules.VideoPickerModule.pickVideo((file: any) => {
-          if (file.uri)
-            sendMediaMessage(
-              chatWithId.current,
-              file,
-              MessageTypeConstants.video,
-              chatWith.current
-            );
+          if (file.uri){
+            setMediaPreviewUri(file.uri);
+            setShowActionSheet(false);
+            setMediaPreviewVisibility(true);
+            
+            // sendMediaMessage(
+            //   chatWithId.current,
+            //   file,
+            //   MessageTypeConstants.video,
+            //   chatWith.current
+            // );
+
+            setMediaMessageToSend({
+              ChatWithId: chatWithId.current,
+              File: file,
+              MessageType: MessageTypeConstants.video,
+              ChatWith: chatWith.current
+            })
+
+          }
         });
       } else
         FileManager.openFileChooser(fileType, async (fileInfo: any) => {
@@ -871,12 +912,25 @@ export const CometChatMessageComposer = React.forwardRef(
             type,
             uri,
           };
-          sendMediaMessage(
-            chatWithId.current,
-            file,
-            fileType,
-            chatWith.current
-          );
+
+          setMediaPreviewUri(uri);
+          setShowActionSheet(false);
+          setMediaPreviewVisibility(true);
+          
+          // sendMediaMessage(
+          //   chatWithId.current,
+          //   file,
+          //   fileType,
+          //   chatWith.current
+          // );
+
+          setMediaMessageToSend({
+            ChatWithId : chatWithId.current,
+            File : file,
+            MessageType : fileType,
+            ChatWith : chatWith.current
+          })
+
         });
     };
 
@@ -1190,6 +1244,142 @@ export const CometChatMessageComposer = React.forwardRef(
         });
     };
 
+    const sendMediaMessage2 = () => {
+
+      let finalTextInput = getRegexString(plainTextInput.current);
+      finalTextInput = finalTextInput.trim();
+
+      let receiverId = mediaMessageToSend?.ChatWithId;
+      let messageInput = mediaMessageToSend?.File;
+      let messageType = mediaMessageToSend?.MessageType;
+      let receiverType = mediaMessageToSend?.ChatWith;
+
+      setMediaMessageToSend({});
+      setMediaPreviewUri(null)
+      setMediaPreviewVisibility(false)
+
+      let PARENT_MESSAGE = messageToBeRepliedRef.current;
+
+      setShowActionSheet(false);
+      let mediaMessage: any = new CometChat.MediaMessage(
+        receiverId,
+        messageInput,
+        messageType,
+        receiverType
+      );
+
+      mediaMessage.setSender(loggedInUser.current);
+      mediaMessage.setReceiver(receiverType);
+      mediaMessage.setType(messageType);
+      mediaMessage.setMuid(String(getUnixTimestampInMilliseconds()));
+      mediaMessage.setData({
+        type: messageType,
+        category: CometChat.CATEGORY_MESSAGE,
+        name: messageInput['name'],
+        file: messageInput,
+        url: messageInput['uri'],
+        sender: loggedInUser.current,
+      });
+      mediaMessage.setMetadata({
+        captionedMediaMessage: finalTextInput
+      })
+      
+
+      if(PARENT_MESSAGE){
+        mediaMessage.setMetadata({
+          parentMessage: PARENT_MESSAGE
+        })
+      }
+
+      parentMessageId &&
+        mediaMessage.setParentMessageId(parentMessageId as number);
+
+      plainTextInput.current = '';
+      setMentionsSearchData([])
+
+      let localMessage: any = new CometChat.MediaMessage(
+        receiverId,
+        messageInput,
+        messageType,
+        receiverType
+      );
+
+      localMessage.setSender(loggedInUser.current);
+      localMessage.setReceiver(user ?? group);
+      localMessage.setType(messageType);
+      localMessage.setMuid(String(getUnixTimestampInMilliseconds()));
+      localMessage.setData({
+        type: messageType,
+        category: CometChat.CATEGORY_MESSAGE,
+        name: messageInput['name'],
+        file: messageInput,
+        url: messageInput['uri'],
+        sender: loggedInUser.current,
+      });
+      localMessage.setMetadata({
+        captionedMediaMessage: finalTextInput
+      })
+
+      if(PARENT_MESSAGE){
+        localMessage.setMetadata({
+          parentMessage: PARENT_MESSAGE
+        })
+      }
+
+      parentMessageId &&
+        localMessage.setParentMessageId(parentMessageId as number);
+      localMessage.setData({
+        type: messageType,
+        category: CometChat.CATEGORY_MESSAGE,
+        name: messageInput['name'],
+        file: messageInput,
+        url: messageInput['uri'],
+        sender: loggedInUser.current,
+        attachments: [messageInput],
+      });
+
+      CometChatUIEventHandler.emitMessageEvent(MessageEvents.ccMessageSent, {
+        message: localMessage,
+        status: messageStatus.inprogress,
+      });
+
+      clearInputBox();
+
+
+      if (!disableSoundForMessages) playAudio();
+      CometChat.sendMediaMessage(mediaMessage)
+        .then((message: any) => {
+          CometChatUIEventHandler.emitMessageEvent(
+            MessageEvents.ccMessageSent,
+            {
+              message: message,
+              status: messageStatus.success,
+            }
+          );
+          setShowRecordAudio(false);
+          setTimeout(() => {
+            dispatch(setMessageToBeReplied(null))
+          }, 500);
+
+
+
+        })
+        .catch((error: any) => {
+          setShowRecordAudio(false);
+          onError && onError(error);
+          localMessage.data.metaData = { error: true };
+          CometChatUIEventHandler.emitMessageEvent(
+            MessageEvents.ccMessageSent,
+            {
+              message: localMessage,
+              status: messageStatus.error,
+            }
+          );
+          console.log('media message sent error', error);
+        });
+    };
+
+
     const startTyping = (endTypingTimeout?: any, typingMetadata?: any) => {
       //if typing is disabled
       if (disableTypingEvents) {
@@ -1277,7 +1467,7 @@ export const CometChatMessageComposer = React.forwardRef(
       if (SendButtonView && messageComposerId)
         return <SendButtonView user={user} group={group} composerId={messageComposerId} />;
       return (
-       <View style={{backgroundColor: (inputMessage as String).length === 0 ? theme.palette.getAccent400() : messageComposerStyle?.sendIconTint,padding:2,borderRadius: 100}}>
+       <View style={{backgroundColor: (inputMessage as String).length > 0 || inputMessage || mediaPreviewUri ? messageComposerStyle?.sendIconTint : theme.palette.getAccent400() ,padding:2,borderRadius: 100}}>
          <ImageButton
            image={ICONS.SEND}
            imageStyle={[
@@ -1294,8 +1484,8 @@ export const CometChatMessageComposer = React.forwardRef(
              // },
             ]}
            label={"Button to send message"}
-           disable={(inputMessage as String).length === 0}
-           onClick={sendTextMessage}
+           disable={(inputMessage as String).length === 0 && mediaPreviewUri == null}
+           onClick={mediaMessageToSend && mediaPreviewUri ? sendMediaMessage2 : sendTextMessage}
          />
        </View>
       );
@@ -2070,6 +2260,97 @@ export const CometChatMessageComposer = React.forwardRef(
         >
           {CustomView && CustomView}
         </Modal>
+
+            {mediaPreviewVisbility &&
+            <View style={{flex:1,position:'absolute',width:'100%',height:'100%',zIndex:100}}>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                keyboardVerticalOffset={Platform.select({ ios: kbOffset })}
+                style={{ flex: 1 }}
+              >
+              <SafeAreaView style={{ flex: 1, paddingBottom: Platform.OS === 'android' ? keyboardHeight : 0 }}>
+
+                <View style={{ height: 70, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', borderWidth: 1, padding: 10, backgroundColor: 'black' }}>
+                  <TouchableOpacity
+                    accessible={true}
+                    accessibilityLabel='Close saved message modaal'
+                    style={{ height: 40, width: 40, alignItems: 'center', justifyContent: 'center' }}
+                    onPress={() => {
+                      setMediaPreviewUri(null); 
+                      setMediaPreviewVisibility(false)
+                    }}
+                  >
+                    <Image source={Icons.IcClear} style={{ width: 18, height: 18 }} tintColor={Colors.white} />
+                  </TouchableOpacity>
+
+                  <Text style={{ fontSize: 20, fontFamily: Fonts.LexendSemiBold, color: Colors.white }}>Preview</Text>
+                </View>
+                
+                <TouchableWithoutFeedback accessible={false} onPress={Keyboard.dismiss}>
+
+                <View style={{ width: '100%', flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+
+                  {mediaMessageToSend?.MessageType == "image" ?
+
+                  <FastImage
+                    source={{ uri: mediaPreviewUri }}
+                    style={{ width: '100%', height: '40%' }}
+                    resizeMode='cover'
+                    accessible={false}
+                  />
+                  : mediaMessageToSend?.MessageType == "video" ?
+                  <Video
+                    style={{ width: '100%', height: '50%' }}
+                    source={{ uri: mediaPreviewUri }}
+                    resizeMode="cover"
+                    controls
+                    volume={1}
+                    muted={false}
+                  /> 
+                  :
+                  mediaMessageToSend?.MessageType == "audio" ?
+                  <View style={{width:'100%',justifyContent:'center',alignItems:'center'}}>
+                     <Image source={Icons.ICAttachAudio} tintColor={Colors.newGreyBorder} style={{height:80,width:80}} />
+                     <Text style={{color:'white',fontSize:18,fontFamily:Fonts.LexendMedium,marginTop:10}}>{mediaMessageToSend?.File?.name}</Text>
+                    </View>
+                    :
+                  <View style={{width:'100%',justifyContent:'center',alignItems:'center'}}>
+                     <Image source={Icons.IcNewPDF} style={{height:80,width:80}} />
+                     <Text style={{color:'white',fontSize:18,fontFamily:Fonts.LexendMedium,marginTop:10}}>{mediaMessageToSend?.File?.name}</Text>
+                    </View>
+                    
+                  }
+                </View>
+                </TouchableWithoutFeedback>
+
+              <View style={{ paddingBottom: keyboardHeight}}>
+                <CometChatMessageInput
+                  source="media_preview"
+                  mediaPreviewUri={mediaPreviewUri}
+                  messageInputRef={messageInputRef}
+                  text={inputMessage as string}
+                  placeHolderText={placeHolderText}
+                  style={messageComposerStyle}
+                  onSelectionChange={({ nativeEvent: { selection } }) => {
+                    setSelectionPosition(selection);
+                    openList(selection);
+                  }}
+                  maxHeight={maxHeight ?? undefined}
+                  onChangeText={textChangeHandler}
+                  SecondaryButtonView={SecondaryButtonViewElem}
+                  AuxiliaryButtonView={AuxiliaryButtonViewElem}
+                  PrimaryButtonView={PrimaryButtonView}
+                  auxiliaryButtonAlignment={
+                    auxiliaryButtonsAlignment ? auxiliaryButtonsAlignment : 'right'
+                  }
+                />
+                </View>
+              </SafeAreaView>
+              </KeyboardAvoidingView>
+            </View>
+            }
+            
+
         <KeyboardAvoidingView
           key={messageComposerId}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -2222,6 +2503,8 @@ export const CometChatMessageComposer = React.forwardRef(
             </View>
             <View style={{paddingVertical:5, alignItems:'center',justifyContent:'center'}}>
             <CometChatMessageInput
+              source="main_composer"
+              mediaPreviewUri={mediaPreviewUri}
               messageInputRef={messageInputRef}
               text={inputMessage as string}
               placeHolderText={placeHolderText}
