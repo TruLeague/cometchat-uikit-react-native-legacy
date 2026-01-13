@@ -26,7 +26,7 @@ import { TextStyle } from 'react-native';
 import { anyObject } from '../../shared/utils';
 import { store } from '../../../../../../src/redux/Store';
 import { Toast, useToast } from 'react-native-toast-notifications';
-import { Languages } from '../../../../../../src/cometchat-v4-ui-kit/utils/languages';
+import { Languages } from '../../../../../../src/cometchat/utils/languages';
 export class MessageTranslationExtensionDecorator extends DataSourceDecorator {
   messageTranslationConfiguration?: MessageTranslationConfigurationInterface;
 
