@@ -26,7 +26,7 @@ import { CometChatOptions } from '../../modals';
 import { CometChatContextType } from '../../base/Types';
 import { anyObject } from '../../utils';
 import { Colors } from '../../../../../../../src/common/Colors';
-import { charColor } from '../../../../../../../src/cometchat-v4-ui-kit/utils/DynamicColorUtils';
+import { charColor } from '../../../../../../../src/cometchat/utils/DynamicColorUtils';
 import { decrypt } from '../../../../../../../src/services/auth/AuthServices';
 
 /**

@@ -15,7 +15,7 @@ import { CometChatThreadedMessages } from "../CometChatThreadedMessages";
 import { infoIcon } from "./resources";
 import { Style } from "./style";
 import { CometChatUIEventHandler } from "../shared/events/CometChatUIEventHandler/CometChatUIEventHandler";
-import { useKeyboard } from "../../../../../src/cometchat-v4-ui-kit/hooks/useKeyboard";
+import { useKeyboard } from "../../../../../src/cometchat/hooks/useKeyboard";
 
 const currentTime = new Date().getTime();
 const msgListenerId = "messages_" + currentTime;

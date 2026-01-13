@@ -76,16 +76,16 @@ import { CommonUtils } from '../shared/utils/CommonUtils';
 import { permissionUtil } from '../shared/utils/PermissionUtil';
 import { commonVars } from '../shared/base/vars';
 import { Colors } from '../../../../../src/common/Colors';
-import { MentionPostProcessor } from '../../../../../src/cometchat-v4-ui-kit/utils/MentionUtility';
+import { MentionPostProcessor } from '../../../../../src/cometchat/utils/MentionUtility';
 import { useDispatch, useSelector } from 'react-redux'
 import { setMessageToBeReplied } from '../../../../../src/redux/action/ReplyMessageAction'
-import { minifyParentMessage } from '../../../../../src/cometchat-v4-ui-kit/utils/MessageUtils';
+import { minifyParentMessage } from '../../../../../src/cometchat/utils/MessageUtils';
 import FastImage from 'react-native-fast-image';
 import { Icons, Images } from '../../../../../src/assets/Images';
 import { Fonts } from '../../../../../src/common/Fonts';
 import CustomStatusBar from '../../../../../src/components/CustomStatusBar';
 import Video from 'react-native-video';
-import { useKeyboard } from '../../../../../src/cometchat-v4-ui-kit/hooks/useKeyboard';
+import { useKeyboard } from '../../../../../src/cometchat/hooks/useKeyboard';
 
 const { FileManager, CommonUtil } = NativeModules;
 
