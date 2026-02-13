@@ -1697,6 +1697,7 @@ export const CometChatMessageList = memo(forwardRef<
         }
 
         const shareMedia = async (messageObject: CometChat.MediaMessage | any) => {
+            setShowMessageOptions([]);
             let _plainString = getPlainString(messageObject?.getData()['text'] || "", messageObject);
 
             let textMessage = _plainString;
